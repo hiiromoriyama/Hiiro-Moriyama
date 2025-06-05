@@ -1267,6 +1267,16 @@ section,
   color: var(--accent-color);
 }
 
+@font-face {
+  font-family: 'TrajanPro';
+  src: url('path-to-your-trajan-font/TrajanPro-Regular.woff2') format('woff2');
+}
+
+.trajan {
+  font-family: 'TrajanPro', serif;
+}
+
+
 /*--------------------------------------------------------------
 # Starter Section Section
 --------------------------------------------------------------*/
