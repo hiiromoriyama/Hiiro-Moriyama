@@ -720,7 +720,7 @@ section,
   width: 1px;
   height: 10px;
   transition: 0.9s;
-  background-color: var(--accent-color);
+  background-color: var(--default-color);
 }
 
 /*--------------------------------------------------------------
@@ -737,7 +737,7 @@ section,
 .resume .resume-item {
   padding: 0 0 20px 20px;
   margin-top: -2px;
-  border-left: 2px solid var(--accent-color);
+  border-left: 2px solid var(--default-color);
   position: relative;
 }
 
@@ -779,7 +779,7 @@ section,
   left: -9px;
   top: 0;
   background: var(--background-color);
-  border: 2px solid var(--accent-color);
+  border: 2px solid var(--default-color);
 }
 
 /*--------------------------------------------------------------
