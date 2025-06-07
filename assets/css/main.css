@@ -543,8 +543,9 @@ section,
 # Hero Section
 --------------------------------------------------------------*/
 .hero {
+  display: flex;
+  justify-content: center;
   position: relative;
-  width: 100%;
   min-height: 100vh;
 }
 
@@ -566,14 +567,13 @@ section,
   z-index: 2;
 }
 
+
 .hero .container {
   position: absolute;
-  top: 54%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 52%;
   text-align: center;
-  z-index: 3;
 }
+
 
 .hero h2 {
   margin: 0;
