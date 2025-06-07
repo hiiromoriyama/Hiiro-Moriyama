@@ -573,6 +573,7 @@ section,
 .hero .container {
   position: relative;
   z-index: 3;
+  text-align: center;
 }
 
 .hero h2 {
@@ -588,7 +589,6 @@ section,
 
 .hero p span {
   letter-spacing: 1px;
-  border-bottom: 2px solid var(--accent-color);
 }
 
 .hero .social-links {
