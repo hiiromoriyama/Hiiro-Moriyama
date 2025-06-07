@@ -568,7 +568,7 @@ section,
 
 .hero .container {
   position: absolute;
-  top: 66%;
+  top: 54%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
