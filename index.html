@@ -38,7 +38,83 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+    <meta charset="UTF-8">
+  <title>Hover Toggle Navigation</title>
+  <style>
+    :root {
+      --nav-color: #fff;
+      --nav-hover-color: #ffcc00;
+      --accent-color: #ffcc00;
+      --contrast-color: #000;
+      --nav-dropdown-color: #ccc;
+      --nav-dropdown-hover-color: #fff;
+      --nav-dropdown-background-color: #222;
+      --nav-font: Arial, sans-serif;
+    }
 
+    body {
+      margin: 0;
+      font-family: var(--nav-font);
+      background-color: #333;
+    }
+
+    .nav-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .menu-icon {
+      font-size: 30px;
+      padding: 10px 15px;
+      background-color: #222;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .navmenu {
+      display: block;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #111;
+      width: 200px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 9997;
+    }
+
+    .nav-wrapper:hover .navmenu {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .navmenu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navmenu a {
+      display: block;
+      color: var(--nav-color);
+      padding: 15px 10px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .navmenu a:hover {
+      color: var(--nav-hover-color);
+      background-color: #222;
+    }
+
+    .navmenu a .navicon {
+      margin-right: 10px;
+    }
+
+    /* Add more styling below as needed */
+  </style>
+</head>
 <body class="index-page">
 
   <header id="header" class="header dark-background d-flex flex-column">
@@ -60,17 +136,19 @@
       <a href="https://orcid.org/0009-0001-9306-3806" class="orcid-link" target="_blank" rel="noopener noreferrer"><i class="bi bi-person-badge"></i></a>
       <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin"><i class="bi bi-linkedin"></i></a>
     </div>
-
-    <nav id="navmenu" class="navmenu">
-      <ul>
-        <li><a href="#hero" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
-        <li><a href="#awards" class="active"><i class="bi bi-trophy navicon"></i>Awards</a></li>
-        <li><a href="#resume" class="active"><i class="bi bi-person navicon bi"></i>Resume</a></li>
-        <li><a href="#skills" class="active"><i class="bi bi-gear navicon"></i>Skills</a></li>
-        <li><a href="#arts" class="active"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
-      </ul>
-    </nav>
+    <div class="nav-wrapper">
+        <div class="menu-icon">☰</div>
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="#hero" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
+            <li><a href="#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
+            <li><a href="#awards" class="active"><i class="bi bi-trophy navicon"></i>Awards</a></li>
+            <li><a href="#resume" class="active"><i class="bi bi-person navicon bi"></i>Resume</a></li>
+            <li><a href="#skills" class="active"><i class="bi bi-gear navicon"></i>Skills</a></li>
+            <li><a href="#arts" class="active"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
+          </ul>
+        </nav>
+    </div>
 
   </header>
 
