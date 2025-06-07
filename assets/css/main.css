@@ -601,7 +601,7 @@ section,
 }
 
 .hero .social-links a {
-  font-size: 24px;
+  font-size: 20px;
   display: inline-block;
   color: color-mix(in srgb, var(--default-color), transparent 50%);
   line-height: 1;
