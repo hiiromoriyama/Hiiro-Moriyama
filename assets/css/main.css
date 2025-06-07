@@ -571,9 +571,12 @@ section,
 }
 
 .hero .container {
-  position: relative;
-  z-index: 3;
+  position: absolute;
+  top: 66%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
+  z-index: 3;
 }
 
 .hero h2 {
