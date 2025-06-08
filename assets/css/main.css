@@ -902,6 +902,27 @@ section,
   transform: translate(-50%, -50%);
 }
 
+/* Custom centred link inside portfolio info */
+.portfolio .portfolio-content .portfolio-info.center-text-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.portfolio .portfolio-content .portfolio-info.center-text-link a {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.portfolio .portfolio-content .portfolio-info.center-text-link a:hover {
+  color: var(--accent-color);
+}
+
+
 /*--------------------------------------------------------------
 # Services Section
 --------------------------------------------------------------*/
