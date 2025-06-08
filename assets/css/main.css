@@ -895,6 +895,13 @@ section,
   transform: scale(1.1);
 }
 
+/* Centred zoom icon only when .center-icon is used */
+.portfolio .portfolio-content .portfolio-info.center-icon .preview-link {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 /*--------------------------------------------------------------
 # Services Section
 --------------------------------------------------------------*/
