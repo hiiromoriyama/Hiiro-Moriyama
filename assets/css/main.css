@@ -902,23 +902,22 @@ section,
   transform: translate(-50%, -50%);
 }
 
-/* Custom centred link inside portfolio info */
-.portfolio .portfolio-content .portfolio-info.center-text-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Centred text link inside .portfolio-info when using .center-text-link */
+.portfolio .portfolio-content .portfolio-info.center-text-link a.centered-link {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  z-index: 4;
   text-align: center;
 }
 
-.portfolio .portfolio-content .portfolio-info.center-text-link a {
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.portfolio .portfolio-content .portfolio-info.center-text-link a:hover {
+.portfolio .portfolio-content .portfolio-info.center-text-link a.centered-link:hover {
   color: var(--accent-color);
 }
 
