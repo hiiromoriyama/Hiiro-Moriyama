@@ -1272,11 +1272,11 @@ section,
 .service-details .services-list a.active {
   color: #ffffff;
   font-weight: 700;
-  border-color:  #ffffff;
+  border-color:  var(--default-color);
 }
 
 .service-details .services-list a:hover {
-  border-color:  #ffffff;
+  border-color:  var(--default-color);
 }
 
 .service-details .services-img {
