@@ -47,7 +47,7 @@
 }
 
 .dark-background {
-  --background-color: #1C1C1C;
+  --background-color: #002147;
   --default-color: #ffffff;
   --heading-color: #ffffff;
   --surface-color: #1C1C1C;
@@ -299,12 +299,12 @@ h6 {
   border-radius: 50%;
   transition: 0.3s;
   flex-shrink: 0;
-  background-color: color-mix(in srgb, var(--accent-color), transparent 90%);
+  background-color: color-mix(in srgb, var(--default-color), transparent 90%);
 }
 
 .navmenu a .toggle-dropdown:hover,
 .navmenu a:focus .toggle-dropdown:hover {
-  background-color: var(--accent-color);
+  background-color: var(--default-color);
   color: var(--contrast-color);
 }
 
@@ -317,7 +317,7 @@ h6 {
 .navmenu a:hover .navicon,
 .navmenu .active .navicon,
 .navmenu .active:focus .navicon {
-  color: var(--accent-color);
+  color: var(--default-color);
 }
 
 .navmenu .active .toggle-dropdown,
