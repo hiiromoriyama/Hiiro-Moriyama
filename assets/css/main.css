@@ -1270,7 +1270,7 @@ section,
 }
 
 .service-details .services-list a.active {
-  color: var(--heading-color);
+  color: #ffffff;
   font-weight: 700;
   border-color: var(--accent-color);
 }
