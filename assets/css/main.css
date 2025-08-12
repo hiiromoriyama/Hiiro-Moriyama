@@ -963,11 +963,11 @@ section,
 }
 
 .services .service-item .title a {
-  color: var(--heading-color);
+  color: #ffffff;
 }
 
 .services .service-item .title a:hover {
-  color: var(--accent-color);
+  color: #ffffff;
 }
 
 .services .service-item .description {
