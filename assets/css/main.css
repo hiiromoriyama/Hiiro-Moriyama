@@ -1255,7 +1255,7 @@ section,
 --------------------------------------------------------------*/
 .service-details .services-list {
   padding: 10px 30px;
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  border: 1px solid color-mix(in srgb, #ffffff, transparent 90%);
   margin-bottom: 20px;
 }
 
@@ -1265,7 +1265,7 @@ section,
   padding: 8px 0 8px 15px;
   border-left: 3px solid color-mix(in srgb, var(--default-color), transparent 70%);
   margin: 20px 0;
-  color: color-mix(in srgb, var(--default-color), transparent 20%);
+  color: color-mix(in srgb, #ffffff, transparent 20%);
   transition: 0.3s;
 }
 
