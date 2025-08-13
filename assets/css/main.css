@@ -473,8 +473,8 @@ h6 {
 # Global Page Titles & Breadcrumbs
 --------------------------------------------------------------*/
 .page-title {
-  color: var(--contrast-color);
-  background-color: #002147; /* Oxford blue */
+  color: #002147;
+  background-color: #ffffff; /* Oxford blue */
   padding: 25px 0;
   position: relative;
 }
