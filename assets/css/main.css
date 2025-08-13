@@ -473,7 +473,7 @@ h6 {
 --------------------------------------------------------------*/
 .page-title {
   color: var(--contrast-color);
-  background-color: var(--background-color);
+  background-color: #a8a9b4;
   padding: 25px 0;
   position: relative;
 }
@@ -502,16 +502,6 @@ h6 {
   display: inline-block;
   padding-right: 10px;
   color: color-mix(in srgb, var(--contrast-color), transparent 70%);
-}
-
-/* Breadcrumb colors */
-.page-title .breadcrumbs a {
-  color: #a8a9b4; /* Home link */
-  text-decoration: none;
-}
-
-.page-title .breadcrumbs .current {
-  color: #ffffff; /* Current page */
 }
 
 /*--------------------------------------------------------------
