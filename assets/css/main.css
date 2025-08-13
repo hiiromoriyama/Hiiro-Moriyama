@@ -504,6 +504,16 @@ h6 {
   color: color-mix(in srgb, var(--contrast-color), transparent 70%);
 }
 
+/* Breadcrumb colors */
+.page-title .breadcrumbs a {
+  color: #a8a9b4; /* Home link */
+  text-decoration: none;
+}
+
+.page-title .breadcrumbs .current {
+  color: #ffffff; /* Current page */
+}
+
 /*--------------------------------------------------------------
 # Global Sections
 --------------------------------------------------------------*/
