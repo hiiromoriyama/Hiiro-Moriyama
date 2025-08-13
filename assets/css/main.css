@@ -501,20 +501,11 @@ h6 {
 
 .page-title .breadcrumbs ol li+li::before {
   content: "/";
+  color: #a8a9b4;
   display: inline-block;
   padding-right: 10px;
   color: color-mix(in srgb, var(--contrast-color), transparent 70%);
 }
-
-/* Home breadcrumb colour */
-.page-title .breadcrumbs ol li:first-child a {
-  color: #a8a9b4;
-}
-
-.page-title .breadcrumbs ol li:first-child a:hover {
-  color: #ffffff; /* or desired hover colour */
-}
-
 
 /*--------------------------------------------------------------
 # Global Sections
