@@ -87,6 +87,11 @@ h5,
 h6 {
   color: var(--heading-color);
   font-family: var(--heading-font);
+/* Page Title in dark background */
+.page-title.dark-background h1 {
+  color: #ffffff; /* white */
+}
+
 }
 
 /* PHP Email Form Messages
