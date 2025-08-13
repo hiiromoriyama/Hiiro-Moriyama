@@ -1255,7 +1255,7 @@ section,
 --------------------------------------------------------------*/
 .service-details .services-list {
   padding: 10px 30px;
-  border: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+  border: 1px solid color-mix(in srgb, var(--#ffffff), transparent 90%);
   margin-bottom: 20px;
 }
 
