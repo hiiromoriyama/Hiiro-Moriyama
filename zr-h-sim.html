@@ -58,8 +58,8 @@
 </head>
 <body>
     <div id="overlay" onclick="startSim()">
-        <h2 style="font-weight:900; color:#ffffff; letter-spacing:5px;">INITIALIZE HCP</h2>
-        <p style="font-size:10px; color:#777;">CLICK TO START ZR SIMULATION</p>
+        <h2 style="font-weight:900; color:#ffffff; letter-spacing:5px;">INITIALIZE</h2>
+        <p style="font-size:10px; color:#777;">CLICK TO START</p>
     </div>
     <div id="container">
         <div id="ui-panel">
@@ -76,7 +76,7 @@
             <div class="control">
                 <label>Audio Mix</label>
                 <div class="audio-toggles">
-                   <label><input type="checkbox" id="m-emit" checked> EMIT</label>
+                   <label><input type="checkbox" id="m-emit" checked> EMT</label>
                    <label><input type="checkbox" id="m-bounce" checked> BNC</label>
                    <label><input type="checkbox" id="m-abs" checked> ABS</label>
                 </div>
@@ -85,7 +85,7 @@
             <div class="control"><label>Mean Free Path</label><input type="range" id="mfp" min="100" max="1000" step="50" value="400" oninput="lambda_k=parseFloat(this.value)"></div>
             <div class="control"><label>Electron Size</label><input type="range" id="e-size" min="2" max="15" step="1" value="5" oninput="particleBaseR=parseFloat(this.value)"></div>
             <div class="control"><label>Thermal </label><input type="range" id="thermal" min="0" max="8" step="0.5" value="1" oninput="thermalK=this.value"></div>
-            <div class="control"><label>Zr Lattice Size</label><input type="range" id="fe-vol" min="10" max="35" value="22" oninput="latSize=this.value; generateLattice()"></div>
+            <div class="control"><label>Zr Conc</label><input type="range" id="fe-vol" min="10" max="80" value="45" oninput="latSize=this.value; generateLattice()"></div>
             <div class="control"><label>H Conc (Interstitials)</label><input type="range" id="h-conc" min="0" max="100" value="20" oninput="hConc=this.value; generateLattice()"></div>
             <div class="control"><label>Freq</label><input type="range" id="emit-freq" min="1" max="60" value="12" oninput="emitFreq=this.value"></div>
             <div class="control"><label>Velocity</label><input type="range" id="vel" min="1" max="10" step="0.5" value="4.5" oninput="speedFactor=this.value"></div>
@@ -107,13 +107,12 @@
         const ctx = canvas.getContext('2d');
         let atoms = [], hAtoms = [], particles = [];
         let isPaused = false, frame = 0, started = false;
-        let latSize = 22, hConc = 20, emitFreq = 12, speedFactor = 4.5, lambda_k = 400, particleBaseR = 5, thermalK = 1, emitMode = 'pulse';
+        let latSize = 45, hConc = 20, emitFreq = 12, speedFactor = 4.5, lambda_k = 400, particleBaseR = 5, thermalK = 1, emitMode = 'pulse';
         let totalBounces = 0, totalAbsorbed = 0, emitter = null;
+        let audioCtx;
         
-        // Zirconium HCP Parameters
         const PX_PER_ANG = 45;
-        const A = 3.23; // Zr a-parameter
-        const C = 5.15; // Zr c-parameter
+        const A = 3.23; 
         const rowHeight = A * Math.sin(Math.PI / 3); 
 
         function startSim() {
@@ -148,24 +147,20 @@
             const cx = (canvas.width / dpr) / 2;
             const cy = (canvas.height / dpr) / 2;
             
-            const rows = 12;
-            const cols = 12;
+            const rows = 20; 
+            const cols = 20;
 
-            // Generate HCP Zr Lattice (ABAB stacking)
             for (let r = -rows/2; r < rows/2; r++) {
                 for (let c = -cols/2; c < cols/2; c++) {
                     let x = cx + c * A * PX_PER_ANG;
                     let y = cy + r * rowHeight * PX_PER_ANG;
                     
-                    // Offset every other row for hexagonal packing
                     if (r % 2 !== 0) x += (A / 2) * PX_PER_ANG;
 
                     const distFromCenter = Math.hypot(x - cx, y - cy);
-                    if (distFromCenter < latSize * (PX_PER_ANG/4)) {
+                    if (distFromCenter < latSize * 10) { 
                         atoms.push(new Atom(x, y, 'Zr'));
                         
-                        // Octahedral Interstitial Site Placement (clearly different site)
-                        // In 2D HCP projections, these appear in the centers of the Zr triangles
                         if (Math.random() * 100 < hConc) {
                             let hx = x + (A/2) * PX_PER_ANG;
                             let hy = y + (rowHeight/3) * PX_PER_ANG;
@@ -248,7 +243,6 @@
                 const g = ctx.createRadialGradient(tx - a.r*0.3, ty - a.r*0.3, a.r*0.1, tx, ty, a.r);
                 
                 if (a.type === 'Zr') {
-                    // PURPLE ZIRCONIUM THEME
                     g.addColorStop(0, isHit ? '#fff' : '#c387ff');
                     g.addColorStop(0.4, isHit ? '#9d4edd' : '#5a189a');
                     g.addColorStop(1, '#10002b');
