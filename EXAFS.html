@@ -1,100 +1,456 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <style>
-        /* This CSS ensures the simulation fills the iframe perfectly */
-        body, html { margin: 0; padding: 0; overflow: hidden; background: #000; font-family: sans-serif; }
-        canvas { display: block; width: 100vw; height: 100vh; }
-        
-        .ui-overlay {
-            position: absolute; top: 0; left: 0; width: 100%;
-            background: rgba(0,0,0,0.8); display: flex; padding: 10px;
-            gap: 20px; border-bottom: 1px solid #333; z-index: 10;
-        }
-        .ctrl { display: flex; flex-direction: column; color: #00e5ff; font-size: 10px; font-weight: bold; }
-        label { margin-bottom: 3px; letter-spacing: 1px; text-transform: uppercase; }
-        input[type=range] { width: 85px; cursor: pointer; }
-        
-        .stats-bar {
-            position: absolute; bottom: 10px; left: 15px;
-            color: #666; font-size: 11px; letter-spacing: 1px;
-        }
-    </style>
-</head>
-<body>
-    <div class="ui-overlay">
-        <div class="ctrl">
-            <label>H-Jump (Diffusion)</label>
-            <input type="range" id="jump_slider" min="0" max="0.1" step="0.005" value="0.01">
-        </div>
-        <div class="ctrl">
-            <label>Thermal Vibr.</label>
-            <input type="range" id="thermal_slider" min="0" max="10" step="1" value="1">
-        </div>
-        <button onclick="location.reload()" style="font-size: 10px; height: 24px; margin-top: 5px; cursor: pointer;">RESET</button>
-    </div>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>EXAFS - Hiiro Moriyama</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;600&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    /* --- SIMULATION STYLING --- */
+    .sim-wrapper {
+      width: 100%;
+      height: 700px; /* Increased height to accommodate larger UI */
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #444;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      margin-top: 20px;
+      margin-bottom: 20px;
+      position: relative;
+      font-family: 'Inter', sans-serif;
+      user-select: none;
+    }
+
+    canvas { 
+        background: #000; 
+        display: block; 
+        width: 100%; 
+        height: 100%; 
+    }
+
+    /* Initialization Overlay */
+    #overlay {
+      position: absolute; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.9); z-index: 1000;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      cursor: pointer;
+    }
+    #overlay h2 { font-weight: 900; letter-spacing: 5px; color: #00e5ff; margin-bottom: 15px; }
+    #overlay p { font-size: 14px; color: #888; text-transform: uppercase; }
+
+    /* UI Grid - LARGER FONTS & SPACING */
+    .ui-grid { 
+      position:absolute; top: 0; left: 0; width: 100%;
+      background: rgba(0, 0, 0, 0.92); border-bottom: 1px solid #333; 
+      padding: 15px 5px; z-index: 100; display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+      gap: 12px; justify-items: center; align-items: center;
+    }
+
+    .control { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
     
-    <div class="stats-bar">FE-H LATTICE DYNAMICS // ACTIVE</div>
-    <canvas id="simCanvas"></canvas>
+    /* Increased Label Font */
+    .control label { 
+        font-size: 11px; 
+        color: #00e5ff; 
+        font-weight: 900; 
+        text-transform: uppercase; 
+        letter-spacing: 0.5px;
+    }
 
-    <script>
-        const canvas = document.getElementById('simCanvas');
-        const ctx = canvas.getContext('2d');
-        let atoms = [], hAtoms = [], sites = [];
-        let jumpProb = 0.01, thermalK = 1;
+    .audio-toggles { display: flex; gap: 6px; margin-top: 2px; }
+    .audio-toggles label { font-size: 10px; color: #fff; display: flex; align-items: center; gap: 3px; cursor: pointer;}
 
-        document.getElementById('jump_slider').oninput = e => jumpProb = parseFloat(e.target.value);
-        document.getElementById('thermal_slider').oninput = e => thermalK = parseFloat(e.target.value);
+    /* Larger Buttons */
+    button { 
+      background: #eee; color: #000; border: none; padding: 8px 15px; 
+      cursor: pointer; font-weight: 900; font-size: 12px; font-family: 'Inter', sans-serif;
+      clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+      transition: all 0.2s;
+    }
+    button:hover { background: #00e5ff; transform: scale(1.05); }
 
-        function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            atoms = []; hAtoms = []; sites = [];
-            const cx = canvas.width/2, cy = canvas.height/2, gap = 80;
+    /* Larger Sliders for Visibility */
+    input[type=range] { 
+        appearance: none; 
+        background: #333; 
+        height: 4px; 
+        width: 100px; 
+        border-radius: 2px;
+    }
+    input[type=range]::-webkit-slider-thumb { 
+        appearance: none; 
+        width: 16px; 
+        height: 16px; 
+        background: #eee; 
+        cursor: pointer; 
+        border-radius: 50%;
+        border: 2px solid #00e5ff;
+    }
 
-            // Create 5x5 Iron (Fe) Lattice
-            for(let i=-2; i<=2; i++) {
-                for(let j=-2; j<=2; j++) {
-                    let x = cx + i*gap, y = cy + j*gap;
-                    atoms.push({x, y, r: 16});
-                    // Define empty sites for Hydrogen to "Jump" into
-                    sites.push({x: x + gap/2, y: y + gap/2});
+    /* Larger Info Panel */
+    .info { 
+      position:absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
+      display: flex; gap: 40px; padding: 12px 50px; background: rgba(0,0,0,0.9);
+      border: 1px solid #333; border-bottom: none; font-size: 12px; letter-spacing: 1.5px;
+      font-weight: 900; text-transform: uppercase; color: #aaa; pointer-events: none;
+      border-radius: 10px 10px 0 0;
+    }
+    
+    #absorb-stat { color: #00ff66; text-shadow: 0 0 10px rgba(0,255,102,0.4); }
+    .flash-active { border-color: #00ff66 !important; box-shadow: inset 0 0 20px rgba(0,255,102,0.2); }
+  </style>
+</head>
+
+<body class="service-details-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+    <div class="profile-img">
+      <img src="assets/img/prof3.jpg" alt="" class="img-fluid rounded-circle">
+    </div>
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Hiiro Moriyama</h1>
+    </a>
+    <div class="social-links text-center">
+      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama" class="researchgate" target="_blank"><i class="bi bi-journal-richtext"></i></a>
+      <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+    </div>
+    <nav id="navmenu" class="navmenu">
+        <ul>
+         <li><a href="index.html#hero"><i class="bi bi-house navicon"></i>Home</a></li>
+         <li><a href="index.html#aboutme"><i class="bi bi-person navicon"></i>About me</a></li>
+         <li><a href="index.html#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
+         <li><a href="index.html#awards"><i class="bi bi-trophy navicon"></i>Awards</a></li>
+         <li><a href="index.html#arts"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
+        </ul>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Extended X-Ray Absorption Fine Structure (EXAFS)</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">EXAFS</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <section id="service-details" class="service-details section">
+      <div class="container">
+        
+        <div class="row gy-4 mb-5">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="services-list">
+              <a href="microresidual-stress.html">Micro-Residual Stress</a>
+              <a href="xray-prosthesis.html">X-ray Prosthesis</a>
+              <a href="xray-optics.html">Ultrafast X-ray Optics</a>
+              <a href="2D-Flows.html">2D Flows</a>
+              <a href="exafs.html" class="active">EXAFS</a>
+            </div>
+
+            <h4>Acknowledgement</h4>
+            <p style="text-align: justify;">This project focuses on the application of EXAFS to probe the local atomic structure and coordination environments in complex material systems.</p>
+          </div>
+
+          <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+            <h3>Probing Local Atomic Environments</h3>
+            <p style="text-align: justify;">EXAFS does not require long-range periodicity, making it an invaluable tool for studying amorphous materials and complex molecular complexes. Below is an interactive simulation of the <strong>Fe-H Dynamics</strong>.</p>
+            
+            <div class="sim-wrapper" id="sim-container">
+                <div id="overlay" onclick="startSim()">
+                    <h2>CORE INITIALIZATION</h2>
+                    <p>Click to activate system & audio</p>
+                </div>
+
+                <canvas id="c"></canvas>
+
+                <div class="ui-grid" id="ui-panel">
+                    <div class="control"><button onclick="togglePause()">STP/GO</button></div>
+                    <div class="control">
+                        <label>Audio Mix</label>
+                        <div class="audio-toggles">
+                           <label><input type="checkbox" id="m-emit" checked> EMT</label>
+                           <label><input type="checkbox" id="m-bounce" checked> BNC</label>
+                           <label><input type="checkbox" id="m-abs" checked> ABS</label>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <label>H-Jump</label>
+                        <input type="range" id="jump-prob" min="0" max="0.05" step="0.001" value="0.005" oninput="jumpProb=parseFloat(this.value)">
+                    </div>
+                    <div class="control"><label>Thermal</label><input type="range" id="thermal" min="0" max="8" step="0.5" value="1" oninput="thermalK=this.value"></div>
+                    <div class="control"><label>Fe-Vol</label><input type="range" id="fe-vol" min="10" max="35" value="20" oninput="feSize=this.value; generateLattice()"></div>
+                    <div class="control"><label>H-Conc</label><input type="range" id="h-conc" min="0" max="100" value="15" oninput="hConc=this.value; generateLattice()"></div>
+                    <div class="control"><label>Freq</label><input type="range" id="emit-freq" min="1" max="60" value="10" oninput="emitFreq=this.value"></div>
+                    <div class="control"><button onclick="resetSim()" style="background:#cc3300; color:#fff">RESET</button></div>
+                </div>
+
+                <div class="info" id="info-panel">
+                    <div>Impacts: <span id="bounces">0</span></div>
+                    <div id="absorb-stat">Absorbed: <span id="abs-count">0</span></div>
+                    <div>Atoms: <span id="fe-count">0</span></div>
+                </div>
+            </div>
+            </div>
+        </div>
+      </div> 
+    </section>
+
+  </main>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    let atoms = [], hAtoms = [], particles = [], interstitialSites = [];
+    let isPaused = false, frame = 0, started = false;
+    
+    // Core Parameters
+    let feSize = 20, hConc = 15, emitFreq = 10, speedFactor = 4, lambda_k = 400, particleBaseR = 3, thermalK = 1, jumpProb = 0.005;
+    let totalBounces = 0, totalAbsorbed = 0, emitter = null;
+
+    const PX_PER_ANG = 35;
+    const LATTICE_A = 3.64; 
+
+    let audioCtx;
+
+    function startSim() {
+        if (started) return;
+        started = true;
+        document.getElementById('overlay').style.display = 'none';
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        resize();
+        draw();
+    }
+
+    function playSound(freq, type, decay, vol, toggleId) {
+        if (!audioCtx || !document.getElementById(toggleId).checked) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + decay);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + decay);
+    }
+
+    function playAbsorbSound() {
+        if (!audioCtx || !document.getElementById('m-abs').checked) return;
+        [523.25, 783.99].forEach(f => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+        });
+    }
+
+    class Atom {
+        constructor(x, y, type = 'Fe') {
+            this.baseX = x; this.baseY = y;
+            this.x = x; this.y = y;
+            this.vibeX = 0; this.vibeY = 0;
+            this.type = type;
+            this.r = type === 'Fe' ? 14 : 7;
+            this.hitTime = -999;
+            this.isEmitter = false;
+        }
+        updateVibe() {
+            this.vibeX = (Math.random() - 0.5) * thermalK;
+            this.vibeY = (Math.random() - 0.5) * thermalK;
+        }
+    }
+
+    function generateLattice() {
+        atoms = []; hAtoms = []; interstitialSites = [];
+        const cx = canvas.width/2, cy = canvas.height/2;
+        const cells = Math.ceil(feSize / LATTICE_A / 2);
+
+        for (let i = -cells; i <= cells; i++) {
+            for (let j = -cells; j <= cells; j++) {
+                const ox = cx + i * LATTICE_A * PX_PER_ANG;
+                const oy = cy + j * LATTICE_A * PX_PER_ANG;
+                [[0,0], [0.5, 0.5], [0.5, 0], [0, 0.5]].forEach(p => {
+                    const ax = ox + p[0] * LATTICE_A * PX_PER_ANG;
+                    const ay = oy + p[1] * LATTICE_A * PX_PER_ANG;
+                    if (!atoms.some(a => Math.hypot(a.baseX-ax, a.baseY-ay) < 5)) {
+                        atoms.push(new Atom(ax, ay, 'Fe'));
+                    }
+                });
+            }
+        }
+
+        const minX = Math.min(...atoms.map(a => a.x)), maxX = Math.max(...atoms.map(a => a.x));
+        const minY = Math.min(...atoms.map(a => a.y)), maxY = Math.max(...atoms.map(a => a.y));
+
+        for (let i = -cells; i <= cells; i++) {
+            for (let j = -cells; j <= cells; j++) {
+                const ox = cx + i * LATTICE_A * PX_PER_ANG;
+                const oy = cy + j * LATTICE_A * PX_PER_ANG;
+                [[0.25, 0.25], [0.75, 0.75]].forEach(p => {
+                    const hx = ox + p[0] * LATTICE_A * PX_PER_ANG;
+                    const hy = oy + p[1] * LATTICE_A * PX_PER_ANG;
+                    if(hx > minX && hx < maxX && hy > minY && hy < maxY) {
+                        interstitialSites.push({x: hx, y: hy});
+                        if (Math.random() * 100 < hConc) hAtoms.push(new Atom(hx, hy, 'H'));
+                    }
+                });
+            }
+        }
+        emitter = atoms.reduce((p, c) => Math.hypot(c.x-cx, c.y-cy) < Math.hypot(p.x-cx, p.y-cy) ? c : p);
+        emitter.isEmitter = true;
+        document.getElementById('fe-count').textContent = atoms.length;
+    }
+
+    function handleDiffusion() {
+        if (jumpProb === 0) return;
+        hAtoms.forEach(h => {
+            if (Math.random() < jumpProb) {
+                const currentOccupied = hAtoms.map(other => ({x: other.baseX, y: other.baseY}));
+                const available = interstitialSites.filter(site => 
+                    !currentOccupied.some(occ => Math.hypot(occ.x - site.x, occ.y - site.y) < 2)
+                );
+                if (available.length > 0) {
+                    available.sort((a, b) => Math.hypot(a.x - h.baseX, a.y - h.baseY) - Math.hypot(b.x - h.baseX, b.y - h.baseY));
+                    const target = available[Math.floor(Math.random() * Math.min(3, available.length))];
+                    h.baseX = target.x; h.baseY = target.y;
                 }
             }
-            // Add initial Hydrogen (H) atoms
-            sites.forEach(s => {
-                if(Math.random() < 0.3) hAtoms.push({bx: s.x, by: s.y});
+        });
+    }
+
+    function update() {
+        if (isPaused || !started) return;
+        frame++;
+        handleDiffusion();
+        [...atoms, ...hAtoms].forEach(a => a.updateVibe());
+
+        if (frame % Math.max(1, Math.floor(61 - emitFreq)) === 0) {
+            const angle = Math.random() * Math.PI * 2;
+            particles.push({ 
+                x: emitter.x + emitter.vibeX, y: emitter.y + emitter.vibeY, 
+                vx: Math.cos(angle)*speedFactor, vy: Math.sin(angle)*speedFactor, 
+                b: 0, pathLength: 0, history: [], intensity: 1.0
             });
+            playSound(900, 'sine', 0.08, 0.1, 'm-emit');
         }
 
-        function draw() {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0,0,canvas.width, canvas.height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.history.unshift({x: p.x, y: p.y});
+            if(p.history.length > 10) p.history.pop();
+            p.pathLength += Math.hypot(p.vx, p.vy);
+            p.intensity = Math.exp(-p.pathLength / lambda_k);
+            p.x += p.vx; p.y += p.vy;
 
-            // Logic for Hydrogen Jumps
-            hAtoms.forEach(h => {
-                if(Math.random() < jumpProb) {
-                    const target = sites[Math.floor(Math.random()*sites.length)];
-                    h.bx = target.x; h.by = target.y;
+            for (let s of [...atoms, ...hAtoms]) {
+                const dx = p.x - (s.x + s.vibeX), dy = p.y - (s.y + s.vibeY);
+                const d = Math.hypot(dx, dy);
+                if (d < particleBaseR + s.r) {
+                    const nx = dx/d, ny = dy/d, dot = p.vx*nx + p.vy*ny;
+                    if (dot < 0) {
+                        p.vx -= 2*dot*nx; p.vy -= 2*dot*ny;
+                        s.hitTime = frame; p.b++; totalBounces++;
+                        playSound(s.type === 'Fe' ? 180 : 350, 'square', 0.04, 0.05, 'm-bounce');
+                    }
                 }
-                ctx.beginPath();
-                ctx.arc(h.bx + (Math.random()-0.5)*thermalK, h.by + (Math.random()-0.5)*thermalK, 6, 0, Math.PI*2);
-                ctx.fillStyle = '#ff3333'; ctx.fill();
-            });
+            }
 
-            // Draw Iron Lattice
-            atoms.forEach(a => {
-                ctx.beginPath();
-                ctx.arc(a.x + (Math.random()-0.5)*thermalK, a.y + (Math.random()-0.5)*thermalK, 16, 0, Math.PI*2);
-                ctx.fillStyle = '#444'; ctx.fill();
-            });
-
-            requestAnimationFrame(draw);
+            if (p.intensity < 0.1 || p.x < -50 || p.x > canvas.width+50 || p.y < -50 || p.y > canvas.height+50) {
+                particles.splice(i, 1);
+            } else if (p.b > 0 && Math.hypot(p.x - emitter.x, p.y - emitter.y) < emitter.r + 5) {
+                totalAbsorbed++;
+                document.getElementById('abs-count').textContent = totalAbsorbed;
+                playAbsorbSound();
+                particles.splice(i, 1);
+                document.getElementById('sim-container').classList.add('flash-active');
+                setTimeout(() => document.getElementById('sim-container').classList.remove('flash-active'), 150);
+            }
         }
+        document.getElementById('bounces').textContent = totalBounces;
+    }
 
-        window.onresize = init;
-        init(); 
-        draw();
-    </script>
+    function draw() {
+        if (!started) return;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        [...atoms, ...hAtoms].forEach(a => {
+            const isHit = frame - a.hitTime < 10;
+            const tx = a.x + a.vibeX, ty = a.y + a.vibeY;
+            
+            ctx.beginPath();
+            ctx.arc(tx, ty, a.r, 0, Math.PI*2);
+            
+            let g = ctx.createRadialGradient(tx - a.r/3, ty - a.r/3, a.r/10, tx, ty, a.r);
+            if (a.type === 'Fe') {
+                g.addColorStop(0, isHit ? '#fff' : '#bbb');
+                g.addColorStop(1, '#111');
+            } else {
+                g.addColorStop(0, isHit ? '#ffaaaa' : '#cc0000');
+                g.addColorStop(1, '#200000');
+            }
+            ctx.fillStyle = g; ctx.fill();
+            ctx.strokeStyle = a.isEmitter ? '#00e5ff' : '#222';
+            ctx.lineWidth = a.isEmitter ? 3 : 1;
+            ctx.stroke();
+        });
+
+        particles.forEach(p => {
+            const currentR = particleBaseR * p.intensity;
+            ctx.beginPath(); ctx.arc(p.x, p.y, currentR, 0, Math.PI*2);
+            ctx.fillStyle = `rgba(0, 229, 255, ${p.intensity})`; ctx.fill();
+        });
+
+        update();
+        requestAnimationFrame(draw);
+    }
+
+    function togglePause() { isPaused = !isPaused; }
+    function resetSim() { particles = []; totalBounces = 0; totalAbsorbed = 0; document.getElementById('abs-count').textContent = '0'; generateLattice(); }
+    function resize() { 
+        const rect = document.getElementById('sim-container').getBoundingClientRect();
+        canvas.width = rect.width; 
+        canvas.height = rect.height; 
+        generateLattice(); 
+    }
+    
+    window.addEventListener('resize', resize);
+  </script>
+
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+
 </body>
 </html>
