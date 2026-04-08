@@ -24,20 +24,20 @@
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
-    /* Styling for the simulation container */
+    /* Simulation Container Styling */
     .sim-wrapper {
       width: 100%;
-      height: 600px;
+      height: 600px; /* Adjust this height to match your sim's UI */
       background: #000;
       border-radius: 12px;
       overflow: hidden;
       border: 1px solid #444;
       box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-      margin-top: 20px;
-      margin-bottom: 20px;
+      margin-top: 25px;
+      margin-bottom: 25px;
+      position: relative;
     }
     
-    /* Ensures the iframe fills the container without scrollbars */
     .sim-wrapper iframe {
       width: 100%;
       height: 100%;
@@ -48,6 +48,7 @@
     .services-img {
       border-radius: 8px;
       margin-bottom: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
   </style>
 </head>
@@ -57,16 +58,14 @@
   <header id="header" class="header dark-background d-flex flex-column">
     <i class="header-toggle d-xl-none bi bi-list"></i>
     <div class="profile-img">
-      <img src="assets/img/prof3.jpg" alt="" class="img-fluid rounded-circle">
+      <img src="assets/img/prof3.jpg" alt="Hiiro Moriyama" class="img-fluid rounded-circle">
     </div>
     <a href="index.html" class="logo d-flex align-items-center justify-content-center">
       <h1 class="sitename">Hiiro Moriyama</h1>
     </a>
     <div class="social-links text-center">
       <a href="https://www.researchgate.net/profile/Hiiro-Moriyama" class="researchgate" target="_blank"><i class="bi bi-journal-richtext"></i></a>
-      <a href="https://www.instagram.com/hiiromoriyama/" class="instagram" target="_blank"><i class="bi bi-instagram"></i></a>
-      <a href="https://orcid.org/0009-0001-9306-3806" class="orcid-link" target="_blank"><i class="bi bi-person-badge"></i></a>
-      <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin" target="_blank"><i class="bi bi-linkedin"></i></a>
     </div>
     <nav id="navmenu" class="navmenu">
       <ul>
@@ -96,7 +95,7 @@
     <section id="service-details" class="service-details section">
       <div class="container">
         
-        <div class="row gy-4 mb-5">
+        <div class="row gy-4">
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="services-list">
               <a href="microresidual-stress.html">Micro-Residual Stress</a>
@@ -106,13 +105,14 @@
               <a href="exafs.html" class="active">EXAFS</a>
             </div>
 
-            <h4>Acknowledgement</h4>
-            <p style="text-align: justify;">This project focuses on the application of EXAFS to probe the local atomic structure and coordination environments in complex material systems.</p>
-            
-            <div class="mt-3">
-              <a href="https://www.ox.ac.uk" target="_blank">
-                <img src="assets/img/oxford-logo.png" alt="University of Oxford" class="img-fluid" style="max-width: 150px;">
-              </a>
+            <div class="mt-4">
+              <h4>Acknowledgement</h4>
+              <p style="text-align: justify;">This work explores local atomic environments using synchrotron radiation, focusing on the precision mapping of interstitial sites.</p>
+              <div class="mt-3">
+                <a href="https://www.ox.ac.uk" target="_blank">
+                  <img src="assets/img/oxford-logo.png" alt="University of Oxford" class="img-fluid" style="max-width: 140px;">
+                </a>
+              </div>
             </div>
           </div>
 
@@ -120,31 +120,18 @@
             <img src="assets/img/exafs-main.jpg" alt="EXAFS Spectra Analysis" class="img-fluid services-img">
             <h3>Probing Local Atomic Environments</h3>
             <p style="text-align: justify;">
-              EXAFS provides detailed information about the local environment of specific atoms within a sample. Unlike diffraction, it does not require long-range order, making it a critical tool for studying defects, amorphous structures, and interstitial dynamics.
-            </p>
-            <p style="text-align: justify;">
-              In metallic systems such as the Fe-H lattice, the presence of light elements like Hydrogen can significantly distort the surrounding Iron matrix. Measuring these subtle shifts requires high-precision synchrotron radiation.
-            </p>
-          </div>
-        </div>
-
-        <div class="row" data-aos="fade-up">
-          <div class="col-12">
-            <h3>Interactive Dynamics: Fe-H Lattice</h3>
-            <p class="mb-3">
-              This simulation visualizes photoelectron scattering. Use the <strong>H-Jump</strong> slider to control the rate of Hydrogen diffusion through the interstitial sites.
+              EXAFS provides a unique window into the short-range order of materials. By measuring the modulation of X-ray absorption, we can determine the exact distance and species of neighboring atoms.
             </p>
             
-            <div class="sim-wrapper">
-              <iframe src="fe-h-sim.html" title="Fe-H Dynamics"></iframe>
+            <div class="sim-wrapper" data-aos="zoom-in">
+              <iframe src="fe-h-sim.html" title="Interactive Fe-H Dynamics">
+                <p>Your browser does not support iframes. Please ensure fe-h-sim.html is in the same folder.</p>
+              </iframe>
             </div>
-          </div>
-        </div>
 
-        <div class="row mt-4">
-          <div class="col-12" data-aos="fade-up">
+            <h3>Interstitial Dynamics</h3>
             <p style="text-align: justify;">
-              By analyzing the Fourier transform of the EXAFS oscillations, we can determine interatomic distances to an accuracy of 0.01 Å. This allows us to track real-time structural changes as Hydrogen atoms migrate (or "jump") through the metallic lattice, providing insights into hydrogen embrittlement and storage.
+              In the simulation above, the <strong>H-Jump</strong> function illustrates how Hydrogen atoms migrate through the metallic lattice. This diffusion is a critical factor in hydrogen embrittlement research, where structural stability is mapped through precise interatomic coordination analysis.
             </p>
           </div>
         </div>
@@ -155,12 +142,10 @@
   </main>
 
   <footer id="footer" class="footer position-relative light-background">
-    <div style="text-align: center; font-size: 14px; padding: 10px;">
-      <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
-    </div>
     <div class="container">
-      <div class="copyright text-center ">
+      <div class="copyright text-center">
         <p>© <span>Hiiro Moriyama | Oxford 2026</span></p>
+        <p style="font-size: 12px; color: #888;">Department of Materials, University of Oxford</p>
       </div>
     </div>
   </footer>
@@ -175,5 +160,4 @@
   <script src="assets/js/main.js"></script>
 
 </body>
-
 </html>
