@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Fe-H Advanced Dynamics - Simulation</title>
+    <title>Fe-H EXAFS Dynamics</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         
@@ -78,7 +78,7 @@
             <div class="control">
                 <label>Audio Mix</label>
                 <div class="audio-toggles">
-                   <label><input type="checkbox" id="m-emit" checked> EMT</label>
+                   <label><input type="checkbox" id="m-emit" checked> EMIT</label>
                    <label><input type="checkbox" id="m-bounce" checked> BNC</label>
                    <label><input type="checkbox" id="m-abs" checked> ABS</label>
                 </div>
@@ -273,7 +273,7 @@
                     g.addColorStop(1, '#200000');
                 }
                 ctx.fillStyle = g; ctx.fill();
-                ctx.strokeStyle = a.isEmitter ? '#ffffff' : 'rgba(255,255,255,0.05)';
+                ctx.strokeStyle = a.isEmitter ? '#00e5ff' : 'rgba(255,255,255,0.05)';
                 ctx.lineWidth = a.isEmitter ? 2 : 0.5; ctx.stroke();
             });
             particles.forEach(p => {
