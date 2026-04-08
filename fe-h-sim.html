@@ -5,49 +5,68 @@
     <title>Fe-H Advanced Dynamics - Simulation</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
         body { margin:0; padding:0; background:#000; overflow:hidden; font-family: 'Inter', sans-serif; color: #eee; user-select: none; }
-        #container { display:flex; height:100vh; background:#000; position:relative; }
-        canvas { background: #000; cursor: default; display: block; flex-grow: 1; }
+        
+        #container { 
+            display: flex; 
+            flex-direction: row; /* Horizontal alignment of UI and Canvas */
+            height: 100vh; 
+            width: 100vw;
+            background: #000; 
+        }
+
+        /* Sidebar layout */
+        #ui-panel { 
+            width: 130px; 
+            min-width: 130px;
+            height: 100%; 
+            background: rgba(15, 15, 15, 1); 
+            border-right: 1px solid #333; 
+            padding: 20px 10px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            box-sizing: border-box;
+            z-index: 10;
+            overflow-y: auto;
+        }
+
+        #c { flex-grow: 1; display: block; }
+
         #overlay {
             position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.8); z-index: 1000;
+            background: rgba(0,0,0,0.9); z-index: 1000;
             display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
         }
         #overlay h2 { font-weight: 900; letter-spacing: 5px; color: #00e5ff; margin-bottom: 10px; }
-        #overlay p { font-size: 12px; color: #888; text-transform: uppercase; }
-        
-        /* Updated to Column Layout on the Left */
-        .ui-grid { 
-            width: 120px;
-            height: 100%;
-            background: rgba(10, 10, 10, 0.95); 
-            border-right: 1px solid #333; 
-            padding: 20px 10px; 
-            z-index: 100; 
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            overflow-y: auto;
-        }
+        #overlay p { font-size: 10px; color: #888; text-transform: uppercase; }
+
         .info { 
             position:absolute; bottom: 20px; right: 20px; 
-            display: flex; flex-direction: column; gap: 5px; padding: 15px; background: rgba(0,0,0,0.8);
-            border: 1px solid #444; font-size: 10px; letter-spacing: 1px;
-            font-weight: 900; text-transform: uppercase; color: #aaa; pointer-events: none;
+            display: flex; flex-direction: column; gap: 5px; padding: 12px; background: rgba(0,0,0,0.85);
+            border: 1px solid #444; font-size: 10px; font-weight: 900; text-transform: uppercase; color: #aaa; pointer-events: none;
         }
+        
         #absorb-stat { color: #00ff66; text-shadow: 0 0 5px rgba(0,255,102,0.5); }
-        .flash-active { box-shadow: inset 0 0 20px #00ff66; }
+        .flash-active { box-shadow: inset 0 0 30px rgba(0,255,102,0.3); }
+
         .control { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; width: 100%; }
-        .control label { font-size: 8px; color: #888; font-weight: 900; text-transform: uppercase; }
-        .audio-toggles { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
-        .audio-toggles label { font-size: 7px; color: #eee; display: flex; align-items: center; gap: 4px; cursor: pointer;}
+        .control label { font-size: 8px; color: #666; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .audio-toggles { display: flex; flex-direction: column; gap: 4px; }
+        .audio-toggles label { font-size: 7px; color: #ccc; display: flex; align-items: center; gap: 4px; cursor: pointer;}
+        
         button { 
-            background: #eee; color: #000; border: none; padding: 6px; width: 100%;
+            background: #eee; color: #000; border: none; padding: 8px; width: 100%;
             cursor: pointer; font-weight: 900; font-size: 9px; font-family: 'Inter', sans-serif;
             clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+            transition: background 0.2s;
         }
-        input[type=range] { appearance: none; background: #333; height: 2px; width: 100%; }
-        input[type=range]::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; background: #00e5ff; cursor: pointer; border-radius: 50%; }
+        button:hover { background: #00e5ff; }
+
+        input[type=range] { appearance: none; background: #333; height: 2px; width: 100%; margin: 8px 0; }
+        input[type=range]::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; background: #eee; cursor: pointer; border-radius: 50%; }
     </style>
 </head>
 <body>
@@ -56,7 +75,7 @@
         <p>Click to activate system & audio</p>
     </div>
     <div id="container">
-        <div class="ui-grid" id="ui-panel">
+        <div id="ui-panel">
             <div class="control"><button onclick="togglePause()">STP/GO</button></div>
             <div class="control">
                 <label>Audio Mix</label>
@@ -72,23 +91,26 @@
             <div class="control"><label>H-Conc</label><input type="range" id="h-conc" min="0" max="100" value="15" oninput="hConc=this.value; generateLattice()"></div>
             <div class="control"><label>Freq</label><input type="range" id="emit-freq" min="1" max="60" value="10" oninput="emitFreq=this.value"></div>
             <div class="control"><label>Vel</label><input type="range" id="vel" min="1" max="10" step="0.5" value="4" oninput="speedFactor=this.value"></div>
-            <div class="control"><label>Size</label><input type="range" id="p-size" min="1" max="15" step="0.5" value="3" oninput="particleBaseR=parseFloat(this.value)"></div>
+            <div class="control"><label>Size</label><input type="range" id="p-size" min="1" max="15" step="0.5" value="4" oninput="particleBaseR=parseFloat(this.value)"></div>
             <div class="control"><label>MFP (λ)</label><input type="range" id="mfp" min="50" max="1000" step="10" value="400" oninput="lambda_k=this.value"></div>
-            <div class="control" style="margin-top:auto;"><button onclick="resetSim()" style="background:#cc3300; color:#fff">RESET</button></div>
+            <div class="control" style="margin-top: auto;"><button onclick="resetSim()" style="background:#cc3300; color:#fff">RESET</button></div>
         </div>
+
         <canvas id="c"></canvas>
+
         <div class="info" id="info-panel">
             <div>Impacts: <span id="bounces">0</span></div>
             <div id="absorb-stat">Absorbed: <span id="abs-count">0</span></div>
             <div>Fe Atoms: <span id="fe-count">0</span></div>
         </div>
     </div>
+
     <script>
         const canvas = document.getElementById('c');
         const ctx = canvas.getContext('2d');
         let atoms = [], hAtoms = [], particles = [], interstitialSites = [];
         let isPaused = false, frame = 0, started = false;
-        let feSize = 20, hConc = 15, emitFreq = 10, speedFactor = 4, lambda_k = 400, particleBaseR = 3, thermalK = 1, jumpProb = 0.005;
+        let feSize = 20, hConc = 15, emitFreq = 10, speedFactor = 4, lambda_k = 400, particleBaseR = 4, thermalK = 1, jumpProb = 0.005;
         let totalBounces = 0, totalAbsorbed = 0, emitter = null;
         const PX_PER_ANG = 35;
         const LATTICE_A = 3.64; 
@@ -147,7 +169,7 @@
 
         function generateLattice() {
             atoms = []; hAtoms = []; interstitialSites = [];
-            const cx = canvas.width/2 + 60, cy = canvas.height/2;
+            const cx = canvas.width/(2 * (window.devicePixelRatio || 1)), cy = canvas.height/(2 * (window.devicePixelRatio || 1));
             const cells = Math.ceil(feSize / LATTICE_A / 2);
             for (let i = -cells; i <= cells; i++) {
                 for (let j = -cells; j <= cells; j++) {
@@ -216,7 +238,7 @@
                 p.x += p.vx; p.y += p.vy;
                 for (let s of [...atoms, ...hAtoms]) {
                     const dx = p.x - (s.x + s.vibeX), dy = p.y - (s.y + s.vibeY), d = Math.hypot(dx, dy);
-                    if (d < particleBaseR + s.r) {
+                    if (d < (particleBaseR/2) + s.r) {
                         const nx = dx/d, ny = dy/d, dot = p.vx*nx + p.vy*ny;
                         if (dot < 0) {
                             p.vx -= 2*dot*nx; p.vy -= 2*dot*ny;
@@ -225,15 +247,15 @@
                         }
                     }
                 }
-                if (p.intensity < 0.05 || p.x < -100 || p.x > canvas.width+100 || p.y < -100 || p.y > canvas.height+100) {
+                if (p.intensity < 0.01 || p.x < -100 || p.x > canvas.width+100 || p.y < -100 || p.y > canvas.height+100) {
                     particles.splice(i, 1);
                 } else if (p.b > 0 && Math.hypot(p.x - emitter.x, p.y - emitter.y) < emitter.r + 5) {
                     totalAbsorbed++;
                     document.getElementById('abs-count').textContent = totalAbsorbed;
                     playAbsorbSound();
                     particles.splice(i, 1);
-                    document.getElementById('ui-panel').classList.add('flash-active');
-                    setTimeout(() => document.getElementById('ui-panel').classList.remove('flash-active'), 150);
+                    document.body.classList.add('flash-active');
+                    setTimeout(() => document.body.classList.remove('flash-active'), 150);
                 }
             }
             document.getElementById('bounces').textContent = totalBounces;
@@ -241,47 +263,55 @@
 
         function draw() {
             if (!started) return;
-            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const dpr = window.devicePixelRatio || 1;
+            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width/dpr, canvas.height/dpr);
             
-            // Draw Atoms with High-Res Gradient
+            // Draw Atoms
             [...atoms, ...hAtoms].forEach(a => {
                 const isHit = frame - a.hitTime < 10;
                 const tx = a.x + a.vibeX, ty = a.y + a.vibeY;
-                ctx.beginPath(); ctx.arc(tx, ty, a.r, 0, Math.PI*2);
-                const g = ctx.createRadialGradient(tx - a.r/3, ty - a.r/3, a.r/10, tx, ty, a.r);
-                if (a.type === 'Fe') { 
-                    g.addColorStop(0, isHit ? '#ffffff' : '#e0e0e0'); 
-                    g.addColorStop(0.4, isHit ? '#aaaaaa' : '#444444');
-                    g.addColorStop(1, '#050505'); 
-                } else { 
-                    g.addColorStop(0, isHit ? '#ffaaaa' : '#ff3333'); 
-                    g.addColorStop(1, '#200000'); 
+                ctx.beginPath();
+                ctx.arc(tx, ty, a.r, 0, Math.PI*2);
+                
+                // Sphere Gradient
+                const g = ctx.createRadialGradient(tx - a.r*0.3, ty - a.r*0.3, a.r*0.1, tx, ty, a.r);
+                if (a.type === 'Fe') {
+                    g.addColorStop(0, isHit ? '#fff' : '#efefef');
+                    g.addColorStop(0.2, isHit ? '#ccc' : '#888');
+                    g.addColorStop(1, '#0a0a0a');
+                } else {
+                    g.addColorStop(0, isHit ? '#ffaaaa' : '#ff4444');
+                    g.addColorStop(1, '#200000');
                 }
-                ctx.fillStyle = g; ctx.fill();
-                ctx.strokeStyle = a.isEmitter ? '#00e5ff' : 'rgba(255,255,255,0.05)'; 
-                ctx.lineWidth = a.isEmitter ? 2 : 0.5; 
+                ctx.fillStyle = g;
+                ctx.fill();
+                
+                // Ring
+                ctx.strokeStyle = a.isEmitter ? '#00e5ff' : 'rgba(255,255,255,0.1)';
+                ctx.lineWidth = a.isEmitter ? 2 : 0.5;
                 ctx.stroke();
             });
 
-            // Draw Photoelectrons with Head and Tapering Tail
+            // Draw Photoelectrons
             particles.forEach(p => {
-                if(p.history.length > 1) {
-                    // Draw Tail
-                    for(let i = 0; i < p.history.length - 1; i++) {
-                        const ratio = 1 - (i / p.history.length);
+                // Tail (Tapered)
+                if (p.history.length > 2) {
+                    for (let j = 0; j < p.history.length - 1; j++) {
+                        const tRatio = 1 - (j / p.history.length);
                         ctx.beginPath();
-                        ctx.moveTo(p.history[i].x, p.history[i].y);
-                        ctx.lineTo(p.history[i+1].x, p.history[i+1].y);
-                        ctx.strokeStyle = `rgba(0, 229, 255, ${p.intensity * ratio * 0.6})`;
-                        ctx.lineWidth = particleBaseR * ratio * p.intensity;
+                        ctx.moveTo(p.history[j].x, p.history[j].y);
+                        ctx.lineTo(p.history[j+1].x, p.history[j+1].y);
+                        ctx.strokeStyle = `rgba(0, 229, 255, ${p.intensity * tRatio * 0.5})`;
+                        ctx.lineWidth = particleBaseR * tRatio * 0.8;
                         ctx.lineCap = 'round';
                         ctx.stroke();
                     }
                 }
-                // Draw Head
+                
+                // Head
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, particleBaseR * p.intensity * 1.2, 0, Math.PI*2);
-                ctx.fillStyle = `rgba(0, 229, 255, ${p.intensity})`;
+                ctx.arc(p.x, p.y, (particleBaseR/2) * p.intensity, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.intensity})`;
                 ctx.shadowBlur = 10;
                 ctx.shadowColor = '#00e5ff';
                 ctx.fill();
@@ -290,15 +320,15 @@
 
             update(); requestAnimationFrame(draw);
         }
+
         function togglePause() { isPaused = !isPaused; }
         function resetSim() { particles = []; totalBounces = 0; totalAbsorbed = 0; document.getElementById('abs-count').textContent = '0'; generateLattice(); }
         
         function resize() {
             const dpr = window.devicePixelRatio || 1;
-            canvas.width = (window.innerWidth - 120) * dpr; 
-            canvas.height = window.innerHeight * dpr;
-            canvas.style.width = (window.innerWidth - 120) + 'px';
-            canvas.style.height = window.innerHeight + 'px';
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
             ctx.scale(dpr, dpr);
             generateLattice();
         }
