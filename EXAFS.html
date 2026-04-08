@@ -1,161 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <style>
-        /* This ensures the simulation fills the iframe perfectly without extra scrollbars */
-        body, html { margin: 0; padding: 0; overflow: hidden; background: #000; font-family: 'Inter', sans-serif; }
+        body, html { margin: 0; padding: 0; overflow: hidden; background: #000; font-family: sans-serif; }
         canvas { display: block; width: 100vw; height: 100vh; }
-
-        /* HUD/UI Styling */
-        .ui-panel {
-            position: absolute; top: 0; left: 0; width: 100%;
-            background: rgba(0, 0, 0, 0.85); border-bottom: 1px solid #333;
-            display: flex; justify-content: space-around; align-items: center;
-            padding: 10px 0; z-index: 10;
-        }
-
-        .control-group { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        label { color: #00e5ff; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .ui { position: absolute; top: 0; left: 0; width: 100%; background: rgba(0,0,0,0.8); display: flex; padding: 10px; gap: 20px; border-bottom: 1px solid #333; }
+        .ctrl { display: flex; flex-direction: column; color: #00e5ff; font-size: 10px; font-weight: bold; }
+        label { margin-bottom: 3px; letter-spacing: 1px; }
         input[type=range] { width: 90px; cursor: pointer; }
-        
-        .stats {
-            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-            color: #888; font-size: 11px; font-weight: bold; letter-spacing: 1px;
-        }
-        #abs-val { color: #00ff66; }
+        .stats { position: absolute; bottom: 10px; left: 15px; color: #666; font-size: 11px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
-
-    <div class="ui-panel">
-        <div class="control-group">
-            <label>H-Jump</label>
-            <input type="range" id="jump-range" min="0" max="0.1" step="0.005" value="0.01">
-        </div>
-        <div class="control-group">
-            <label>Thermal</label>
-            <input type="range" id="thermal-range" min="0" max="10" step="0.5" value="1">
-        </div>
-        <div class="control-group">
-            <label>H-Conc</label>
-            <input type="range" id="conc-range" min="0" max="80" step="5" value="15">
-        </div>
-        <button onclick="location.reload()" style="font-size: 10px; font-weight: bold; cursor: pointer;">RESET</button>
+    <div class="ui">
+        <div class="ctrl"><label>H-JUMP</label><input type="range" id="j" min="0" max="0.1" step="0.005" value="0.01"></div>
+        <div class="ctrl"><label>THERMAL</label><input type="range" id="t" min="0" max="10" step="1" value="1"></div>
+        <div class="ctrl"><label>H-CONC</label><input type="range" id="c_slider" min="0" max="80" step="5" value="15"></div>
+        <button onclick="location.reload()" style="font-size: 10px; height: 25px; margin-top: 5px;">RESET</button>
     </div>
-
-    <div class="stats">
-        BOUNCES: <span id="bounce-val">0</span> | ABSORPTIONS: <span id="abs-val">0</span>
-    </div>
-
-    <canvas id="simCanvas"></canvas>
+    <div class="stats">SYSTEM ACTIVE // BOUNCES: <span id="b">0</span></div>
+    <canvas id="canvas"></canvas>
 
     <script>
-        const canvas = document.getElementById('simCanvas');
+        const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        let atoms = [], hAtoms = [], particles = [], sites = [];
-        let jumpProb = 0.01, thermalK = 1, hConc = 15;
-        let bounces = 0, absorbed = 0;
+        let atoms = [], hAtoms = [], sites = [];
+        let jumpProb = 0.01, thermalK = 1, hConc = 15, bounces = 0;
 
-        // UI Listeners
-        document.getElementById('jump-range').oninput = e => jumpProb = parseFloat(e.target.value);
-        document.getElementById('thermal-range').oninput = e => thermalK = parseFloat(e.target.value);
-        document.getElementById('conc-range').oninput = e => { hConc = parseInt(e.target.value); init(); };
+        document.getElementById('j').oninput = e => jumpProb = parseFloat(e.target.value);
+        document.getElementById('t').oninput = e => thermalK = parseFloat(e.target.value);
+        document.getElementById('c_slider').oninput = e => { hConc = e.target.value; init(); };
 
         function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             atoms = []; hAtoms = []; sites = [];
-            const cx = canvas.width / 2;
-            const cy = canvas.height / 2;
-            const spacing = 80;
+            const cx = canvas.width/2, cy = canvas.height/2, gap = 80;
 
-            // Create Fe Lattice
-            for (let i = -3; i <= 3; i++) {
-                for (let j = -2; j <= 2; j++) {
-                    let x = cx + i * spacing;
-                    let y = cy + j * spacing;
-                    atoms.push({x, y, r: 16, type: 'Fe'});
-                    // Interstitial sites for H-Jumping
-                    sites.push({x: x + spacing/2, y: y + spacing/2});
+            for(let i=-3; i<=3; i++) {
+                for(let j=-2; j<=2; j++) {
+                    let x = cx + i*gap, y = cy + j*gap;
+                    atoms.push({x, y, r: 15});
+                    sites.push({x: x + gap/2, y: y + gap/2});
                 }
             }
-
-            // Populate Hydrogen
             sites.forEach(s => {
-                if (Math.random() * 100 < hConc) {
-                    hAtoms.push({x: s.x, y: s.y, baseX: s.x, baseY: s.y, r: 6, type: 'H'});
-                }
+                if(Math.random()*100 < hConc) hAtoms.push({x: s.x, y: s.y, bx: s.x, by: s.y});
             });
-        }
-
-        function update() {
-            // H-Jump Logic
-            hAtoms.forEach(h => {
-                if (Math.random() < jumpProb) {
-                    const target = sites[Math.floor(Math.random() * sites.length)];
-                    h.baseX = target.x; h.baseY = target.y;
-                }
-                // Thermal vibration
-                h.x = h.baseX + (Math.random() - 0.5) * thermalK;
-                h.y = h.baseY + (Math.random() - 0.5) * thermalK;
-            });
-
-            // Particle Emission
-            if (Math.random() < 0.1) {
-                particles.push({x: canvas.width/2, y: canvas.height/2, vx: (Math.random()-0.5)*6, vy: (Math.random()-0.5)*6, b: 0});
-            }
-
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.vx; p.y += p.vy;
-
-                [...atoms, ...hAtoms].forEach(a => {
-                    if (Math.hypot(p.x - a.x, p.y - a.y) < a.r) {
-                        p.vx *= -1; p.vy *= -1;
-                        p.b++; bounces++;
-                    }
-                });
-
-                if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
-                    particles.splice(i, 1);
-                } else if (p.b > 0 && Math.hypot(p.x - canvas.width/2, p.y - canvas.height/2) < 20) {
-                    absorbed++;
-                    particles.splice(i, 1);
-                }
-            }
-            document.getElementById('bounce-val').innerText = bounces;
-            document.getElementById('abs-val').innerText = absorbed;
         }
 
         function draw() {
             ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0,0,canvas.width, canvas.height);
 
-            atoms.forEach(a => {
-                ctx.beginPath();
-                ctx.arc(a.x + (Math.random()-0.5)*thermalK, a.y, a.r, 0, Math.PI*2);
-                ctx.fillStyle = '#444'; ctx.fill();
-            });
-
+            // H-Jump Logic: Red atoms teleport to a random empty site
             hAtoms.forEach(h => {
+                if(Math.random() < jumpProb) {
+                    const s = sites[Math.floor(Math.random()*sites.length)];
+                    h.bx = s.x; h.by = s.y;
+                }
                 ctx.beginPath();
-                ctx.arc(h.x, h.y, h.r, 0, Math.PI*2);
+                ctx.arc(h.bx + (Math.random()-0.5)*thermalK, h.by + (Math.random()-0.5)*thermalK, 6, 0, Math.PI*2);
                 ctx.fillStyle = '#f00'; ctx.fill();
             });
 
-            particles.forEach(p => {
-                ctx.fillStyle = '#00e5ff';
-                ctx.fillRect(p.x, p.y, 3, 3);
+            atoms.forEach(a => {
+                ctx.beginPath();
+                ctx.arc(a.x + (Math.random()-0.5)*thermalK, a.y + (Math.random()-0.5)*thermalK, 15, 0, Math.PI*2);
+                ctx.fillStyle = '#444'; ctx.fill();
             });
 
-            update();
             requestAnimationFrame(draw);
         }
 
         window.onresize = init;
-        init();
-        draw();
+        init(); draw();
     </script>
 </body>
 </html>
