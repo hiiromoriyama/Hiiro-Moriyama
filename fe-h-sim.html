@@ -60,17 +60,17 @@
 </head>
 <body>
     <div id="overlay" onclick="startSim()">
-        <h2 style="font-weight:900; color:#ffffff; letter-spacing:5px;">CORE INITIALIZATION</h2>
-        <p style="font-size:10px; color:#777;">CLICK TO ACTIVATE SYSTEM & AUDIO</p>
+        <h2 style="font-weight:900; color:#ffffff; letter-spacing:5px;">INITIALIZE</h2>
+        <p style="font-size:10px; color:#777;">CLICK TO START</p>
     </div>
     <div id="container">
         <div id="ui-panel">
             <button id="play-pause" onclick="togglePause()">⏯</button>
             
             <div class="control">
-                <label>Emission Mode</label>
+                <label>Flux</label>
                 <select id="emit-mode" onchange="emitMode=this.value">
-                    <option value="pulse">Discrete Pulse</option>
+                    <option value="pulse">Discrete</option>
                     <option value="cont">Continuous</option>
                 </select>
             </div>
@@ -86,11 +86,11 @@
 
             <div class="control"><label>Mean Free Path</label><input type="range" id="mfp" min="100" max="1000" step="50" value="400" oninput="lambda_k=parseFloat(this.value)"></div>
             <div class="control"><label>Electron Size</label><input type="range" id="e-size" min="2" max="15" step="1" value="5" oninput="particleBaseR=parseFloat(this.value)"></div>
-            <div class="control"><label>Thermal (σ²)</label><input type="range" id="thermal" min="0" max="8" step="0.5" value="1" oninput="thermalK=this.value"></div>
-            <div class="control"><label>Fe Volume</label><input type="range" id="fe-vol" min="10" max="35" value="20" oninput="feSize=this.value; generateLattice()"></div>
-            <div class="control"><label>H Conc (%)</label><input type="range" id="h-conc" min="0" max="100" value="15" oninput="hConc=this.value; generateLattice()"></div>
-            <div class="control"><label>Emission Freq</label><input type="range" id="emit-freq" min="1" max="60" value="10" oninput="emitFreq=this.value"></div>
-            <div class="control"><label>Velocity (k)</label><input type="range" id="vel" min="1" max="10" step="0.5" value="4" oninput="speedFactor=this.value"></div>
+            <div class="control"><label>Thermal </label><input type="range" id="thermal" min="0" max="8" step="0.5" value="1" oninput="thermalK=this.value"></div>
+            <div class="control"><label>Fe Conc</label><input type="range" id="fe-vol" min="10" max="35" value="20" oninput="feSize=this.value; generateLattice()"></div>
+            <div class="control"><label>H Conc</label><input type="range" id="h-conc" min="0" max="100" value="15" oninput="hConc=this.value; generateLattice()"></div>
+            <div class="control"><label>Freq</label><input type="range" id="emit-freq" min="1" max="60" value="10" oninput="emitFreq=this.value"></div>
+            <div class="control"><label>Velocity</label><input type="range" id="vel" min="1" max="10" step="0.5" value="4" oninput="speedFactor=this.value"></div>
 
             <div class="legend">
                 <div class="stat-item">Impacts <span class="stat-val" id="b-count">0</span></div>
@@ -99,7 +99,7 @@
                 <div class="stat-item">H Atoms <span class="stat-val" id="h-val">0</span></div>
             </div>
             
-            <button onclick="resetSim()" style="margin-top:auto; background:#440000; color:#ffaaaa; border:1px solid #660000; padding:6px; font-size:9px; font-weight:900; cursor:pointer; border-radius:4px;">RESET CORE</button>
+            <button onclick="resetSim()" style="margin-top:auto; background:#440000; color:#ffaaaa; border:1px solid #660000; padding:6px; font-size:9px; font-weight:900; cursor:pointer; border-radius:4px;">RESET</button>
         </div>
         <canvas id="c"></canvas>
     </div>
