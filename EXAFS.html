@@ -5,13 +5,15 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>EXAFS - Hiiro Moriyama</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
   <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -22,21 +24,59 @@
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
-    .sim-wrapper {
+    /* Integrated Simulation Styles */
+    #sim-container-wrapper {
+      position: relative;
       width: 100%;
-      height: 600px;
+      height: 500px;
       background: #000;
-      border-radius: 8px;
+      border-radius: 10px;
       overflow: hidden;
-      border: 1px solid #ddd;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      margin: 20px 0;
+      margin-bottom: 25px;
+      border: 1px solid #333;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+
+    #c { background: #000; display: block; width: 100%; height: 100%; }
+
+    #sim-overlay {
+      position: absolute; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.8); z-index: 1000;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      cursor: pointer; transition: 0.3s;
     }
+    #sim-overlay:hover { background: rgba(0,0,0,0.7); }
+    #sim-overlay h2 { font-weight: 900; letter-spacing: 3px; color: #00e5ff; font-size: 1.2rem; margin-bottom: 5px; }
+    #sim-overlay p { font-size: 10px; color: #888; text-transform: uppercase; }
+
+    .sim-ui { 
+      position:absolute; top: 0; left: 0; width: 100%;
+      background: rgba(0, 0, 0, 0.85); border-bottom: 1px solid #333; 
+      padding: 8px 15px; z-index: 100; display: flex; flex-wrap: wrap;
+      gap: 15px; justify-content: space-between; align-items: center;
+    }
+
+    .sim-info-bar { 
+      position:absolute; bottom: 0; left: 0; width: 100%;
+      display: flex; justify-content: space-around; padding: 6px; 
+      background: rgba(0,0,0,0.9); border-top: 1px solid #333;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; color: #aaa;
+    }
+
+    .sim-control-group { display: flex; align-items: center; gap: 8px; }
+    .sim-control-group label { font-size: 9px; color: #00e5ff; font-weight: 700; text-transform: uppercase; margin: 0; }
+    
+    .sim-btn { 
+      background: #00e5ff; color: #000; border: none; padding: 4px 12px; 
+      cursor: pointer; font-weight: 900; font-size: 10px; border-radius: 4px;
+    }
+    .sim-btn-reset { background: #cc3300; color: #fff; }
+
+    input[type=range] { appearance: none; background: #444; height: 3px; width: 60px; border-radius: 5px; }
+    input[type=range]::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; background: #00e5ff; border-radius: 50%; cursor: pointer; }
+    
+    #absorb-stat { color: #00ff66; }
+    .flash-active { box-shadow: inset 0 0 20px #00ff66 !important; }
   </style>
 </head>
 
@@ -44,18 +84,22 @@
 
   <header id="header" class="header dark-background d-flex flex-column">
     <i class="header-toggle d-xl-none bi bi-list"></i>
+
     <div class="profile-img">
       <img src="assets/img/prof3.jpg" alt="" class="img-fluid rounded-circle">
     </div>
+
     <a href="index.html" class="logo d-flex align-items-center justify-content-center">
       <h1 class="sitename">Hiiro Moriyama</h1>
     </a>
+
     <div class="social-links text-center">
-      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama" class="researchgate" target="_blank"><i class="bi bi-journal-richtext"></i></a>
-      <a href="https://www.instagram.com/hiiromoriyama/" class="instagram" target="_blank"><i class="bi bi-instagram"></i></a>
-      <a href="https://orcid.org/0009-0001-9306-3806" class="orcid-link" target="_blank"><i class="bi bi-person-badge"></i></a>
+      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama?ev=hdr_xprf" class="researchgate" target="_blank" rel="noopener noreferrer"><i class="bi bi-journal-richtext"></i></a>
+      <a href="https://www.instagram.com/hiiromoriyama/" class="instagram" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a>
+      <a href="https://orcid.org/0009-0001-9306-3806" class="orcid-link" target="_blank" rel="noopener noreferrer"><i class="bi bi-person-badge"></i></a>
       <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin"><i class="bi bi-linkedin"></i></a>
     </div>
+
     <nav id="navmenu" class="navmenu">
         <ul>
          <li><a href="index.html#hero"><i class="bi bi-house navicon"></i>Home</a></li>
@@ -82,8 +126,8 @@
 
     <section id="service-details" class="service-details section">
       <div class="container">
-        
-        <div class="row gy-4 mb-4">
+        <div class="row gy-4">
+
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="services-list">
               <a href="microresidual-stress.html">Micro-Residual Stress</a>
@@ -95,47 +139,252 @@
 
             <h4>Acknowledgement</h4>
             <p style="text-align: justify;">This project focuses on the application of EXAFS to probe the local atomic structure and coordination environments in complex material systems. By utilizing high-intensity synchrotron radiation, we can resolve the short-range order that governs macroscopic chemical and physical properties.</p>
-            <div class="mt-3">
-                <img src="assets/img/oxford-logo.png" alt="University of Oxford" class="img-fluid" style="max-width: 150px;">
+            
+            <div class="container">
+              <div class="row align-items-center g-4">
+                <div class="col-6 col-md-4">
+                  <a href="https://www.ox.ac.uk" target="_blank">
+                    <img src="assets/img/oxford-logo.png" alt="University of Oxford" class="img-fluid" style="max-width: 100%; height: auto;">
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
-            <img src="assets/img/exafs-main.jpg" alt="EXAFS Spectra" class="img-fluid services-img">
-            <h3>Probing Local Atomic Environments</h3>
-            <p style="text-align: justify;">Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter. Unlike diffraction-based methods, EXAFS does not require long-range periodicity, making it invaluable for studying amorphous materials and liquids.</p>
-          </div>
-        </div>
+            
+            <div id="sim-container-wrapper">
+                <div id="sim-overlay" onclick="startSim()">
+                    <h2>ACTIVATE DYNAMICS SIMULATION</h2>
+                    <p>Click to initialize interactive Fe-H lattice</p>
+                </div>
+                
+                <canvas id="c"></canvas>
 
-        <div class="row" data-aos="fade-up">
-          <div class="col-12">
-            <h3 class="mt-4">Interactive Dynamics: Fe-H Lattice</h3>
-            <p>Real-time visualization of photoelectron interference and lattice strain.</p>
-            <div class="sim-wrapper">
-              <iframe src="fe-h-sim.html" title="Fe-H Simulation"></iframe>
+                <div class="sim-ui">
+                    <div class="sim-control-group">
+                        <button class="sim-btn" onclick="togglePause()">PAUSE/PLAY</button>
+                    </div>
+                    <div class="sim-control-group">
+                        <label>Thermal</label>
+                        <input type="range" id="thermal" min="0" max="8" step="0.5" value="1" oninput="thermalK=this.value">
+                    </div>
+                    <div class="sim-control-group">
+                        <label>H-Conc</label>
+                        <input type="range" id="h-conc" min="0" max="100" value="15" oninput="hConc=this.value; generateLattice()">
+                    </div>
+                    <div class="sim-control-group">
+                        <button class="sim-btn sim-btn-reset" onclick="resetSim()">RESET</button>
+                    </div>
+                </div>
+
+                <div class="sim-info-bar">
+                    <div>Impacts: <span id="bounces">0</span></div>
+                    <div id="absorb-stat">Absorbed: <span id="abs-count">0</span></div>
+                    <div>Fe Atoms: <span id="fe-count">0</span></div>
+                </div>
             </div>
+            <h3 style="max-width: 600px; margin: 0 auto 20px auto;">Probing Local Atomic Environments</h3>
+            
+            <p style="text-align: justify; max-width: 600px; margin: 0 auto 20px auto;">Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter. Unlike diffraction-based methods, EXAFS does not require long-range periodicity, making it an invaluable tool for studying amorphous materials, liquids, and complex molecular complexes.</p>
+            
+            <p style="text-align: justify; max-width: 600px; margin: 0 auto 20px auto;">The physical principle relies on the modulation of the X-ray absorption coefficient at energies just above the absorption edge of a specific element. These oscillations arise from the interference between the outgoing photoelectron wave and the wave backscattered by neighboring atoms.</p>
+            
+            <p style="text-align: justify; max-width: 600px; margin: 0 auto;">Through advanced data modeling and Fourier transform analysis, we can extract precise information regarding interatomic distances, coordination numbers, and the species of neighboring atoms. This research contributes to a deeper understanding of material behavior under various environmental conditions and structural transitions.</p>
           </div>
         </div>
-
-        <div class="row mt-4">
-          <div class="col-12" data-aos="fade-up">
-            <p style="text-align: justify;">The physical principle relies on the modulation of the X-ray absorption coefficient. Through advanced data modeling and Fourier transform analysis, we extract precise information regarding interatomic distances, coordination numbers, and the species of neighboring atoms.</p>
-          </div>
-        </div>
-
       </div>
     </section>
   </main>
 
   <footer id="footer" class="footer position-relative light-background">
-    <div class="container text-center py-3">
-      <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
-      <div class="copyright">© <span>Hiiro Moriyama | Oxford 2026</span></div>
+      <footer style="text-align: center; font-size: 14px; padding: 10px;">
+        <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a>
+        </p>
+      </footer>
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Hiiro Moriyama | Oxford 2026</span></p>
+      </div>
     </div>
   </footer>
 
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="assets/js/main.js"></script>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const wrapper = document.getElementById('sim-container-wrapper');
+    let atoms = [], hAtoms = [], particles = [], interstitialSites = [];
+    let isPaused = false, frame = 0, started = false;
+    
+    let feSize = 22, hConc = 15, emitFreq = 10, speedFactor = 4, lambda_k = 400, particleBaseR = 3, thermalK = 1, jumpProb = 0.005;
+    let totalBounces = 0, totalAbsorbed = 0, emitter = null;
+    let audioCtx;
+
+    function startSim() {
+        if (started) return;
+        started = true;
+        document.getElementById('sim-overlay').style.display = 'none';
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        resize();
+        draw();
+    }
+
+    function playSound(freq, type, decay, vol) {
+        if (!audioCtx) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + decay);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + decay);
+    }
+
+    class Atom {
+        constructor(x, y, type = 'Fe') {
+            this.baseX = x; this.baseY = y;
+            this.x = x; this.y = y;
+            this.vibeX = 0; this.vibeY = 0;
+            this.type = type;
+            this.r = type === 'Fe' ? 14 : 7;
+            this.hitTime = -999;
+            this.isEmitter = false;
+        }
+        updateVibe() {
+            this.vibeX = (Math.random() - 0.5) * thermalK;
+            this.vibeY = (Math.random() - 0.5) * thermalK;
+        }
+    }
+
+    function generateLattice() {
+        atoms = []; hAtoms = []; interstitialSites = [];
+        const cx = canvas.width/2, cy = canvas.height/2;
+        const PX_PER_ANG = 35;
+        const LATTICE_A = 3.64;
+        const cells = 3;
+
+        for (let i = -cells; i <= cells; i++) {
+            for (let j = -cells; j <= cells; j++) {
+                const ox = cx + i * LATTICE_A * PX_PER_ANG;
+                const oy = cy + j * LATTICE_A * PX_PER_ANG;
+                [[0,0], [0.5, 0.5], [0.5, 0], [0, 0.5]].forEach(p => {
+                    const ax = ox + p[0] * LATTICE_A * PX_PER_ANG;
+                    const ay = oy + p[1] * LATTICE_A * PX_PER_ANG;
+                    if (!atoms.some(a => Math.hypot(a.baseX-ax, a.baseY-ay) < 5)) {
+                        atoms.push(new Atom(ax, ay, 'Fe'));
+                    }
+                });
+            }
+        }
+
+        const minX = Math.min(...atoms.map(a => a.x)), maxX = Math.max(...atoms.map(a => a.x));
+        const minY = Math.min(...atoms.map(a => a.y)), maxY = Math.max(...atoms.map(a => a.y));
+
+        atoms.forEach(a => {
+            const hx = a.x + (LATTICE_A/2)*PX_PER_ANG;
+            const hy = a.y + (LATTICE_A/2)*PX_PER_ANG;
+            if (Math.random() * 100 < hConc) hAtoms.push(new Atom(hx, hy, 'H'));
+        });
+
+        emitter = atoms.reduce((p, c) => Math.hypot(c.x-cx, c.y-cy) < Math.hypot(p.x-cx, p.y-cy) ? c : p);
+        emitter.isEmitter = true;
+        document.getElementById('fe-count').textContent = atoms.length;
+    }
+
+    function update() {
+        if (isPaused || !started) return;
+        frame++;
+        [...atoms, ...hAtoms].forEach(a => a.updateVibe());
+
+        if (frame % 15 === 0) {
+            const angle = Math.random() * Math.PI * 2;
+            particles.push({ 
+                x: emitter.x, y: emitter.y, 
+                vx: Math.cos(angle)*speedFactor, vy: Math.sin(angle)*speedFactor, 
+                b: 0, pathLength: 0, history: [], intensity: 1.0
+            });
+            playSound(900, 'sine', 0.08, 0.05);
+        }
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.history.unshift({x: p.x, y: p.y});
+            if(p.history.length > 10) p.history.pop();
+            p.pathLength += Math.hypot(p.vx, p.vy);
+            p.intensity = Math.exp(-p.pathLength / lambda_k);
+            p.x += p.vx; p.y += p.vy;
+
+            for (let s of [...atoms, ...hAtoms]) {
+                const dx = p.x - (s.x + s.vibeX), dy = p.y - (s.y + s.vibeY);
+                const d = Math.hypot(dx, dy);
+                if (d < particleBaseR + s.r) {
+                    const nx = dx/d, ny = dy/d, dot = p.vx*nx + p.vy*ny;
+                    if (dot < 0) {
+                        p.vx -= 2*dot*nx; p.vy -= 2*dot*ny;
+                        s.hitTime = frame; p.b++; totalBounces++;
+                        playSound(s.type === 'Fe' ? 180 : 350, 'square', 0.04, 0.03);
+                    }
+                }
+            }
+
+            if (p.intensity < 0.1 || p.x < -50 || p.x > canvas.width+50 || p.y < -50 || p.y > canvas.height+50) {
+                particles.splice(i, 1);
+            } else if (p.b > 0 && Math.hypot(p.x - emitter.x, p.y - emitter.y) < emitter.r + 5) {
+                totalAbsorbed++;
+                document.getElementById('abs-count').textContent = totalAbsorbed;
+                playSound(523, 'sine', 0.5, 0.1);
+                particles.splice(i, 1);
+            }
+        }
+        document.getElementById('bounces').textContent = totalBounces;
+    }
+
+    function draw() {
+        if (!started) return;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        [...atoms, ...hAtoms].forEach(a => {
+            const isHit = frame - a.hitTime < 10;
+            const tx = a.x + a.vibeX, ty = a.y + a.vibeY;
+            ctx.beginPath();
+            ctx.arc(tx, ty, a.r, 0, Math.PI*2);
+            ctx.fillStyle = a.type === 'Fe' ? (isHit ? '#fff' : '#444') : (isHit ? '#f00' : '#800');
+            ctx.fill();
+            if(a.isEmitter) { ctx.strokeStyle = '#00e5ff'; ctx.lineWidth = 2; ctx.stroke(); }
+        });
+
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, particleBaseR * p.intensity, 0, Math.PI*2);
+            ctx.fillStyle = `rgba(0, 229, 255, ${p.intensity})`;
+            ctx.fill();
+        });
+
+        update();
+        requestAnimationFrame(draw);
+    }
+
+    function togglePause() { isPaused = !isPaused; }
+    function resetSim() { particles = []; totalBounces = 0; totalAbsorbed = 0; document.getElementById('abs-count').textContent = '0'; generateLattice(); }
+    function resize() { 
+        canvas.width = wrapper.clientWidth; 
+        canvas.height = wrapper.clientHeight; 
+        generateLattice(); 
+    }
+    window.addEventListener('resize', resize);
+  </script>
+
 </body>
 </html>
