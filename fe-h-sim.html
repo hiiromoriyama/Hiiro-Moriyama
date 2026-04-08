@@ -7,30 +7,55 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         
         body { 
-            margin:0; padding:0; background:#000; overflow:hidden; 
-            font-family: 'Inter', sans-serif; color: #eee; user-select: none;
-            width: 100vw; height: 100vh;
+            margin:0; 
+            padding:0; 
+            background:#000; 
+            overflow:hidden; 
+            font-family: 'Inter', sans-serif; 
+            color: #eee; 
+            user-select: none;
+            width: 100vw;
+            height: 100vh;
         }
 
-        #container { display: flex; flex-direction: row; width: 100%; height: 100%; background: #000; }
+        #container { 
+            display: flex; 
+            flex-direction: row;
+            width: 100%; 
+            height: 100%; 
+            background: #000; 
+        }
 
         #ui-panel { 
-            width: 170px; min-width: 170px; height: 100%; 
-            background: #0d0d0d; border-right: 2px solid #333; 
-            padding: 15px; display: flex; flex-direction: column; 
-            gap: 12px; box-sizing: border-box; z-index: 100; overflow-y: auto;
+            width: 170px; 
+            min-width: 170px; 
+            height: 100%; 
+            background: #0d0d0d; 
+            border-right: 2px solid #333; 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            box-sizing: border-box; 
+            z-index: 100; 
+            overflow-y: auto;
         }
 
-        #c { flex-grow: 1; height: 100%; display: block; background: #000; }
+        #c { 
+            flex-grow: 1; 
+            height: 100%;
+            display: block; 
+            background: #000; 
+        }
 
         #overlay {
             position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.95); z-index: 1001;
+            background: rgba(0,0,0,0.9); z-index: 1001;
             display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
         }
 
         .control { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-        .control label { font-size: 8px; color: #ffffff; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; }
+        .control label { font-size: 8px; color: #00e5ff; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
         
         .legend { margin-top: 10px; padding-top: 10px; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 6px; }
         .stat-item { font-size: 9px; font-weight: 900; text-transform: uppercase; color: #aaa; }
@@ -39,19 +64,15 @@
         #h-val { color: #ff4444; }
 
         button#play-pause { 
-            background: #222; color: #fff; border: 1px solid #444; padding: 10px; width: 100%;
+            background: #222; color: #00e5ff; border: 1px solid #00e5ff; padding: 10px; width: 100%;
             cursor: pointer; font-size: 18px; transition: all 0.2s; border-radius: 4px;
         }
-        button#play-pause:hover { background: #fff; color: #000; }
+        button#play-pause:hover { background: #00e5ff; color: #000; }
 
-        select { background: #222; color: #eee; border: 1px solid #444; font-size: 9px; padding: 4px; border-radius: 3px; width: 100%; }
+        select { background: #222; color: #eee; border: 1px solid #444; font-size: 9px; padding: 4px; border-radius: 3px; font-family: 'Inter'; width: 100%; }
 
-        /* WHITE SLIDER STYLING */
-        input[type=range] { appearance: none; background: #333; height: 2px; width: 100%; margin: 5px 0; }
-        input[type=range]::-webkit-slider-thumb { 
-            appearance: none; width: 12px; height: 12px; background: #ffffff; 
-            cursor: pointer; border-radius: 50%; border: 1px solid #fff; 
-        }
+        input[type=range] { appearance: none; background: #333; height: 3px; width: 100%; margin: 5px 0; }
+        input[type=range]::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; background: #00e5ff; cursor: pointer; border-radius: 50%; }
         
         .audio-toggles { display: flex; flex-direction: column; gap: 4px; }
         .audio-toggles label { font-size: 7px; color: #ccc; display: flex; align-items: center; gap: 4px; cursor: pointer;}
@@ -59,8 +80,8 @@
 </head>
 <body>
     <div id="overlay" onclick="startSim()">
-        <h2 style="font-weight:900; color:#fff; letter-spacing:5px;">CORE INITIALIZATION</h2>
-        <p style="font-size:10px; color:#777;">CLICK TO ENABLE INTERACTIVE AUDIO</p>
+        <h2 style="font-weight:900; color:#00e5ff; letter-spacing:5px;">CORE INITIALIZATION</h2>
+        <p style="font-size:10px; color:#555;">CLICK TO ACTIVATE SYSTEM</p>
     </div>
     <div id="container">
         <div id="ui-panel">
@@ -82,9 +103,10 @@
             </div>
             <div class="control"><label>Mean Free Path (λ)</label><input type="range" id="mfp" min="100" max="1000" step="50" value="400" oninput="lambda_k=parseFloat(this.value)"></div>
             <div class="control"><label>Electron Size</label><input type="range" id="e-size" min="2" max="15" step="1" value="5" oninput="particleBaseR=parseFloat(this.value)"></div>
-            <div class="control"><label>Thermal (σ²)</label><input type="range" id="thermal" min="0" max="8" step="0.5" value="1" oninput="thermalK=this.value"></div>
-            <div class="control"><label>Fe Volume</label><input type="range" id="fe-vol" min="10" max="35" value="20" oninput="feSize=this.value; generateLattice()"></div>
-            <div class="control"><label>H Concentration</label><input type="range" id="h-conc" min="0" max="100" value="15" oninput="hConc=this.value; generateLattice()"></div>
+            
+            <div class="control"><label>Thermal</label><input type="range" id="thermal" min="0" max="8" step="0.5" value="1" oninput="thermalK=this.value"></div>
+            <div class="control"><label>Fe-Vol</label><input type="range" id="fe-vol" min="10" max="35" value="20" oninput="feSize=this.value; generateLattice()"></div>
+            <div class="control"><label>H-Conc</label><input type="range" id="h-conc" min="0" max="100" value="15" oninput="hConc=this.value; generateLattice()"></div>
             <div class="control"><label>Freq</label><input type="range" id="emit-freq" min="1" max="60" value="10" oninput="emitFreq=this.value"></div>
             <div class="control"><label>Vel (k)</label><input type="range" id="vel" min="1" max="10" step="0.5" value="4" oninput="speedFactor=this.value"></div>
 
@@ -115,7 +137,6 @@
             started = true;
             document.getElementById('overlay').style.display = 'none';
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
             resize();
             draw();
         }
@@ -143,6 +164,7 @@
             const cy = (canvas.height / dpr) / 2;
             const cells = Math.ceil(feSize / LATTICE_A / 2);
 
+            // 1. Generate Base Iron Atoms
             for (let i = -cells; i <= cells; i++) {
                 for (let j = -cells; j <= cells; j++) {
                     const ox = cx + i * LATTICE_A * PX_PER_ANG;
@@ -157,6 +179,7 @@
                 }
             }
 
+            // 2. Generate Hydrogen in Interstitials
             const minX = Math.min(...atoms.map(a => a.x)), maxX = Math.max(...atoms.map(a => a.x));
             const minY = Math.min(...atoms.map(a => a.y)), maxY = Math.max(...atoms.map(a => a.y));
             for (let i = -cells; i <= cells; i++) {
@@ -173,13 +196,14 @@
                 }
             }
 
-            // IRON-IRON DISTORTION PHYSICS
+            // 3. APPLY IRON-IRON DISTORTION PHYSICS (Lattice Strain)
             atoms.forEach(fe => {
                 let dx_total = 0, dy_total = 0;
                 hAtoms.forEach(h => {
                     const dx = fe.baseX - h.baseX;
                     const dy = fe.baseY - h.baseY;
                     const dist = Math.hypot(dx, dy);
+                    // If Iron is close to a Hydrogen interstitial, push it away
                     if (dist < LATTICE_A * PX_PER_ANG * 0.9) {
                         const force = (LATTICE_A * PX_PER_ANG / dist) * 2.5; 
                         dx_total += (dx / dist) * force;
@@ -198,16 +222,14 @@
 
         function playSound(freq, type, decay, vol, toggleId) {
             if (!audioCtx || !document.getElementById(toggleId).checked) return;
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + decay);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); osc.stop(audioCtx.currentTime + decay);
-            } catch(e) {}
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + decay);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + decay);
         }
 
         function update() {
@@ -224,8 +246,11 @@
                 let p = particles[i];
                 p.history.unshift({x: p.x, y: p.y});
                 if(p.history.length > 12) p.history.pop();
+                
                 p.pathLength += Math.hypot(p.vx, p.vy);
+                // Apply Mean Free Path decay
                 p.intensity = Math.exp(-p.pathLength / lambda_k);
+                
                 p.x += p.vx; p.y += p.vy;
                 for (let s of [...atoms, ...hAtoms]) {
                     const dx = p.x - (s.x + s.vibeX), dy = p.y - (s.y + s.vibeY), d = Math.hypot(dx, dy);
@@ -243,7 +268,6 @@
                 } else if (p.b > 0 && Math.hypot(p.x - emitter.x, p.y - emitter.y) < emitter.r + 5) {
                     totalAbsorbed++;
                     document.getElementById('abs-val').textContent = totalAbsorbed;
-                    playSound(1200, 'sine', 0.2, 0.05, 'm-abs');
                     particles.splice(i, 1);
                 }
             }
@@ -287,13 +311,8 @@
             update(); requestAnimationFrame(draw);
         }
 
-        function togglePause() { 
-            isPaused = !isPaused; 
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-        }
-
+        function togglePause() { isPaused = !isPaused; }
         function resetSim() { particles = []; totalBounces = 0; totalAbsorbed = 0; document.getElementById('abs-val').textContent = '0'; generateLattice(); }
-        
         function resize() {
             const dpr = window.devicePixelRatio || 1;
             canvas.width = (window.innerWidth - 170) * dpr;
