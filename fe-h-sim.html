@@ -1,152 +1,220 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>EXAFS - Hiiro Moriyama</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <link href="assets/css/main.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Fe-H Advanced Dynamics</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { margin:0; padding:0; background:#000; overflow:hidden; font-family: 'Inter', sans-serif; color: #eee; }
+        #container { display:flex; justify-content:center; align-items:center; height:100vh; background:#000; position:relative; }
+        canvas { background: #000; cursor: crosshair; }
+        .ui-grid { 
+            position:absolute; top: 0; left: 0; width: 100%;
+            background: rgba(0, 0, 0, 0.95); border-bottom: 1px solid #333; 
+            padding: 12px 0; z-index: 100; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 5px; justify-items: center; align-items: center;
+        }
+        .info { 
+            position:absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
+            display: flex; gap: 20px; padding: 5px 20px; background: rgba(0,0,0,0.9);
+            border: 1px solid #333; border-bottom: none; font-size: 9px; letter-spacing: 1px;
+            font-weight: 900; text-transform: uppercase; color: #aaa; width: 100%; justify-content: center;
+        }
+        #absorb-stat { color: #00ff66; }
+        .flash-active { color: #00ff66 !important; text-shadow: 0 0 10px #00ff66; }
+        .control { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+        .control label { font-size: 7px; color: #888; font-weight: 900; text-transform: uppercase; }
+        .audio-toggles { display: flex; gap: 5px; }
+        .audio-toggles label { font-size: 6px; color: #eee; cursor: pointer;}
+        button { background: #eee; color: #000; border: none; padding: 4px 8px; cursor: pointer; font-weight: 900; font-size: 8px; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); }
+        input[type=range] { appearance: none; background: #333; height: 2px; width: 60px; }
+        input[type=range]::-webkit-slider-thumb { appearance: none; width: 8px; height: 8px; background: #eee; cursor: pointer; }
+    </style>
 </head>
-
-<body class="service-details-page">
-
-  <header id="header" class="header dark-background d-flex flex-column">
-    <i class="header-toggle d-xl-none bi bi-list"></i>
-
-    <div class="profile-img">
-      <img src="assets/img/prof3.jpg" alt="" class="img-fluid rounded-circle">
-    </div>
-
-    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
-      <h1 class="sitename">Hiiro Moriyama</h1>
-    </a>
-
-    <div class="social-links text-center">
-      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama?ev=hdr_xprf" class="researchgate" target="_blank" rel="noopener noreferrer"><i class="bi bi-journal-richtext"></i></a>
-      <a href="https://www.instagram.com/hiiromoriyama/" class="instagram" target="_blank" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a>
-      <a href="https://orcid.org/0009-0001-9306-3806" class="orcid-link" target="_blank" rel="noopener noreferrer"><i class="bi bi-person-badge"></i></a>
-      <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin"><i class="bi bi-linkedin"></i></a>
-    </div>
-
-    <nav id="navmenu" class="navmenu">
-        <ul>
-         <li><a href="index.html#hero"><i class="bi bi-house navicon"></i>Home</a></li>
-         <li><a href="index.html#aboutme"><i class="bi bi-person navicon"></i>About me</a></li>
-         <li><a href="index.html#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
-         <li><a href="index.html#awards"><i class="bi bi-trophy navicon"></i>Awards</a></li>
-         <li><a href="index.html#arts"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
-       </ul>
-    </nav>
-
-  </header>
-
-  <main class="main">
-
-    <div class="page-title dark-background">
-      <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Extended X-Ray Absorption Fine Structure (EXAFS)</h1>
-        <nav class="breadcrumbs">
-          <ol>
-            <li><a href="index.html">Home</a></li>
-            <li class="current">EXAFS</li>
-          </ol>
-        </nav>
-      </div>
-    </div><section id="service-details" class="service-details section">
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-            <div class="services-list">
-              <a href="microresidual-stress.html">Micro-Residual Stress</a>
-              <a href="xray-prosthesis.html">X-ray Prosthesis</a>
-              <a href="xray-optics.html">Ultrafast X-ray Optics</a>
-              <a href="2D-Flows.html">2D Flows</a>
-              <a href="exafs.html" class="active">EXAFS</a>
-            </div>
-
-            <h4>Acknowledgement</h4>
-            <p style="text-align: justify;">This project focuses on the application of EXAFS to probe the local atomic structure and coordination environments in complex material systems. By utilizing high-intensity synchrotron radiation, we can resolve the short-range order that governs macroscopic chemical and physical properties.</p>
-            
-            <div class="container">
-              <div class="row align-items-center g-4">
-                <div class="col-6 col-md-4">
-                  <a href="https://www.ox.ac.uk" target="_blank">
-                    <img src="assets/img/oxford-logo.png" alt="University of Oxford" class="img-fluid" style="max-width: 100%; height: auto;">
-                  </a>
+<body>
+    <div id="container">
+        <canvas id="c"></canvas>
+        <div class="ui-grid" id="ui-panel">
+            <div class="control"><button onclick="togglePause()">STP/GO</button></div>
+            <div class="control">
+                <label>Audio</label>
+                <div class="audio-toggles">
+                   <label><input type="checkbox" id="m-emit" checked> EMT</label>
+                   <label><input type="checkbox" id="m-bounce" checked> BNC</label>
+                   <label><input type="checkbox" id="m-abs" checked> ABS</label>
                 </div>
-              </div>
             </div>
-          </div>
-
-          <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
-            <img src="assets/img/exafs-main.jpg" alt="EXAFS Spectra Analysis" class="img-fluid services-img">
-            <h3 style="max-width: 600px; margin: 0 auto 20px auto;">Probing Local Atomic Environments</h3>
-            
-            <p style="text-align: justify; max-width: 600px; margin: 0 auto 20px auto;">Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter. Unlike diffraction-based methods, EXAFS does not require long-range periodicity, making it an invaluable tool for studying amorphous materials, liquids, and complex molecular complexes.</p>
-            
-            <p style="text-align: justify; max-width: 600px; margin: 0 auto 20px auto;">The physical principle relies on the modulation of the X-ray absorption coefficient at energies just above the absorption edge of a specific element. These oscillations arise from the interference between the outgoing photoelectron wave and the wave backscattered by neighboring atoms.</p>
-            
-            <p style="text-align: justify; max-width: 600px; margin: 0 auto 20px auto;">Through advanced data modeling and Fourier transform analysis, we can extract precise information regarding interatomic distances, coordination numbers, and the species of neighboring atoms. This research contributes to a deeper understanding of material behavior under various environmental conditions and structural transitions.</p>
-
-            <div class="mt-5 mb-4" data-aos="fade-up" data-aos-delay="300">
-                <h3 style="max-width: 600px; margin: 0 auto 20px auto;">Interactive Dynamics: Fe-H Lattice</h3>
-                <div style="position: relative; width: 100%; height: 550px; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                    <iframe src="fe-h-sim.html" style="width: 100%; height: 100%; border: none;" title="Fe-H Dynamics Simulation"></iframe>
-                </div>
-                <p class="mt-3" style="text-align: justify; max-width: 600px; margin: 0 auto; font-style: italic; font-size: 0.85em; color: #666;">
-                    <strong>Simulation Guide:</strong> This interactive model visualizes the photoelectron scattering process within an Iron (Fe) lattice containing Hydrogen (H) interstitials. Adjust the <strong>H-Conc</strong> slider to see how impurities distort the lattice, or increase <strong>Thermal</strong> to simulate lattice vibrations (Debye-Waller factor effects).
-                </p>
-            </div>
-            </div>
+            <div class="control"><label>Thermal</label><input type="range" id="thermal" min="0" max="8" step="0.5" value="0" oninput="thermalK=this.value"></div>
+            <div class="control"><label>Fe-Vol</label><input type="range" id="fe-vol" min="10" max="35" value="20" oninput="feSize=this.value; generateLattice()"></div>
+            <div class="control"><label>H-Conc</label><input type="range" id="h-conc" min="0" max="100" value="15" oninput="hConc=this.value; generateLattice()"></div>
+            <div class="control"><label>Freq</label><input type="range" id="emit-freq" min="1" max="60" value="10" oninput="emitFreq=this.value"></div>
+            <div class="control"><label>Vel</label><input type="range" id="vel" min="1" max="10" step="0.5" value="4" oninput="speedFactor=this.value"></div>
+            <div class="control"><label>Size</label><input type="range" id="p-size" min="1" max="15" step="0.5" value="3" oninput="particleBaseR=parseFloat(this.value)"></div>
+            <div class="control"><label>MFP</label><input type="range" id="mfp" min="50" max="1000" step="10" value="400" oninput="lambda_k=this.value"></div>
+            <div class="control"><button onclick="resetSim()" style="background:#cc3300; color:#fff">RESET</button></div>
         </div>
-
-      </div>
-    </section>
-
-  </main>
-
-  <footer id="footer" class="footer position-relative light-background">
-      <footer style="text-align: center; font-size: 14px; padding: 10px;">
-        <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a>
-        </p>
-      </footer>
-    <div class="container">
-      <div class="copyright text-center ">
-        <p>© <span>Hiiro Moriyama | Oxford 2026</span></p>
-      </div>
+        <div class="info" id="info-panel">
+            <div>Bounces: <span id="bounces">0</span></div>
+            <div id="absorb-stat">Absorbed: <span id="abs-count">0</span></div>
+            <div>Fe: <span id="fe-count">0</span></div>
+            <div>H: <span id="h-count">0</span></div>
+        </div>
     </div>
-  </footer>
-
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <div id="preloader"></div>
-
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-
-  <script src="assets/js/main.js"></script>
-
+    <script>
+        // ... (Paste all the Javascript logic from your original code here) ...
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let atoms = [], hAtoms = [], particles = [];
+        let isPaused = false, frame = 0;
+        let feSize = 20, hConc = 15, emitFreq = 10, speedFactor = 4, strainK = 15, lambda_k = 400, particleBaseR = 3, thermalK = 0;
+        let totalBounces = 0, totalAbsorbed = 0, emitter = null;
+        const PX_PER_ANG = 35; const LATTICE_A = 3.64;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+        function playSound(freq, type, decay, vol, toggleId) {
+            if (!document.getElementById(toggleId).checked) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + decay);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + decay);
+        }
+        function playAbsorbSound() {
+            if (!document.getElementById('m-abs').checked) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            [523.25, 783.99].forEach(f => {
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+            });
+        }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; generateLattice(); }
+        class Atom {
+            constructor(x, y, type = 'Fe') {
+                this.baseX = x; this.baseY = y; this.x = x; this.y = y;
+                this.vibeX = 0; this.vibeY = 0; this.type = type;
+                this.r = type === 'Fe' ? 14 : 7; this.hitTime = -999; this.isEmitter = false;
+            }
+            updateVibe() { this.vibeX = (Math.random() - 0.5) * thermalK; this.vibeY = (Math.random() - 0.5) * thermalK; }
+        }
+        function generateLattice() {
+            atoms = []; hAtoms = []; const cx = canvas.width/2, cy = canvas.height/2;
+            const cells = Math.ceil(feSize / LATTICE_A / 2);
+            for (let i = -cells; i <= cells; i++) {
+                for (let j = -cells; j <= cells; j++) {
+                    const ox = cx + i * LATTICE_A * PX_PER_ANG, oy = cy + j * LATTICE_A * PX_PER_ANG;
+                    [[0,0], [0.5, 0.5], [0.5, 0], [0, 0.5]].forEach(p => {
+                        const ax = ox + p[0] * LATTICE_A * PX_PER_ANG, ay = oy + p[1] * LATTICE_A * PX_PER_ANG;
+                        if (!atoms.some(a => Math.hypot(a.baseX-ax, a.baseY-ay) < 5)) atoms.push(new Atom(ax, ay, 'Fe'));
+                    });
+                }
+            }
+            const minX = Math.min(...atoms.map(a => a.x)), maxX = Math.max(...atoms.map(a => a.x));
+            const minY = Math.min(...atoms.map(a => a.y)), maxY = Math.max(...atoms.map(a => a.y));
+            for (let i = -cells; i <= cells; i++) {
+                for (let j = -cells; j <= cells; j++) {
+                    const ox = cx + i * LATTICE_A * PX_PER_ANG, oy = cy + j * LATTICE_A * PX_PER_ANG;
+                    [[0.25, 0.25], [0.75, 0.75]].forEach(p => {
+                        if (Math.random() * 100 < hConc) {
+                            const hx = ox + p[0] * LATTICE_A * PX_PER_ANG, hy = oy + p[1] * LATTICE_A * PX_PER_ANG;
+                            if(hx > minX && hx < maxX && hy > minY && hy < maxY) hAtoms.push(new Atom(hx, hy, 'H'));
+                        }
+                    });
+                }
+            }
+            emitter = atoms.reduce((p, c) => Math.hypot(c.x-cx, c.y-cy) < Math.hypot(p.x-cx, p.y-cy) ? c : p);
+            emitter.isEmitter = true; applyDistortion();
+            document.getElementById('fe-count').textContent = atoms.length;
+            document.getElementById('h-count').textContent = hAtoms.length;
+        }
+        function applyDistortion() {
+            atoms.forEach(a => {
+                let dx_total = 0, dy_total = 0;
+                hAtoms.forEach(h => {
+                    const dx = a.baseX - h.baseX, dy = a.baseY - h.baseY;
+                    const distSq = dx*dx + dy*dy + 10, dist = Math.sqrt(distSq);
+                    if (dist < LATTICE_A * PX_PER_ANG) {
+                        const force = (1 - dist/(LATTICE_A * PX_PER_ANG)) * strainK;
+                        dx_total += (dx/dist) * force; dy_total += (dy/dist) * force;
+                    }
+                });
+                a.x = a.baseX + dx_total; a.y = a.baseY + dy_total;
+            });
+        }
+        function triggerGreenFlash() {
+            totalAbsorbed++; document.getElementById('abs-count').textContent = totalAbsorbed;
+            playAbsorbSound();
+            const panels = [document.getElementById('ui-panel'), document.getElementById('info-panel')];
+            panels.forEach(p => p.classList.add('flash-active'));
+            setTimeout(() => panels.forEach(p => p.classList.remove('flash-active')), 150);
+        }
+        function update() {
+            if (isPaused) return; frame++;
+            [...atoms, ...hAtoms].forEach(a => a.updateVibe());
+            if (frame % Math.max(1, Math.floor(61 - emitFreq)) === 0) {
+                const angle = Math.random() * Math.PI * 2;
+                particles.push({ x: emitter.x + emitter.vibeX, y: emitter.y + emitter.vibeY, vx: Math.cos(angle)*speedFactor, vy: Math.sin(angle)*speedFactor, b: 0, pathLength: 0, history: [], intensity: 1.0 });
+                playSound(900, 'sine', 0.08, 0.1, 'm-emit');
+            }
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i]; p.history.unshift({x: p.x, y: p.y});
+                if(p.history.length > 10) p.history.pop();
+                p.pathLength += Math.hypot(p.vx, p.vy); p.intensity = Math.exp(-p.pathLength / lambda_k);
+                p.x += p.vx; p.y += p.vy;
+                for (let s of [...atoms, ...hAtoms]) {
+                    const dx = p.x - (s.x + s.vibeX), dy = p.y - (s.y + s.vibeY), d = Math.hypot(dx, dy);
+                    if (d < particleBaseR + s.r) {
+                        const nx = dx/d, ny = dy/d, dot = p.vx*nx + p.vy*ny;
+                        if (dot < 0) {
+                            p.vx -= 2*dot*nx; p.vy -= 2*dot*ny;
+                            s.hitTime = frame; p.b++; totalBounces++;
+                            playSound(s.type === 'Fe' ? 180 : 350, 'square', 0.04, 0.05, 'm-bounce');
+                        }
+                    }
+                }
+                if (p.intensity < 0.1 || p.x < -100 || p.x > canvas.width+100 || p.y < -100 || p.y > canvas.height+100) {
+                    particles.splice(i, 1);
+                } else if (p.b > 0 && Math.hypot(p.x - (emitter.x + emitter.vibeX), p.y - (emitter.y + emitter.vibeY)) < emitter.r + 5) {
+                    triggerGreenFlash(); particles.splice(i, 1);
+                }
+            }
+            document.getElementById('bounces').textContent = totalBounces;
+        }
+        function draw() {
+            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            [...atoms, ...hAtoms].forEach(a => {
+                const isHit = frame - a.hitTime < 10; const tx = a.x + a.vibeX, ty = a.y + a.vibeY;
+                ctx.beginPath(); ctx.arc(tx, ty, a.r, 0, Math.PI*2);
+                const g = ctx.createRadialGradient(tx - a.r/3, ty - a.r/3, a.r/10, tx, ty, a.r);
+                if (a.type === 'Fe') {
+                    g.addColorStop(0, isHit ? '#fff' : '#aaa'); g.addColorStop(0.3, isHit ? '#eee' : '#777'); g.addColorStop(1, '#111');
+                } else {
+                    g.addColorStop(0, isHit ? '#ffaaaa' : '#cc0000'); g.addColorStop(1, '#200000');
+                }
+                ctx.fillStyle = g; ctx.fill();
+                ctx.strokeStyle = a.isEmitter ? '#00e5ff' : '#222'; ctx.lineWidth = a.isEmitter ? 2 : 1; ctx.stroke();
+            });
+            particles.forEach(p => {
+                const currentR = particleBaseR * p.intensity;
+                if(p.history.length > 1) {
+                    ctx.beginPath(); ctx.moveTo(p.x, p.y);
+                    for(let i=0; i<p.history.length; i++) ctx.lineTo(p.history[i].x, p.history[i].y);
+                    ctx.strokeStyle = `rgba(0, 229, 255, ${p.intensity})`; ctx.lineWidth = currentR; ctx.lineCap = 'round'; ctx.stroke();
+                }
+                ctx.beginPath(); ctx.arc(p.x, p.y, currentR, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(0, 229, 255, ${p.intensity})`; ctx.fill();
+            });
+            update(); requestAnimationFrame(draw);
+        }
+        function togglePause() { isPaused = !isPaused; if(!isPaused) audioCtx.resume(); }
+        function resetSim() { particles = []; totalBounces = 0; totalAbsorbed = 0; document.getElementById('abs-count').textContent = '0'; generateLattice(); }
+        window.addEventListener('resize', resize); resize(); draw();
+    </script>
 </body>
-
 </html>
