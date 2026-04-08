@@ -13,7 +13,7 @@
 
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;600&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;600&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -24,50 +24,31 @@
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
-    /* --- INTEGRATED SIMULATION STYLING --- */
+    /* Styling for the simulation container */
     .sim-wrapper {
       width: 100%;
-      height: 700px;
+      height: 600px;
       background: #000;
       border-radius: 12px;
       overflow: hidden;
       border: 1px solid #444;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
       margin-top: 20px;
       margin-bottom: 20px;
-      position: relative;
-      font-family: 'Inter', sans-serif;
     }
-
-    canvas { background: #000; display: block; width: 100%; height: 100%; }
-
-    #overlay {
-      position: absolute; top:0; left:0; width:100%; height:100%;
-      background: rgba(0,0,0,0.9); z-index: 1000;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      cursor: pointer;
-    }
-    #overlay h2 { font-weight: 900; letter-spacing: 5px; color: #00e5ff; }
-
-    .ui-grid { 
-      position:absolute; top: 0; left: 0; width: 100%;
-      background: rgba(0, 0, 0, 0.92); border-bottom: 1px solid #333; 
-      padding: 15px 5px; z-index: 100; display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 10px; align-items: center;
-    }
-
-    .control { display: flex; flex-direction: column; align-items: center; }
-    .control label { font-size: 11px; color: #00e5ff; font-weight: 900; text-transform: uppercase; margin-bottom: 4px; }
     
-    input[type=range] { width: 90px; height: 4px; cursor: pointer; }
-
-    .info { 
-      position:absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
-      display: flex; gap: 30px; padding: 10px 30px; background: rgba(0,0,0,0.8);
-      font-size: 12px; font-weight: 900; color: #aaa; border-radius: 10px 10px 0 0;
+    /* Ensures the iframe fills the container without scrollbars */
+    .sim-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
     }
-    #absorb-stat { color: #00ff66; }
+
+    .services-img {
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 
@@ -88,13 +69,13 @@
       <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin"><i class="bi bi-linkedin"></i></a>
     </div>
     <nav id="navmenu" class="navmenu">
-        <ul>
-         <li><a href="index.html#hero"><i class="bi bi-house navicon"></i>Home</a></li>
-         <li><a href="index.html#aboutme"><i class="bi bi-person navicon"></i>About me</a></li>
-         <li><a href="index.html#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
-         <li><a href="index.html#awards"><i class="bi bi-trophy navicon"></i>Awards</a></li>
-         <li><a href="index.html#arts"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
-        </ul>
+      <ul>
+        <li><a href="index.html#hero"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="index.html#aboutme"><i class="bi bi-person navicon"></i>About me</a></li>
+        <li><a href="index.html#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
+        <li><a href="index.html#awards"><i class="bi bi-trophy navicon"></i>Awards</a></li>
+        <li><a href="index.html#arts"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
+      </ul>
     </nav>
   </header>
 
@@ -138,199 +119,54 @@
           <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
             <img src="assets/img/exafs-main.jpg" alt="EXAFS Spectra Analysis" class="img-fluid services-img">
             <h3>Probing Local Atomic Environments</h3>
-            <p style="text-align: justify;">EXAFS does not require long-range periodicity, making it an invaluable tool for studying amorphous materials and complex molecular complexes.</p>
+            <p style="text-align: justify;">
+              EXAFS provides detailed information about the local environment of specific atoms within a sample. Unlike diffraction, it does not require long-range order, making it a critical tool for studying defects, amorphous structures, and interstitial dynamics.
+            </p>
+            <p style="text-align: justify;">
+              In metallic systems such as the Fe-H lattice, the presence of light elements like Hydrogen can significantly distort the surrounding Iron matrix. Measuring these subtle shifts requires high-precision synchrotron radiation.
+            </p>
           </div>
         </div>
 
         <div class="row" data-aos="fade-up">
           <div class="col-12">
             <h3>Interactive Dynamics: Fe-H Lattice</h3>
-            <div class="sim-wrapper" id="sim-container">
-                <div id="overlay" onclick="startSim()">
-                    <h2>INITIALIZE ENGINE</h2>
-                    <p style="color: #888;">CLICK TO ACTIVATE SYSTEM</p>
-                </div>
-
-                <canvas id="c"></canvas>
-
-                <div class="ui-grid">
-                    <div class="control"><button onclick="isPaused = !isPaused" class="btn btn-sm btn-light">PAUSE</button></div>
-                    <div class="control">
-                        <label>H-Jump</label>
-                        <input type="range" id="jump-prob" min="0" max="0.1" step="0.005" value="0.01" oninput="jumpProb=parseFloat(this.value)">
-                    </div>
-                    <div class="control">
-                        <label>Thermal</label>
-                        <input type="range" id="thermal" min="0" max="8" value="1" oninput="thermalK=this.value">
-                    </div>
-                    <div class="control">
-                        <label>H-Conc</label>
-                        <input type="range" id="h-conc" min="0" max="80" value="15" oninput="hConc=this.value; generateLattice()">
-                    </div>
-                    <div class="control">
-                        <label>Freq</label>
-                        <input type="range" id="emit-freq" min="1" max="60" value="10" oninput="emitFreq=this.value">
-                    </div>
-                    <div class="control"><button onclick="resetSim()" class="btn btn-sm btn-danger">RESET</button></div>
-                </div>
-
-                <div class="info">
-                    <div>Impacts: <span id="bounces">0</span></div>
-                    <div id="absorb-stat">Absorbed: <span id="abs-count">0</span></div>
-                </div>
+            <p class="mb-3">
+              This simulation visualizes photoelectron scattering. Use the <strong>H-Jump</strong> slider to control the rate of Hydrogen diffusion through the interstitial sites.
+            </p>
+            
+            <div class="sim-wrapper">
+              <iframe src="fe-h-sim.html" title="Fe-H Dynamics"></iframe>
             </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12" data-aos="fade-up">
+            <p style="text-align: justify;">
+              By analyzing the Fourier transform of the EXAFS oscillations, we can determine interatomic distances to an accuracy of 0.01 Å. This allows us to track real-time structural changes as Hydrogen atoms migrate (or "jump") through the metallic lattice, providing insights into hydrogen embrittlement and storage.
+            </p>
           </div>
         </div>
 
       </div> 
     </section>
+
   </main>
 
   <footer id="footer" class="footer position-relative light-background">
     <div style="text-align: center; font-size: 14px; padding: 10px;">
-      <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a></p>
+      <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
+    </div>
+    <div class="container">
+      <div class="copyright text-center ">
+        <p>© <span>Hiiro Moriyama | Oxford 2026</span></p>
+      </div>
     </div>
   </footer>
 
-  <script>
-    const canvas = document.getElementById('c');
-    const ctx = canvas.getContext('2d');
-    let atoms = [], hAtoms = [], particles = [], interstitialSites = [];
-    let isPaused = false, frame = 0, started = false;
-    
-    let feSize = 25, hConc = 15, emitFreq = 10, thermalK = 1, jumpProb = 0.01;
-    let totalBounces = 0, totalAbsorbed = 0, emitter = null;
-
-    const PX_PER_ANG = 35;
-    const LATTICE_A = 3.64; 
-
-    function startSim() {
-        if (started) return;
-        started = true;
-        document.getElementById('overlay').style.display = 'none';
-        resize();
-        draw();
-    }
-
-    class Atom {
-        constructor(x, y, type = 'Fe') {
-            this.baseX = x; this.baseY = y;
-            this.x = x; this.y = y;
-            this.type = type;
-            this.r = type === 'Fe' ? 14 : 6;
-            this.hitTime = -999;
-        }
-        update() {
-            this.x = this.baseX + (Math.random() - 0.5) * thermalK;
-            this.y = this.baseY + (Math.random() - 0.5) * thermalK;
-        }
-    }
-
-    function generateLattice() {
-        atoms = []; hAtoms = []; interstitialSites = [];
-        const cx = canvas.width/2, cy = canvas.height/2;
-        const cells = 3; 
-
-        for (let i = -cells; i <= cells; i++) {
-            for (let j = -cells; j <= cells; j++) {
-                const ax = cx + i * LATTICE_A * PX_PER_ANG;
-                const ay = cy + j * LATTICE_A * PX_PER_ANG;
-                atoms.push(new Atom(ax, ay, 'Fe'));
-                
-                // Track interstitial sites for H-Jumping
-                interstitialSites.push({x: ax + (LATTICE_A*PX_PER_ANG/2), y: ay + (LATTICE_A*PX_PER_ANG/2)});
-            }
-        }
-        
-        interstitialSites.forEach(site => {
-            if (Math.random() * 100 < hConc) hAtoms.push(new Atom(site.x, site.y, 'H'));
-        });
-
-        emitter = atoms[Math.floor(atoms.length/2)];
-    }
-
-    function handleDiffusion() {
-        if (jumpProb === 0) return;
-        hAtoms.forEach(h => {
-            if (Math.random() < jumpProb) {
-                const occupied = hAtoms.map(other => ({x: other.baseX, y: other.baseY}));
-                const available = interstitialSites.filter(site => 
-                    !occupied.some(occ => Math.hypot(occ.x - site.x, occ.y - site.y) < 5) &&
-                    Math.hypot(site.x - h.baseX, site.y - h.baseY) < 200
-                );
-                if (available.length > 0) {
-                    const target = available[Math.floor(Math.random() * available.length)];
-                    h.baseX = target.x; h.baseY = target.y;
-                }
-            }
-        });
-    }
-
-    function update() {
-        if (isPaused || !started) return;
-        frame++;
-        handleDiffusion();
-        [...atoms, ...hAtoms].forEach(a => a.update());
-
-        if (frame % Math.max(1, Math.floor(61 - emitFreq)) === 0) {
-            const angle = Math.random() * Math.PI * 2;
-            particles.push({ x: emitter.x, y: emitter.y, vx: Math.cos(angle)*4, vy: Math.sin(angle)*4, b: 0 });
-        }
-
-        for (let i = particles.length - 1; i >= 0; i--) {
-            let p = particles[i];
-            p.x += p.vx; p.y += p.vy;
-
-            for (let s of [...atoms, ...hAtoms]) {
-                const d = Math.hypot(p.x - s.x, p.y - s.y);
-                if (d < s.r + 2) {
-                    p.vx *= -1; p.vy *= -1; 
-                    p.b++; totalBounces++;
-                    s.hitTime = frame;
-                }
-            }
-
-            if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) particles.splice(i, 1);
-            else if (p.b > 0 && Math.hypot(p.x - emitter.x, p.y - emitter.y) < emitter.r) {
-                totalAbsorbed++;
-                particles.splice(i, 1);
-            }
-        }
-        document.getElementById('bounces').textContent = totalBounces;
-        document.getElementById('abs-count').textContent = totalAbsorbed;
-    }
-
-    function draw() {
-        if (!started) return;
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        [...atoms, ...hAtoms].forEach(a => {
-            ctx.beginPath();
-            ctx.arc(a.x, a.y, a.r, 0, Math.PI*2);
-            ctx.fillStyle = a.type === 'Fe' ? '#555' : '#f00';
-            if (frame - a.hitTime < 5) ctx.fillStyle = '#fff';
-            ctx.fill();
-            if (a === emitter) { ctx.strokeStyle = '#00e5ff'; ctx.lineWidth = 2; ctx.stroke(); }
-        });
-
-        particles.forEach(p => {
-            ctx.fillStyle = '#00e5ff';
-            ctx.fillRect(p.x, p.y, 3, 3);
-        });
-
-        update();
-        requestAnimationFrame(draw);
-    }
-
-    function resetSim() { particles = []; totalBounces = 0; totalAbsorbed = 0; generateLattice(); }
-    function resize() { 
-        const rect = document.getElementById('sim-container').getBoundingClientRect();
-        canvas.width = rect.width; canvas.height = rect.height; 
-        generateLattice(); 
-    }
-    window.addEventListener('resize', resize);
-  </script>
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
@@ -339,4 +175,5 @@
   <script src="assets/js/main.js"></script>
 
 </body>
+
 </html>
