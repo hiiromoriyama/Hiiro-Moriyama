@@ -5,14 +5,31 @@
     <title>Fe-H Advanced Dynamics - Simulation</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
         body { margin:0; padding:0; background:#000; overflow:hidden; font-family: 'Inter', sans-serif; color: #eee; user-select: none; }
-        #container { display: flex; height: 100vh; width: 100vw; background: #000; }
+        
+        #container { 
+            display: flex; 
+            flex-direction: row; 
+            height: 100vh; 
+            width: 100vw; 
+            background: #000; 
+        }
 
+        /* LEFT SIDEBAR */
         #ui-panel { 
-            width: 150px; min-width: 150px; height: 100%; 
-            background: #0a0a0a; border-right: 1px solid #333; 
-            padding: 15px; display: flex; flex-direction: column; 
-            gap: 12px; box-sizing: border-box; z-index: 10; overflow-y: auto;
+            width: 160px; 
+            min-width: 160px; 
+            height: 100%; 
+            background: #0d0d0d; 
+            border-right: 1px solid #333; 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            box-sizing: border-box; 
+            z-index: 100; 
+            overflow-y: auto;
         }
 
         #c { flex-grow: 1; display: block; background: #000; }
@@ -24,40 +41,40 @@
         }
 
         .control { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-        .control label { font-size: 8px; color: #888; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
+        .control label { font-size: 9px; color: #00e5ff; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .legend { margin-top: 10px; padding-top: 10px; border-top: 1px solid #222; display: flex; flex-direction: column; gap: 6px; }
-        .stat-item { font-size: 9px; font-weight: 900; text-transform: uppercase; color: #aaa; }
-        .stat-val { color: #eee; float: right; }
+        .legend { margin-top: 10px; padding-top: 10px; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 6px; }
+        .stat-item { font-size: 10px; font-weight: 900; text-transform: uppercase; color: #888; }
+        .stat-val { color: #fff; float: right; }
         #abs-val { color: #00ff66; }
         #h-val { color: #ff4444; }
 
         button#play-pause { 
-            background: #222; color: #00e5ff; border: 1px solid #00e5ff; padding: 10px; width: 100%;
-            cursor: pointer; font-size: 16px; transition: all 0.2s; border-radius: 4px;
+            background: #1a1a1a; color: #00e5ff; border: 1px solid #00e5ff; padding: 10px; width: 100%;
+            cursor: pointer; font-size: 18px; transition: all 0.2s; border-radius: 4px;
         }
         button#play-pause:hover { background: #00e5ff; color: #000; }
 
-        select { background: #222; color: #eee; border: 1px solid #444; font-size: 9px; padding: 4px; border-radius: 3px; font-family: 'Inter'; width: 100%; }
+        select { background: #222; color: #eee; border: 1px solid #444; font-size: 10px; padding: 5px; border-radius: 3px; font-family: 'Inter'; width: 100%; }
 
-        input[type=range] { appearance: none; background: #333; height: 2px; width: 100%; margin: 5px 0; }
-        input[type=range]::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; background: #00e5ff; cursor: pointer; border-radius: 50%; }
+        input[type=range] { appearance: none; background: #333; height: 3px; width: 100%; margin: 8px 0; }
+        input[type=range]::-webkit-slider-thumb { appearance: none; width: 12px; height: 12px; background: #00e5ff; cursor: pointer; border-radius: 50%; }
         
         .audio-toggles { display: flex; flex-direction: column; gap: 4px; }
-        .audio-toggles label { font-size: 7px; color: #ccc; display: flex; align-items: center; gap: 4px; cursor: pointer;}
+        .audio-toggles label { font-size: 8px; color: #ccc; display: flex; align-items: center; gap: 4px; cursor: pointer;}
     </style>
 </head>
 <body>
     <div id="overlay" onclick="startSim()">
-        <h2 style="font-weight:900; color:#00e5ff; letter-spacing:5px;">INITIALIZE</h2>
-        <p style="font-size:10px; color:#555;">CLICK TO START</p>
+        <h2 style="font-weight:900; color:#00e5ff; letter-spacing:5px;">CORE INITIALIZATION</h2>
+        <p style="font-size:10px; color:#555;">CLICK TO ACTIVATE SYSTEM</p>
     </div>
     <div id="container">
         <div id="ui-panel">
             <button id="play-pause" onclick="togglePause()">⏯</button>
             
             <div class="control">
-                <label>Emission Mode</label>
+                <label>Mode</label>
                 <select id="emit-mode" onchange="emitMode=this.value">
                     <option value="pulse">Discrete Pulse</option>
                     <option value="cont">Continuous</option>
@@ -65,7 +82,7 @@
             </div>
 
             <div class="control">
-                <label>Audio Mix</label>
+                <label>Audio</label>
                 <div class="audio-toggles">
                    <label><input type="checkbox" id="m-emit" checked> EMT</label>
                    <label><input type="checkbox" id="m-bounce" checked> BNC</label>
@@ -78,7 +95,7 @@
             <div class="control"><label>Fe-Vol</label><input type="range" id="fe-vol" min="10" max="35" value="20" oninput="feSize=this.value; generateLattice()"></div>
             <div class="control"><label>H-Conc</label><input type="range" id="h-conc" min="0" max="100" value="15" oninput="hConc=this.value; generateLattice()"></div>
             <div class="control"><label>Freq</label><input type="range" id="emit-freq" min="1" max="60" value="10" oninput="emitFreq=this.value"></div>
-            <div class="control"><label>Vel (k)</label><input type="range" id="vel" min="1" max="10" step="0.5" value="4" oninput="speedFactor=this.value"></div>
+            <div class="control"><label>Vel</label><input type="range" id="vel" min="1" max="10" step="0.5" value="4" oninput="speedFactor=this.value"></div>
 
             <div class="legend">
                 <div class="stat-item">Impacts <span class="stat-val" id="b-count">0</span></div>
@@ -87,13 +104,12 @@
                 <div class="stat-item">H Atoms <span class="stat-val" id="h-val">0</span></div>
             </div>
 
-            <button onclick="resetSim()" style="margin-top:auto; background:#cc3300; color:#fff; border:none; padding:8px; font-size:9px; font-weight:900; cursor:pointer;">RESET</button>
+            <button onclick="resetSim()" style="margin-top:auto; background:#cc3300; color:#fff; border:none; padding:8px; font-size:10px; font-weight:900; cursor:pointer;">RESET</button>
         </div>
         <canvas id="c"></canvas>
     </div>
 
     <script>
-        // ... (JS logic same as previous response, including the physical distortion/strain function)
         const canvas = document.getElementById('c');
         const ctx = canvas.getContext('2d');
         let atoms = [], hAtoms = [], particles = [], interstitialSites = [];
@@ -167,7 +183,7 @@
                 }
             }
 
-            // Real physical lattice distortion logic
+            // Physical Strain logic
             atoms.forEach(fe => {
                 let dx_total = 0, dy_total = 0;
                 hAtoms.forEach(h => {
@@ -175,7 +191,7 @@
                     const dy = fe.baseY - h.baseY;
                     const dist = Math.hypot(dx, dy);
                     if (dist < LATTICE_A * PX_PER_ANG * 0.8) {
-                        const force = (LATTICE_A * PX_PER_ANG / dist) * 1.5;
+                        const force = (LATTICE_A * PX_PER_ANG / dist) * 1.8;
                         dx_total += (dx / dist) * force;
                         dy_total += (dy / dist) * force;
                     }
@@ -210,12 +226,12 @@
             if (frame % interval === 0) {
                 const angle = Math.random() * Math.PI * 2;
                 particles.push({ x: emitter.x, y: emitter.y, vx: Math.cos(angle)*speedFactor, vy: Math.sin(angle)*speedFactor, b: 0, pathLength: 0, history: [], intensity: 1.0 });
-                if(frame % 10 === 0) playSound(900, 'sine', 0.08, 0.05, 'm-emit');
+                if(frame % 12 === 0) playSound(900, 'sine', 0.08, 0.05, 'm-emit');
             }
             for (let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
                 p.history.unshift({x: p.x, y: p.y});
-                if(p.history.length > 12) p.history.pop();
+                if(p.history.length > 10) p.history.pop();
                 p.pathLength += Math.hypot(p.vx, p.vy);
                 p.intensity = Math.exp(-p.pathLength / lambda_k);
                 p.x += p.vx; p.y += p.vy;
@@ -230,7 +246,7 @@
                         }
                     }
                 }
-                if (p.intensity < 0.01 || p.x < -50 || p.x > canvas.width + 50 || p.y < -50 || p.y > canvas.height + 50) {
+                if (p.intensity < 0.01 || p.x < -100 || p.x > canvas.width + 100 || p.y < -100 || p.y > canvas.height + 100) {
                     particles.splice(i, 1);
                 } else if (p.b > 0 && Math.hypot(p.x - emitter.x, p.y - emitter.y) < emitter.r + 5) {
                     totalAbsorbed++;
@@ -252,10 +268,10 @@
                 const g = ctx.createRadialGradient(tx - a.r*0.3, ty - a.r*0.3, a.r*0.1, tx, ty, a.r);
                 if (a.type === 'Fe') {
                     g.addColorStop(0, isHit ? '#fff' : '#efefef');
-                    g.addColorStop(0.3, isHit ? '#aaa' : '#444');
+                    g.addColorStop(0.3, isHit ? '#888' : '#333');
                     g.addColorStop(1, '#050505');
                 } else {
-                    g.addColorStop(0, isHit ? '#ffaaaa' : '#ff3333');
+                    g.addColorStop(0, isHit ? '#ffaaaa' : '#ff4444');
                     g.addColorStop(1, '#200000');
                 }
                 ctx.fillStyle = g; ctx.fill();
