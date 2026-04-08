@@ -78,7 +78,7 @@
             <div class="control">
                 <label>Audio Mix</label>
                 <div class="audio-toggles">
-                   <label><input type="checkbox" id="m-emit" checked> EMIT</label>
+                   <label><input type="checkbox" id="m-emit" checked> EMT</label>
                    <label><input type="checkbox" id="m-bounce" checked> BNC</label>
                    <label><input type="checkbox" id="m-abs" checked> ABS</label>
                 </div>
@@ -86,7 +86,7 @@
 
             <div class="control"><label>Mean Free Path</label><input type="range" id="mfp" min="100" max="1000" step="50" value="400" oninput="lambda_k=parseFloat(this.value)"></div>
             <div class="control"><label>Electron Size</label><input type="range" id="e-size" min="2" max="15" step="1" value="5" oninput="particleBaseR=parseFloat(this.value)"></div>
-            <div class="control"><label>Thermal </label><input type="range" id="thermal" min="0" max="8" step="0.5" value="1" oninput="thermalK=this.value"></div>
+            <div class="control"><label>Thermal</label><input type="range" id="thermal" min="0" max="8" step="0.5" value="1" oninput="thermalK=this.value"></div>
             <div class="control"><label>Fe Conc</label><input type="range" id="fe-vol" min="10" max="35" value="20" oninput="feSize=this.value; generateLattice()"></div>
             <div class="control"><label>H Conc</label><input type="range" id="h-conc" min="0" max="100" value="15" oninput="hConc=this.value; generateLattice()"></div>
             <div class="control"><label>Freq</label><input type="range" id="emit-freq" min="1" max="60" value="10" oninput="emitFreq=this.value"></div>
