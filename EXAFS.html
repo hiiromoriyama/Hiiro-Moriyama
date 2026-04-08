@@ -24,31 +24,22 @@
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
-    /* Simulation styling to ensure it takes up maximum space */
-    .full-width-sim {
+    /* Styling for the simulation container to maintain consistent margins */
+    .sim-wrapper {
       width: 100%;
+      height: 650px;
       background: #000;
-      padding: 40px 0;
-      margin-top: 30px;
-    }
-    .sim-frame-container {
-      width: 100%;
-      height: 750px; /* Adjust height as needed */
-      border-top: 1px solid #333;
-      border-bottom: 1px solid #333;
-      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-top: 20px;
+      margin-bottom: 20px;
     }
     iframe {
       width: 100%;
       height: 100%;
       border: none;
-    }
-    .sim-caption {
-      color: #888;
-      font-size: 13px;
-      padding: 15px 20px;
-      text-align: center;
-      background: #0a0a0a;
     }
   </style>
 </head>
@@ -96,8 +87,8 @@
 
     <section id="service-details" class="service-details section">
       <div class="container">
-        <div class="row gy-4">
-
+        
+        <div class="row gy-4 mb-5">
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="services-list">
               <a href="microresidual-stress.html">Micro-Residual Stress</a>
@@ -123,38 +114,32 @@
             <p style="text-align: justify;">Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter. Unlike diffraction-based methods, EXAFS does not require long-range periodicity, making it an invaluable tool for studying amorphous materials, liquids, and complex molecular complexes.</p>
             <p style="text-align: justify;">The physical principle relies on the modulation of the X-ray absorption coefficient at energies just above the absorption edge of a specific element. These oscillations arise from the interference between the outgoing photoelectron wave and the wave backscattered by neighboring atoms.</p>
           </div>
-
-        </div> </div> <div class="full-width-sim" data-aos="fade-up">
-        <div class="container-fluid p-0">
-            <div class="px-5 mb-4">
-                <h3 class="text-white">Interactive Dynamics: Fe-H Lattice</h3>
-                <p class="text-secondary">A real-time simulation of photoelectron scattering and structural distortion in a metallic lattice.</p>
-            </div>
-            <div class="sim-frame-container">
-                <iframe src="fe-h-sim.html" title="Fe-H Dynamics"></iframe>
-            </div>
-            <div class="sim-caption">
-                Adjust <strong>H-Conc</strong> to observe chemical impurity strain or <strong>Thermal</strong> for Debye-Waller factor simulations.
-            </div>
         </div>
-      </div>
-      <div class="container mt-5">
-        <div class="row">
-          <div class="col-lg-12" data-aos="fade-up">
+
+        <div class="row" data-aos="fade-up">
+          <div class="col-12">
+            <h3>Interactive Dynamics: Fe-H Lattice</h3>
+            <p class="mb-3">Visualization of photoelectron scattering and structural distortion within the metallic lattice.</p>
+            <div class="sim-wrapper">
+              <iframe src="fe-h-sim.html" title="Fe-H Dynamics"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-12" data-aos="fade-up">
             <p style="text-align: justify;">Through advanced data modeling and Fourier transform analysis, we can extract precise information regarding interatomic distances, coordination numbers, and the species of neighboring atoms. This research contributes to a deeper understanding of material behavior under various environmental conditions and structural transitions.</p>
           </div>
         </div>
-      </div>
 
-    </section>
+      </div> </section>
 
   </main>
 
   <footer id="footer" class="footer position-relative light-background">
-      <footer style="text-align: center; font-size: 14px; padding: 10px;">
-        <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a>
-        </p>
-      </footer>
+    <div style="text-align: center; font-size: 14px; padding: 10px;">
+      <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
+    </div>
     <div class="container">
       <div class="copyright text-center ">
         <p>© <span>Hiiro Moriyama | Oxford 2026</span></p>
