@@ -2,56 +2,48 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Zr-H HCP EXAFS Dynamics</title>
+    <title>Zr-H BCC Tetrahedral EXAFS Dynamics</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        
-        body { 
-            margin:0; padding:0; background:#000; overflow:hidden; 
+       
+        body {
+            margin:0; padding:0; background:#000; overflow:hidden;
             font-family: 'Inter', sans-serif; color: #eee; user-select: none;
             width: 100vw; height: 100vh;
         }
-
         #container { display: flex; flex-direction: row; width: 100%; height: 100%; background: #000; }
-
-        #ui-panel { 
-            width: 170px; min-width: 170px; height: 100%; 
-            background: #0d0d0d; border-right: 2px solid #333; 
-            padding: 10px; display: flex; flex-direction: column; 
+        #ui-panel {
+            width: 170px; min-width: 170px; height: 100%;
+            background: #0d0d0d; border-right: 2px solid #333;
+            padding: 10px; display: flex; flex-direction: column;
             gap: 8px; box-sizing: border-box; z-index: 100;
         }
-
         #c { flex-grow: 1; height: 100%; display: block; background: #000; }
-
         #overlay {
             position: absolute; top:0; left:0; width:100%; height:100%;
             background: rgba(0,0,0,0.9); z-index: 1001;
             display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
         }
-
         .control { display: flex; flex-direction: column; gap: 2px; width: 100%; }
         .control label { font-size: 7.5px; color: #ffffff; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
-        
+       
         .legend { margin-top: 5px; padding-top: 5px; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 4px; }
         .stat-item { font-size: 8px; font-weight: 900; text-transform: uppercase; color: #aaa; }
         .stat-val { color: #eee; float: right; }
         #abs-val { color: #00ff66; }
         #h-val { color: #ff4444; }
-
-        button#play-pause { 
+        button#play-pause {
             background: #222; color: #ffffff; border: 1px solid #ffffff; padding: 6px; width: 100%;
             cursor: pointer; font-size: 14px; transition: all 0.2s; border-radius: 4px;
         }
         button#play-pause:hover { background: #ffffff; color: #000; }
-
         select { background: #222; color: #eee; border: 1px solid #444; font-size: 8px; padding: 2px; border-radius: 3px; width: 100%; }
-
         input[type=range] { appearance: none; background: #333; height: 2px; width: 100%; margin: 4px 0; }
-        input[type=range]::-webkit-slider-thumb { 
-            appearance: none; width: 10px; height: 10px; background: #ffffff; 
+        input[type=range]::-webkit-slider-thumb {
+            appearance: none; width: 10px; height: 10px; background: #ffffff;
             cursor: pointer; border-radius: 50%; box-shadow: 0 0 5px rgba(255,255,255,0.3);
         }
-        
+       
         .audio-toggles { display: flex; flex-direction: row; flex-wrap: wrap; gap: 6px; }
         .audio-toggles label { font-size: 7px; color: #ccc; display: flex; align-items: center; gap: 2px; cursor: pointer;}
     </style>
@@ -64,7 +56,7 @@
     <div id="container">
         <div id="ui-panel">
             <button id="play-pause" onclick="togglePause()">⏯</button>
-            
+           
             <div class="control">
                 <label>Flux</label>
                 <select id="emit-mode" onchange="emitMode=this.value">
@@ -72,7 +64,6 @@
                     <option value="cont">Continuous</option>
                 </select>
             </div>
-
             <div class="control">
                 <label>Audio Mix</label>
                 <div class="audio-toggles">
@@ -81,7 +72,6 @@
                    <label><input type="checkbox" id="m-abs" checked> ABS</label>
                 </div>
             </div>
-
             <div class="control"><label>Mean Free Path</label><input type="range" id="mfp" min="100" max="1000" step="50" value="400" oninput="lambda_k=parseFloat(this.value)"></div>
             <div class="control"><label>Electron Size</label><input type="range" id="e-size" min="2" max="15" step="1" value="5" oninput="particleBaseR=parseFloat(this.value)"></div>
             <div class="control"><label>Thermal</label><input type="range" id="thermal" min="0" max="8" step="0.5" value="1" oninput="thermalK=this.value"></div>
@@ -89,19 +79,17 @@
             <div class="control"><label>H Conc</label><input type="range" id="h-conc" min="0" max="100" value="20" oninput="hConc=this.value; generateLattice()"></div>
             <div class="control"><label>Freq</label><input type="range" id="emit-freq" min="1" max="60" value="12" oninput="emitFreq=this.value"></div>
             <div class="control"><label>Velocity</label><input type="range" id="vel" min="1" max="10" step="0.5" value="4.5" oninput="speedFactor=this.value"></div>
-
             <div class="legend">
                 <div class="stat-item">Impacts <span class="stat-val" id="b-count">0</span></div>
                 <div class="stat-item">Absorbed <span class="stat-val" id="abs-val">0</span></div>
                 <div class="stat-item">Zr Atoms <span class="stat-val" id="fe-val">0</span></div>
                 <div class="stat-item">H Atoms <span class="stat-val" id="h-val">0</span></div>
             </div>
-            
+           
             <button onclick="resetSim()" style="margin-top:auto; background:#440000; color:#ffaaaa; border:1px solid #660000; padding:6px; font-size:9px; font-weight:900; cursor:pointer; border-radius:4px;">RESET</button>
         </div>
         <canvas id="c"></canvas>
     </div>
-
     <script>
         const canvas = document.getElementById('c');
         const ctx = canvas.getContext('2d');
@@ -110,10 +98,10 @@
         let latSize = 45, hConc = 20, emitFreq = 12, speedFactor = 4.5, lambda_k = 400, particleBaseR = 5, thermalK = 1, emitMode = 'pulse';
         let totalBounces = 0, totalAbsorbed = 0, emitter = null;
         let audioCtx;
-        
+       
         const PX_PER_ANG = 45;
-        const A = 3.23; 
-        const rowHeight = A * Math.sin(Math.PI / 3); 
+        const A = 3.23;                    // Zr BCC lattice parameter (Å)
+        const BCC_SPACING = A * PX_PER_ANG; // horizontal/vertical spacing for square projection
 
         function startSim() {
             if (started) return;
@@ -147,43 +135,74 @@
             const cx = (canvas.width / dpr) / 2;
             const cy = (canvas.height / dpr) / 2;
             const rows = 20, cols = 20;
-
             let tempZr = [];
+
+            // BCC square projection: atoms on square grid + body-center atoms
             for (let r = -rows/2; r < rows/2; r++) {
                 for (let c = -cols/2; c < cols/2; c++) {
-                    let x = cx + c * A * PX_PER_ANG;
-                    let y = cy + r * rowHeight * PX_PER_ANG;
-                    if (r % 2 !== 0) x += (A / 2) * PX_PER_ANG;
+                    let x = cx + c * BCC_SPACING;
+                    let y = cy + r * BCC_SPACING;
+
                     const distFromCenter = Math.hypot(x - cx, y - cy);
-                    if (distFromCenter < latSize * 10) { 
+                    if (distFromCenter < latSize * 12) {   // slightly larger radius for visibility
+                        // Corner-type atom (square grid)
                         tempZr.push(new Atom(x, y, 'Zr'));
-                        if (Math.random() * 100 < hConc) {
-                            let hx = x + (A/2) * PX_PER_ANG;
-                            let hy = y + (rowHeight/3) * PX_PER_ANG;
-                            hAtoms.push(new Atom(hx, hy, 'H'));
+
+                        // Body-center atom in each square (true BCC feature)
+                        const centerX = x + BCC_SPACING / 2;
+                        const centerY = y + BCC_SPACING / 2;
+                        if (Math.hypot(centerX - cx, centerY - cy) < latSize * 12) {
+                            tempZr.push(new Atom(centerX, centerY, 'Zr'));
                         }
                     }
                 }
             }
 
+            // Tetrahedral interstitial sites in BCC (2D projection)
+            // These are offset positions surrounded by 4 Zr atoms (forming tetrahedra)
+            tempZr.forEach(zr => {
+                // For each Zr, add possible tetrahedral H sites in the local cell
+                // Typical BCC tetrahedral offsets (scaled): approx. (0.25, 0.5), (0.5, 0.25), etc. relative to cell
+                const offsets = [
+                    {dx: 0.25 * BCC_SPACING, dy: 0.50 * BCC_SPACING},
+                    {dx: 0.50 * BCC_SPACING, dy: 0.25 * BCC_SPACING},
+                    {dx: -0.25 * BCC_SPACING, dy: 0.50 * BCC_SPACING},
+                    {dx: 0.50 * BCC_SPACING, dy: -0.25 * BCC_SPACING}
+                ];
+
+                offsets.forEach(off => {
+                    const hx = zr.x + off.dx;
+                    const hy = zr.y + off.dy;
+                    const distFromCenter = Math.hypot(hx - cx, hy - cy);
+                    if (distFromCenter < latSize * 11 && Math.random() * 100 < hConc) {
+                        hAtoms.push(new Atom(hx, hy, 'H'));
+                    }
+                });
+            });
+
+            // Optional: light relaxation (push Zr slightly away from nearby H for visual clarity)
             tempZr.forEach(zr => {
                 let dx_total = 0, dy_total = 0;
                 hAtoms.forEach(h => {
                     const dx = zr.x - h.x, dy = zr.y - h.y, dist = Math.hypot(dx, dy);
-                    const forceRange = A * PX_PER_ANG * 1.2;
+                    const forceRange = BCC_SPACING * 0.8;
                     if (dist < forceRange && dist > 0) {
-                        const strength = (1 - dist/forceRange) * 12; 
+                        const strength = (1 - dist/forceRange) * 8;   // gentler than original
                         dx_total += (dx/dist) * strength;
                         dy_total += (dy/dist) * strength;
                     }
                 });
-                zr.x += dx_total; zr.y += dy_total;
+                zr.x += dx_total * 0.3;   // reduced strength for stability
+                zr.y += dy_total * 0.3;
                 zr.baseX = zr.x; zr.baseY = zr.y;
-                atoms.push(zr);
             });
 
+            atoms = tempZr;
+
+            // Find central emitter
             emitter = atoms.reduce((p, c) => Math.hypot(c.x-cx, c.y-cy) < Math.hypot(p.x-cx, p.y-cy) ? c : p);
             if(emitter) emitter.isEmitter = true;
+
             document.getElementById('fe-val').textContent = atoms.length;
             document.getElementById('h-val').textContent = hAtoms.length;
         }
@@ -210,15 +229,14 @@
             frame++;
             [...atoms, ...hAtoms].forEach(a => a.updateVibe());
             const interval = emitMode === 'pulse' ? Math.max(1, Math.floor(61 - emitFreq)) : 2;
-            
+           
             if (frame % interval === 0 && emitter) {
                 const angle = Math.random() * Math.PI * 2;
-                particles.push({ 
-                    x: emitter.x, y: emitter.y, 
-                    vx: Math.cos(angle)*speedFactor, vy: Math.sin(angle)*speedFactor, 
-                    b: 0, pathLength: 0, history: [], intensity: 1.0 
+                particles.push({
+                    x: emitter.x, y: emitter.y,
+                    vx: Math.cos(angle)*speedFactor, vy: Math.sin(angle)*speedFactor,
+                    b: 0, pathLength: 0, history: [], intensity: 1.0
                 });
-                // FE CODE SYNC: Emitter sound trigger
                 if(frame % 10 === 0) playSound(800, 'sine', 0.1, 0.05, 'm-emit');
             }
 
@@ -237,20 +255,18 @@
                         if (dot < 0) {
                             p.vx -= 2*dot*nx; p.vy -= 2*dot*ny;
                             s.hitTime = frame; p.b++; totalBounces++;
-                            // FE CODE SYNC: Bounce sounds (150 for Metal, 400 for Hydrogen)
                             if(totalBounces % 5 === 0) {
                                 playSound(s.type === 'Zr' ? 150 : 400, 'triangle', 0.05, 0.03, 'm-bounce');
                             }
                         }
                     }
                 }
-                
+               
                 if (p.intensity < 0.01 || p.x < -50 || p.x > canvas.width + 50 || p.y < -50 || p.y > canvas.height + 50) {
                     particles.splice(i, 1);
                 } else if (p.b > 0 && Math.hypot(p.x - emitter.x, p.y - emitter.y) < emitter.r + 5) {
                     totalAbsorbed++;
                     document.getElementById('abs-val').textContent = totalAbsorbed;
-                    // FE CODE SYNC: Absorption sound
                     playSound(1100, 'sine', 0.25, 0.04, 'm-abs');
                     particles.splice(i, 1);
                 }
@@ -262,13 +278,13 @@
             if (!started) return;
             const dpr = window.devicePixelRatio || 1;
             ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width/dpr, canvas.height/dpr);
-            
+           
             [...atoms, ...hAtoms].forEach(a => {
                 const isHit = frame - a.hitTime < 10;
                 const tx = a.x + a.vibeX, ty = a.y + a.vibeY;
                 ctx.beginPath(); ctx.arc(tx, ty, a.r, 0, Math.PI*2);
                 const g = ctx.createRadialGradient(tx - a.r*0.3, ty - a.r*0.3, a.r*0.1, tx, ty, a.r);
-                
+               
                 if (a.type === 'Zr') {
                     g.addColorStop(0, isHit ? '#fff' : '#c387ff');
                     g.addColorStop(0.4, isHit ? '#9d4edd' : '#5a189a');
@@ -298,13 +314,13 @@
             update(); requestAnimationFrame(draw);
         }
 
-        function togglePause() { 
-            isPaused = !isPaused; 
+        function togglePause() {
+            isPaused = !isPaused;
             if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
         }
 
         function resetSim() { particles = []; totalBounces = 0; totalAbsorbed = 0; document.getElementById('abs-val').textContent = '0'; generateLattice(); }
-        
+       
         function resize() {
             const dpr = window.devicePixelRatio || 1;
             canvas.width = (window.innerWidth - 170) * dpr;
