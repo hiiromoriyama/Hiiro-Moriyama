@@ -87,53 +87,56 @@
     <!-- Hero Section -->
 
     <style>
-  /* 1. The Wrapper: defines the area based on the image */
   #hero {
     position: relative;
     width: 100%;
     overflow: hidden;
-    line-height: 0; /* Prevents tiny browser-specific gaps at the bottom of images */
+    /* FIX: Setting font-size and line-height to 0 removes the ghost gap at the bottom */
+    line-height: 0;
+    font-size: 0;
+    background-color: #000; /* Matches dark-background theme */
   }
 
-  /* 2. The Background Image */
   #hero img {
     width: 100%;
     height: auto;
+    /* FIX: display: block removes the space reserved for text descenders */
     display: block;
+    border: none;
   }
 
-  /* 3. The Content Overlay: Centered relative to #hero */
   #hero .container {
+    /* Absolute centering relative to the image */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     
-    /* Presentation */
+    /* Text formatting - Restoring what was set to 0 in the parent */
     width: 100%;
     text-align: center;
     z-index: 10;
     margin: 0;
     padding: 0;
-    line-height: normal; /* Resets the line-height for text readability */
-    color: #ffffff; /* Assumes light text for dark-background class */
+    line-height: normal; 
+    font-size: 2rem; /* Adjust this to your preferred size */
+    color: #ffffff;
+    font-family: sans-serif;
   }
 
-  /* Styling for the typed text span to prevent "jumping" */
+  /* Ensures the typed text doesn't move the container */
   .typed {
     display: inline-block;
-    font-weight: bold;
   }
 
-  /* Optional: Add a dark overlay so text is readable on any image */
-  #hero::after {
-    content: "";
+  /* Optional: Dark overlay to make text pop against the image */
+  .hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4); /* Adjust transparency as needed */
+    background: rgba(0, 0, 0, 0.3); /* Adjust darkness here */
     z-index: 1;
   }
 </style>
