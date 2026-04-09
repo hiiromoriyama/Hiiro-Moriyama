@@ -69,7 +69,7 @@
     <img src="assets/img/Oxford-University-Circlet.svg" 
          alt="University of Oxford" 
          class="img-fluid" 
-         style="max-width: 80px; height: auto; transition: 0.3s;">
+         style="max-width: 70px; height: auto; transition: 0.3s;">
   </a>
 </div>
 
@@ -85,92 +85,66 @@
   <main class="main">
 
     <!-- Hero Section -->
+
     <style>
-  /* All-in-one styling for centering and appearance */
-  #hero-integrated {
-    width: 100%;
-    height: 100vh;
+  /* 1. The Wrapper: defines the area based on the image */
+  #hero {
     position: relative;
-    padding: 0;
-    margin: 0;
-    /* Flexbox: The gold standard for centering across all browsers */
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center; 
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
+    width: 100%;
     overflow: hidden;
-    background-color: #000;
+    line-height: 0; /* Prevents tiny browser-specific gaps at the bottom of images */
   }
 
-  /* Ensures the background image fills the screen and stays behind text */
-  #hero-integrated .hero-bg-img {
-    position: absolute;
-    inset: 0;
+  /* 2. The Background Image */
+  #hero img {
+    width: 100%;
+    height: auto;
     display: block;
+  }
+
+  /* 3. The Content Overlay: Centered relative to #hero */
+  #hero .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Presentation */
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+    margin: 0;
+    padding: 0;
+    line-height: normal; /* Resets the line-height for text readability */
+    color: #ffffff; /* Assumes light text for dark-background class */
+  }
+
+  /* Styling for the typed text span to prevent "jumping" */
+  .typed {
+    display: inline-block;
+    font-weight: bold;
+  }
+
+  /* Optional: Add a dark overlay so text is readable on any image */
+  #hero::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    background: rgba(0, 0, 0, 0.4); /* Adjust transparency as needed */
     z-index: 1;
   }
-
-  /* The Dark Overlay: Makes sure the white text is readable regardless of the photo */
-  #hero-integrated:before {
-    content: "";
-    background: rgba(0, 0, 0, 0.5); 
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-  }
-
-  /* The Content Container */
-  #hero-integrated .container {
-    position: relative;
-    z-index: 3;
-    text-align: center;
-    width: 100%;
-    padding: 0 15px;
-  }
-
-  /* Main Text Styling */
-  #hero-integrated p {
-    color: #ffffff;
-    font-size: clamp(2rem, 8vw, 3.5rem); /* Dynamically scales text for mobile vs desktop */
-    font-weight: 700;
-    margin: 0;
-    letter-spacing: -0.5px;
-    font-family: "Raleway", sans-serif;
-  }
-
-  /* Typed.js Highlight Color */
-  #hero-integrated .typed {
-    color: #00d4ff; 
-    text-shadow: 0px 0px 15px rgba(0, 212, 255, 0.3);
-  }
-
-  /* Ensuring the cursor matches the text size */
-  #hero-integrated .typed-cursor {
-    color: #ffffff;
-  }
 </style>
-
-<section id="hero" class="hero section dark-background">
-  <div id="hero-integrated">
     
-    <img src="assets/img/pic3.jpg" alt="Physicist Artist Background" class="hero-bg-img" data-aos="fade-in">
+<section id="hero" class="hero section dark-background">
 
-    <div class="container" data-aos="zoom-out" data-aos-delay="100">
-      <p>
-        I'm <span class="typed" data-typed-items="a Physicist, an Amateur Artist"></span>
-        <span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span>
-      </p>
-    </div>
+      <img src="assets/img/pic3.jpg" alt="" data-aos="fade-in" class="">
 
-  </div>
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <p>I'm <span class="typed" data-typed-items="a Physicist, an Amateur Artist"></span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span></p>
+      </div>
 </section><!-- /Hero Section -->
 
         <!-- About me Section -->
