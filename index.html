@@ -88,7 +88,7 @@
 
   <style>
   /* This block ensures centering and styling without needing to edit your .css file */
-  #hero {
+  #hero.hero-custom {
     width: 100%;
     height: 100vh;
     position: relative;
@@ -101,7 +101,7 @@
   }
 
   /* Centering the background image */
-  #hero .hero-img {
+  #hero.hero-custom .hero-img {
     position: absolute;
     inset: 0;
     display: block;
@@ -112,7 +112,7 @@
   }
 
   /* Dark Overlay for readability */
-  #hero:before {
+  #hero.hero-custom:before {
     content: "";
     background: rgba(0, 0, 0, 0.5); /* Adjust 0.5 for more/less darkness */
     position: absolute;
@@ -121,41 +121,42 @@
   }
 
   /* Container styling */
-  #hero .container {
+  #hero.hero-custom .container {
     position: relative;
     z-index: 3;
     text-align: center;
     width: 100%;
+    /* Added flex properties to ensure horizontal centering of children */
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 
   /* Large Typography */
-  #hero p {
+  #hero.hero-custom p {
     color: #fff;
     font-size: 3.5rem;
     font-weight: 700;
     margin: 0;
     font-family: "Raleway", sans-serif;
-    display: inline-block;
   }
 
   /* Colored Typed Text */
-  #hero .typed {
+  #hero.hero-custom .typed {
     color: #00d4ff; /* A clean science-blue/art-cyan */
     text-shadow: 0px 0px 15px rgba(0, 212, 255, 0.3);
   }
 
   /* Blinking Cursor Styling */
-  #hero .typed-cursor {
+  #hero.hero-custom .typed-cursor {
     color: #fff;
     font-size: 3.5rem;
   }
 
   /* Mobile responsiveness */
   @media (max-width: 768px) {
-    #hero p, 
-    #hero .typed-cursor {
+    #hero.hero-custom p, 
+    #hero.hero-custom .typed-cursor {
       font-size: 2.2rem;
     }
   }
@@ -163,10 +164,10 @@
   
 <section id="hero" class="hero section dark-background">
 
-      <img src="assets/img/pic3.jpg" alt="" data-aos="fade-in" class="hero-img">
+      <img src="assets/img/pic3.jpg" alt="" data-aos="fade-in" class="">
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <p>I'm <span class="typed" data-typed-items="a Physicist, an Amateur Artist"></span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span></p>
+        <p>I'm <span class="typed" data-typed-items="a Physicist, an Amateur Artist"></span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span></p>
       </div>
 </section><!-- /Hero Section -->
 
