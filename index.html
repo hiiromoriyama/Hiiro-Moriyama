@@ -86,64 +86,77 @@
 
     <!-- Hero Section -->
 
-    <style>
-  #hero {
+  <style>
+  /* This block ensures centering and styling without needing to edit your .css file */
+  #hero.hero-custom {
+    width: 100%;
+    height: 100vh;
     position: relative;
-    width: 100%;
-    /* This ensures the section height is exactly the same as the image */
+    padding: 0;
     display: flex;
-    align-items: center;    /* Vertical center */
+    align-items: center; /* Vertical center */
     justify-content: center; /* Horizontal center */
-    padding: 0;
-    margin: 0;
     overflow: hidden;
-    line-height: 0;         /* Collapses any whitespace gaps */
-    background: transparent; /* Removes any background color bars */
+    background-color: #000; /* Fallback color */
   }
 
-  #hero img {
-    width: 100%;
-    height: auto;
-    display: block;         /* Removes the "text-baseline" gap */
-    margin: 0;
-    padding: 0;
-  }
-
-  /* The container sits ON TOP of the image */
-  #hero .container {
+  /* Centering the background image */
+  #hero.hero-custom .hero-img {
     position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  /* Dark Overlay for readability */
+  #hero.hero-custom:before {
+    content: "";
+    background: rgba(0, 0, 0, 0.5); /* Adjust 0.5 for more/less darkness */
+    position: absolute;
+    inset: 0;
     z-index: 2;
+  }
+
+  /* Container styling */
+  #hero.hero-custom .container {
+    position: relative;
+    z-index: 3;
     text-align: center;
     width: 100%;
-    /* Reset text properties after the parent's line-height: 0 */
-    line-height: normal; 
-    font-size: 2.5rem; 
-    color: white;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.5); /* Helps visibility */
   }
 
-  .typed {
-    display: inline-block;
+  /* Large Typography */
+  #hero.hero-custom p {
+    color: #fff;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0;
+    font-family: "Raleway", sans-serif;
   }
 
-  /* Ensures AOS animations don't create weird spacing */
-  [data-aos] {
-    pointer-events: none;
+  /* Colored Typed Text */
+  #hero.hero-custom .typed {
+    color: #00d4ff; /* A clean science-blue/art-cyan */
+    text-shadow: 0px 0px 15px rgba(0, 212, 255, 0.3);
+  }
+
+  /* Blinking Cursor Styling */
+  #hero.hero-custom .typed-cursor {
+    color: #fff;
+    font-size: 3.5rem;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    #hero.hero-custom p, 
+    #hero.hero-custom .typed-cursor {
+      font-size: 2.2rem;
+    }
   }
 </style>
-
-<section id="hero" class="hero section dark-background">
-
-  <img src="assets/img/pic3.jpg" alt="Hero Background" data-aos="fade-in">
-
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
-    <p>
-      I'm <span class="typed" data-typed-items="a Physicist, an Amateur Artist"></span>
-      <span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span>
-    </p>
-  </div>
-
-</section>
   
 <section id="hero" class="hero section dark-background">
 
