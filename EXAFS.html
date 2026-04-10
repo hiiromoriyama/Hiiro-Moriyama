@@ -4,76 +4,59 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Scientific Projects - Hiiro Moriyama</title>
+  <title>EXAFS - Hiiro Moriyama</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
-    /* Dashboard Cards */
+    /* Styling for the launcher dashboard */
     .project-card {
-      background: #ffffff;
+      background: #fff;
       border: 1px solid #dee2e6;
-      padding: 20px;
+      padding: 15px;
       border-radius: 8px;
       height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       transition: 0.3s;
     }
-    .project-card:hover {
-      border-color: #0563af;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    }
-    .project-card h4 { font-size: 1.1rem; margin-bottom: 8px; color: #222; }
-    .project-card p { font-size: 0.85rem; color: #666; }
-
+    .project-card:hover { border-color: #0563af; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    .project-card h4 { font-size: 1rem; margin-bottom: 5px; }
+    .project-card p { font-size: 0.8rem; color: #666; margin-bottom: 10px; }
+    
     .btn-launch {
       background: #0563af;
       color: white;
       border: none;
-      padding: 8px 16px;
+      padding: 5px 12px;
       border-radius: 4px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
-      width: fit-content;
-      margin-top: 15px;
     }
     .btn-launch:hover { background: #0675d1; }
 
-    /* Content Visibility */
-    .tool-section {
-      display: none; /* Hidden by default */
-      padding-top: 30px;
-      margin-top: 30px;
-      border-top: 2px solid #f1f1f1;
-    }
-    .tool-section.active {
-      display: block !important; /* Force display when active */
-    }
+    /* Toggle visibility logic */
+    .project-section { display: none; }
+    .project-section.active { display: block; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Simulation Styling */
-    .sim-frame {
-      width: 100%;
-      height: 600px;
-      background: #000;
-      border: 2px solid #333;
-      border-radius: 10px;
-      margin: 20px 0;
+    .oxford-link:hover img {
+      opacity: 0.7;
+      transform: scale(1.05);
     }
-    .note-box {
-      font-style: italic;
-      font-size: 0.85rem;
-      color: #555;
-      background: #f8f9fa;
-      padding: 15px;
-      border-left: 4px solid #0563af;
-    }
-    
-    .oxford-link:hover img { opacity: 0.7; transform: scale(1.05); transition: 0.3s; }
   </style>
 </head>
 
@@ -85,133 +68,160 @@
     <a href="index.html" class="logo d-flex align-items-center justify-content-center">
       <h1 class="sitename">Hiiro Moriyama</h1>
     </a>
+    <div class="social-links text-center">
+      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama?ev=hdr_xprf" class="researchgate" target="_blank"><i class="bi bi-journal-richtext"></i></a>
+      <a href="https://pam.web.ox.ac.uk/people/hiiro-moriyama" class="processing-advanced-materials" target="_blank"><i class="bi bi-person-workspace"></i></a>
+      <a href="https://www.digitalmaterials-cdt.ac.uk/people/hiiro-moriyama/" class="materials-4.0" target="_blank"><i class="bi bi-buildings"></i></a>
+      <a href="https://orcid.org/0009-0001-9306-3806" class="orcid-link" target="_blank"><i class="bi bi-person-badge"></i></a>
+      <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+    </div>
     <nav id="navmenu" class="navmenu">
       <ul>
         <li><a href="index.html#hero"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="index.html#aboutme"><i class="bi bi-person navicon"></i>About me</a></li>
         <li><a href="index.html#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
+        <li><a href="index.html#awards"><i class="bi bi-trophy navicon"></i>Awards</a></li>
+        <li><a href="index.html#arts"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
       </ul>
     </nav>
+
+    <div class="oxford-logo-container mt-auto pb-5 text-center">
+      <a href="https://www.ox.ac.uk/" target="_blank" rel="noopener noreferrer" class="oxford-link">
+        <img src="assets/img/Oxford-University-Circlet.svg" alt="University of Oxford" class="img-fluid" style="max-width: 70px; height: auto; transition: 0.3s;">
+      </a>
+    </div>
   </header>
 
   <main class="main">
     <div class="page-title dark-background">
       <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Scientific Projects Dashboard</h1>
+        <h1 class="mb-2 mb-lg-0">Extended X-Ray Absorption Fine Structure (EXAFS)</h1>
         <nav class="breadcrumbs">
-          <ol><li><a href="index.html">Home</a></li><li class="current">Projects</li></ol>
+          <ol><li><a href="index.html">Home</a></li><li class="current">EXAFS</li></ol>
         </nav>
       </div>
     </div>
 
-    <section class="section">
+    <section id="service-details" class="service-details section">
       <div class="container">
         <div class="row gy-4">
-          
-          <div class="col-lg-3">
-            <div class="services-list mb-4">
-              <a href="#" class="active">Interactive Hub</a>
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="services-list">
+              <a href="microresidual-stress.html">Micro-Residual Stress</a>
+              <a href="xray-prosthesis.html">X-ray Prosthesis</a>
+              <a href="xray-optics.html">Ultrafast X-ray Optics</a>
+              <a href="2D-Flows.html">2D Flows</a>
+              <a href="EXAFS.html" class="active">EXAFS</a>
             </div>
-            <div class="p-3 border rounded bg-light">
-              <h6 class="fw-bold">Acknowledgement</h6>
-              <p style="font-size: 0.8rem; line-height: 1.4;">The research forms part of the UKRI Materials 4.0 CDT (EPSRC), led by the Henry Royce Institute, carried out at the University of Oxford’s Department of Materials.</p>
-              <img src="assets/img/oxford-logo.png" alt="Oxford" class="img-fluid mt-2" style="max-width: 120px;">
-            </div>
+            <h4>Acknowledgement</h4>
+            <p style="text-align: justify;">
+              The research forms part of the UKRI <a href="https://www.digitalmaterials-cdt.ac.uk" target="_blank" rel="noopener noreferrer">Materials 4.0</a> CDT (<a href="https://www.ukri.org/councils/epsrc/" target="_blank" rel="noopener noreferrer">EPSRC</a>), led by the <a href="https://www.royce.ac.uk" target="_blank" rel="noopener noreferrer">Henry Royce Institute</a>, and is carried out in the University of Oxford’s <a href="https://www.materials.ox.ac.uk" target="_blank" rel="noopener noreferrer">Department of Materials</a>, with additional funding from the <a href="https://www.britishcouncil.org" target="_blank" rel="noopener noreferrer">British Council</a> Japan Association (<a href="https://www.bcja.net/scholarship_students/2025.html" target="_blank" rel="noopener noreferrer">BCJA</a>).
+            </p>
+            <div class="container"><div class="row align-items-center g-4"><div class="col-6 col-md-4">
+              <a href="https://www.ox.ac.uk" target="_blank"><img src="assets/img/oxford-logo.png" alt="University of Oxford" class="img-fluid"></a>
+            </div></div></div>
           </div>
 
-          <div class="col-lg-9">
-            <h3>Scientific Research Portfolio</h3>
-            <p>Select a specific project or lattice dynamic model below to launch the interactive simulation environment.</p>
+          <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+            <img src="assets/img/exafs-main.jpg" alt="" class="img-fluid services-img">
+            <h3>Probing Local Atomic Environments</h3>
+            <p>Select a model to launch the interactive simulation environment:</p>
 
-            <div class="row gy-3 mt-2">
+            <div class="row gy-3 mb-4">
               <div class="col-md-4">
                 <div class="project-card">
-                  <div>
-                    <h4>EXAFS Analysis</h4>
-                    <p>Lattice Dynamics & Scattering basics.</p>
-                  </div>
-                  <button class="btn-launch" onclick="showTool('exafs')">Launch Tool</button>
+                  <h4>EXAFS Analysis</h4>
+                  <p>Lattice Dynamics & Scattering basics.</p>
+                  <button class="btn-launch" onclick="showProject('exafs-base')">Launch Tool</button>
                 </div>
               </div>
-
               <div class="col-md-4">
                 <div class="project-card">
-                  <div>
-                    <h4>HCP Lattice</h4>
-                    <p>Zirconium Hydrides investigations.</p>
-                  </div>
-                  <button class="btn-launch" onclick="showTool('hcp')">Launch Tool</button>
+                  <h4>HCP Lattice</h4>
+                  <p>Zirconium Hydride investigations.</p>
+                  <button class="btn-launch" onclick="showProject('exafs-hcp')">Launch Tool</button>
                 </div>
               </div>
-
               <div class="col-md-4">
                 <div class="project-card">
-                  <div>
-                    <h4>BCC Lattice</h4>
-                    <p>Hydrogen in α-Iron simulations.</p>
-                  </div>
-                  <button class="btn-launch" onclick="showTool('bcc')">Launch Tool</button>
+                  <h4>BCC Lattice</h4>
+                  <p>Hydrogen in alpha-Iron simulations.</p>
+                  <button class="btn-launch" onclick="showProject('exafs-bcc')">Launch Tool</button>
                 </div>
               </div>
             </div>
 
-            <div id="content-anchor">
-              
-              <div id="tool-exafs" class="tool-section active"> <h3>EXAFS: Probing Local Environments</h3>
-                <p>Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter.</p>
-                <iframe src="fe-h-sim.html" class="sim-frame"></iframe>
-                <div class="note-box">
-                  <strong>Note:</strong> Explore how photoelectrons scatter after an iron atom’s K-edge is excited. Use the H-Conc slider to see real-time strain and the Thermal slider to simulate heat-induced vibrations (Debye-Waller effect).
+            <div id="project-display-area">
+              <div id="exafs-base" class="project-section active">
+                <h3>EXAFS: Probing Local Environments</h3>
+                <p style="text-align: justify;">Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter.</p>
+                <div style="width: 100%; height: 600px; background: #000; margin-top: 30px; border: 1px solid #333; overflow: hidden;">
+                  <iframe src="fe-h-sim.html" style="width: 100%; height: 100%; border: none;" title="Simulation"></iframe>
                 </div>
+                <p class="mt-3" style="font-style: italic; font-size: 0.85em; color: #666;">
+                  <strong>Note:</strong> This interactive tool lets you explore how photoelectrons scatter after an iron atom’s K-edge is excited. Use the H-Conc slider to see how adding Hydrogen atoms creates real-time strain and warps the iron lattice.
+                </p>
               </div>
 
-              <div id="tool-hcp" class="tool-section">
+              <div id="exafs-hcp" class="project-section">
                 <h3>HCP Lattice Dynamics: Zirconium Hydrides</h3>
-                <p>Zirconium alloys are pivotal in nuclear cladding. The absorption of hydrogen leads to brittle hydride phases. Note the complex path distribution in the HCP structure.</p>
-                <iframe src="zr-h-sim.html" class="sim-frame"></iframe>
-                <div class="note-box">
-                  <strong>Note (Zr-H):</strong> Purple spheres represent Zirconium in hexagonal layers. Hydrogen occupies the octahedral interstitial sites.
+                <p style="text-align: justify;">Zirconium alloys are pivotal in nuclear cladding applications, where the absorption of hydrogen leads to the formation of brittle hydride phases.</p>
+                <div style="width: 100%; height: 600px; background: #000; margin-top: 20px; border: 2px solid #6a0dad; overflow: hidden; border-radius: 8px;">
+                  <iframe src="zr-h-sim.html" style="width: 100%; height: 100%; border: none;" title="Zr-H HCP Simulation"></iframe>
                 </div>
+                <p class="mt-3" style="font-style: italic; font-size: 0.85em; color: #666;">
+                  <strong>Note (Zr-H Simulation):</strong> Purple spheres represent Zirconium in hexagonal layers. Hydrogen occupies the octahedral interstitial sites.
+                </p>
               </div>
 
-              <div id="tool-bcc" class="tool-section">
+              <div id="exafs-bcc" class="project-section">
                 <h3>BCC Lattice Dynamics: Hydrogen in α-Iron</h3>
-                <p>In BCC metals, Hydrogen atoms preferentially occupy tetrahedral interstitial sites, causing significant anisotropic expansion of the Iron lattice.</p>
-                <iframe src="fe-h-bcc-sim.html" class="sim-frame"></iframe>
-                <div class="note-box">
-                  <strong>Note:</strong> Observe the physics-based distortion: insertion of Hydrogen causes a shift in the EXAFS oscillation frequency and phase.
+                <p style="text-align: justify;">In BCC metals, Hydrogen atoms preferentially occupy the tetrahedral interstitial sites, acting as precursors to hydrogen-induced cracking.</p>
+                <div style="width: 100%; height: 600px; background: #000; margin-top: 20px; border: 2px solid #444; overflow: hidden; border-radius: 8px;">
+                  <iframe src="fe-h-bcc-sim.html" style="width: 100%; height: 100%; border: none;" title="Fe-H BCC Simulation"></iframe>
                 </div>
+                <p class="mt-3" style="font-style: italic; font-size: 0.85em; color: #666;">
+                  <strong>Note (Fe-H Simulation):</strong> Insertion of Hydrogen causes a significant anisotropic expansion of the Iron lattice.
+                </p>
               </div>
+            </div>
 
-            </div> </div>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <script>
-    function showTool(type) {
-      // 1. Hide all sections using a loop
-      const sections = document.getElementsByClassName('tool-section');
-      for (let i = 0; i < sections.length; i++) {
-        sections[i].classList.remove('active');
-      }
+  <footer id="footer" class="footer position-relative light-background">
+    <div style="text-align: center; font-size: 14px; padding: 10px;">
+      <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
+    </div>
+    <div class="container"><div class="copyright text-center "><p>© <span>Hiiro Moriyama | Oxford 2026</span></p></div></div>
+  </footer>
 
-      // 2. Show the specific section
-      const targetId = 'tool-' + type;
-      const target = document.getElementById(targetId);
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+
+  <script>
+    function showProject(id) {
+      // Hide all sections
+      const sections = document.querySelectorAll('.project-section');
+      sections.forEach(s => s.classList.remove('active'));
       
+      // Show the selected one
+      const target = document.getElementById(id);
       if (target) {
         target.classList.add('active');
-        // 3. Scroll into view
+        // Scroll to the content for better mobile experience
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        console.error("Could not find element with ID: " + targetId);
       }
     }
   </script>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
-
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
