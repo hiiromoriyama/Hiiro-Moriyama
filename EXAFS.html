@@ -9,28 +9,58 @@
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
-    /* Portfolio UI */
-    .portfolio-content { cursor: pointer; transition: 0.3s; border: 1px solid #eee; background: #fff; padding: 15px; }
-    .portfolio-content:hover { border-color: #0563af; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-    
-    /* Interactive Toggle Logic */
-    .project-detail-view { display: none; opacity: 0; }
-    .project-detail-view.active { display: block; opacity: 1; animation: fadeIn 0.5s ease forwards; }
-    
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    /* Clean Dashboard UI (No Images) */
+    .project-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      padding: 20px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .project-card:hover {
+      border-color: #0563af;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .project-card h4 { margin-bottom: 5px; color: #333; font-size: 1.1rem; }
+    .project-card p { font-size: 0.85rem; color: #666; margin-bottom: 15px; }
 
-    /* Simulation Containers */
-    .sim-container { width: 100%; height: 600px; background: #000; margin-top: 20px; border: 2px solid #444; overflow: hidden; border-radius: 8px; }
-    .note-text { font-style: italic; font-size: 0.85em; color: #666; margin-top: 10px; }
-    
-    .btn-launch { background: #0563af; color: white; border: none; padding: 6px 15px; border-radius: 4px; font-size: 0.85rem; margin-top: 10px; }
+    /* Launch Button Styling */
+    .btn-launch {
+      background: #0563af;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      width: fit-content;
+      transition: 0.3s;
+    }
     .btn-launch:hover { background: #0675d1; }
-    .oxford-link:hover img { opacity: 0.7; transform: scale(1.05); transition: 0.3s; }
+
+    /* Interactive Section Logic */
+    .tool-section { display: none; opacity: 0; padding-top: 40px; border-top: 2px solid #eee; margin-top: 40px; }
+    .tool-section.active { display: block; opacity: 1; animation: fadeIn 0.5s ease forwards; }
+    
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Simulation Frame */
+    .sim-frame {
+      width: 100%; 
+      height: 600px; 
+      background: #000; 
+      margin: 20px 0; 
+      border: 2px solid #444; 
+      border-radius: 8px;
+    }
+    .note-box { font-style: italic; font-size: 0.85em; color: #666; background: #f9f9f9; padding: 15px; border-left: 3px solid #ccc; }
   </style>
 </head>
 
@@ -53,82 +83,108 @@
   <main class="main">
     <div class="page-title dark-background">
       <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Scientific Projects</h1>
+        <h1 class="mb-2 mb-lg-0">Scientific Projects Dashboard</h1>
         <nav class="breadcrumbs">
           <ol><li><a href="index.html">Home</a></li><li class="current">Projects</li></ol>
         </nav>
       </div>
     </div>
 
-    <section id="service-details" class="service-details section">
+    <section class="section">
       <div class="container">
         <div class="row gy-4">
           
-          <div class="col-lg-4" data-aos="fade-up">
+          <div class="col-lg-3" data-aos="fade-up">
             <div class="services-list">
-              <a href="index.html">Main Site</a>
-              <a href="#" class="active">Project Dashboard</a>
+              <a href="#" class="active">Project Hub</a>
             </div>
-            <h4>Acknowledgement</h4>
-            <p style="text-align: justify; font-size: 0.85em;">
-              The research forms part of the UKRI Materials 4.0 CDT (EPSRC), led by the Henry Royce Institute, and is carried out in the University of Oxford’s Department of Materials.
-            </p>
+            <div class="mt-4">
+              <h6>Acknowledgement</h6>
+              <p style="font-size: 0.8em; text-align: justify;">Research supported by UKRI Materials 4.0 CDT (EPSRC), Henry Royce Institute, and the University of Oxford.</p>
+            </div>
           </div>
 
-          <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
-            <img src="assets/img/exafs-main.jpg" alt="" class="img-fluid services-img">
+          <div class="col-lg-9" data-aos="fade-up" data-aos-delay="100">
             <h3>Probing Local Atomic Environments</h3>
-            <p style="text-align: justify;">
-              My research interests focus on advancing X-ray imaging techniques at XFEL and synchrotron facilities to enable high-speed, high-resolution investigations of material behaviour under dynamic conditions.
-            </p>
+            <p>My research interests focus on advancing X-ray imaging techniques to enable high-speed, high-resolution investigations of material behaviour. <strong>Select a project below to launch the tool.</strong></p>
 
-            <div class="row gy-4 mt-2 mb-5">
-              <div class="col-md-6">
-                <div class="portfolio-content h-100">
-                  <img src="assets/img/CSIC-square-image.png" class="img-fluid mb-2" alt="">
-                  <h4>EXAFS</h4>
-                  <p class="small">X-ray Absorption Spectroscopy & Lattice Dynamics</p>
-                  <button class="btn-launch" onclick="launch('exafs-view')">Launch Interactive</button>
+            <div class="row gy-4 mt-2">
+              
+              <div class="col-md-6 col-xl-4">
+                <div class="project-card">
+                  <div>
+                    <h4>EXAFS Analysis</h4>
+                    <p>Lattice Dynamics & Scattering basics.</p>
+                  </div>
+                  <button class="btn-launch" onclick="launch('tool-exafs')">Launch Tool</button>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="portfolio-content h-100">
-                  <img src="assets/img/OIST-img.png" class="img-fluid mb-2" alt="">
-                  <h4>2D Flows</h4>
-                  <p class="small">Hydrodynamics: Calm in the Chaos</p>
-                  <button class="btn-launch" onclick="launch('flows-view')">Launch Interactive</button>
+
+              <div class="col-md-6 col-xl-4">
+                <div class="project-card">
+                  <div>
+                    <h4>HCP Lattice Dynamics</h4>
+                    <p>Zirconium Hydrides investigations.</p>
+                  </div>
+                  <button class="btn-launch" onclick="launch('tool-hcp')">Launch Tool</button>
                 </div>
               </div>
+
+              <div class="col-md-6 col-xl-4">
+                <div class="project-card">
+                  <div>
+                    <h4>BCC Lattice Dynamics</h4>
+                    <p>Hydrogen in α-Iron simulations.</p>
+                  </div>
+                  <button class="btn-launch" onclick="launch('tool-bcc')">Launch Tool</button>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-xl-4">
+                <div class="project-card">
+                  <div>
+                    <h4>2D Flows</h4>
+                    <p>Calm in the Chaos: Hydrodynamics.</p>
+                  </div>
+                  <button class="btn-launch" onclick="launch('tool-flows')">Launch Tool</button>
+                </div>
+              </div>
+
             </div>
 
-            <div id="project-container">
-              
-              <div id="exafs-view" class="project-detail-view active">
-                <div class="border-top pt-4">
-                  <h3>EXAFS Analysis</h3>
-                  <p style="text-align: justify;">Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter.</p>
-                  
-                  <div class="sim-container"><iframe src="fe-h-sim.html" style="width:100%; height:100%; border:none;"></iframe></div>
-                  <p class="note-text"><strong>Note:</strong> This interactive tool lets you explore how photoelectrons scatter after an iron atom’s K-edge is excited. Use the sliders to observe real-time strain and the Debye-Waller effect.</p>
+            <div id="display-area">
 
-                  <h3 class="mt-5">HCP Lattice Dynamics: Zirconium Hydrides</h3>
-                  <p style="text-align: justify;">While cubic systems provide a foundation, many engineering materials, such as Zirconium, crystallize in a Hexagonal Close-Packed (HCP) structure. notice how the lower symmetry creates a more complex path distribution.</p>
-                  <div class="sim-container" style="border-color: #6a0dad;"><iframe src="zr-h-sim.html" style="width:100%; height:100%; border:none;"></iframe></div>
-                  <p class="note-text"><strong>Note (Zr-H):</strong> Purple spheres represent Zirconium; Hydrogen occupies octahedral interstitial sites.</p>
-
-                  <h3 class="mt-5">BCC Lattice Dynamics: Hydrogen in α-Iron</h3>
-                  <p style="text-align: justify;">In BCC metals like Ferritic Iron, Hydrogen diffusion is significantly faster. Observe the physics-based distortion: insertion of Hydrogen causes anisotropic expansion.</p>
-                  <div class="sim-container"><iframe src="fe-h-bcc-sim.html" style="width:100%; height:100%; border:none;"></iframe></div>
-                  <p class="note-text"><strong>Note (Fe-H):</strong> Silver spheres are Iron; Red spheres are Hydrogen in tetrahedral sites.</p>
+              <div id="tool-exafs" class="tool-section">
+                <h3>EXAFS: Probing Local Environments</h3>
+                <p>Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter.</p>
+                <iframe src="fe-h-sim.html" class="sim-frame"></iframe>
+                <div class="note-box">
+                  <strong>Note:</strong> Explore how photoelectrons scatter after an iron atom’s K-edge is excited. Use the H-Conc slider to see real-time strain and the Thermal slider to simulate heat-induced vibrations (Debye-Waller effect).
                 </div>
               </div>
 
-              <div id="flows-view" class="project-detail-view">
-                <div class="border-top pt-4">
-                  <h3>2D Flows: Calm in the Chaos</h3>
-                  <p style="text-align: justify;">Investigating the complex patterns of hydrodynamic flows and the underlying stability of 2D systems.</p>
-                  <div class="sim-container" style="border-color: #00d4ff;"><iframe src="2D-Flows.html" style="width:100%; height:100%; border:none;"></iframe></div>
+              <div id="tool-hcp" class="tool-section">
+                <h3>HCP Lattice Dynamics: Zirconium Hydrides</h3>
+                <p>Zirconium alloys are pivotal in nuclear cladding. Notice how the lower symmetry of the HCP structure creates a more complex path distribution for photoelectrons.</p>
+                <iframe src="zr-h-sim.html" class="sim-frame" style="border-color: #6a0dad;"></iframe>
+                <div class="note-box">
+                  <strong>Note:</strong> Purple spheres represent Zirconium in hexagonal layers. Hydrogen occupies the octahedral interstitial sites.
                 </div>
+              </div>
+
+              <div id="tool-bcc" class="tool-section">
+                <h3>BCC Lattice Dynamics: Hydrogen in α-Iron</h3>
+                <p>In BCC metals, Hydrogen atoms preferentially occupy tetrahedral interstitial sites, causing significant anisotropic expansion of the Iron lattice.</p>
+                <iframe src="fe-h-bcc-sim.html" class="sim-frame"></iframe>
+                <div class="note-box">
+                  <strong>Note:</strong> Observe the physics-based distortion: insertion of Hydrogen causes a shift in the EXAFS oscillation frequency and phase.
+                </div>
+              </div>
+
+              <div id="tool-flows" class="tool-section">
+                <h3>2D Flows: Calm in the Chaos</h3>
+                <p>Investigations into hydrodynamic flow patterns under dynamic conditions.</p>
+                <iframe src="2D-Flows.html" class="sim-frame" style="border-color: #00d4ff;"></iframe>
               </div>
 
             </div> </div>
@@ -137,26 +193,23 @@
     </section>
   </main>
 
-  <footer class="footer light-background">
-    <div class="container text-center py-3"><p>© <span>Hiiro Moriyama | Oxford 2026</span></p></div>
-  </footer>
-
   <script>
     function launch(id) {
-      // Hide all sections
-      document.querySelectorAll('.project-detail-view').forEach(view => {
-        view.classList.remove('active');
+      // Hide all tool sections
+      document.querySelectorAll('.tool-section').forEach(section => {
+        section.classList.remove('active');
       });
-      // Show selected section
+      // Show the selected one
       const target = document.getElementById(id);
-      target.classList.add('active');
-      // Scroll to view
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (target) {
+        target.classList.add('active');
+        // Scroll to the content
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   </script>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/js/main.js"></script>
 </body>
 </html>
