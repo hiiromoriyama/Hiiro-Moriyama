@@ -14,36 +14,22 @@
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
-    /* Ensure the portfolio items are visible */
-    .portfolio-item { margin-bottom: 30px; }
+    /* Portfolio UI */
+    .portfolio-content { cursor: pointer; transition: 0.3s; border: 1px solid #eee; background: #fff; padding: 15px; }
+    .portfolio-content:hover { border-color: #0563af; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     
     /* Interactive Toggle Logic */
-    .project-tool-container { 
-      display: none; 
-      margin-top: 30px; 
-      padding-top: 30px; 
-      border-top: 2px solid #eee; 
-    }
+    .project-detail-view { display: none; opacity: 0; }
+    .project-detail-view.active { display: block; opacity: 1; animation: fadeIn 0.5s ease forwards; }
     
-    .project-tool-container.active { 
-      display: block; 
-      animation: fadeIn 0.6s ease;
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .simulation-frame {
-      width: 100%; 
-      height: 600px; 
-      background: #000; 
-      border: 2px solid #444; 
-      border-radius: 8px;
-    }
-
-    .details-link { cursor: pointer; text-decoration: none; }
+    /* Simulation Containers */
+    .sim-container { width: 100%; height: 600px; background: #000; margin-top: 20px; border: 2px solid #444; overflow: hidden; border-radius: 8px; }
+    .note-text { font-style: italic; font-size: 0.85em; color: #666; margin-top: 10px; }
+    
+    .btn-launch { background: #0563af; color: white; border: none; padding: 6px 15px; border-radius: 4px; font-size: 0.85rem; margin-top: 10px; }
+    .btn-launch:hover { background: #0675d1; }
     .oxford-link:hover img { opacity: 0.7; transform: scale(1.05); transition: 0.3s; }
   </style>
 </head>
@@ -78,92 +64,94 @@
       <div class="container">
         <div class="row gy-4">
           
-          <div class="col-lg-4">
+          <div class="col-lg-4" data-aos="fade-up">
             <div class="services-list">
-              <a href="index.html#scientificprojects">← Back to Overview</a>
-              <a href="#" class="active">Interactive Dashboard</a>
+              <a href="index.html">Main Site</a>
+              <a href="#" class="active">Project Dashboard</a>
             </div>
             <h4>Acknowledgement</h4>
             <p style="text-align: justify; font-size: 0.85em;">
-              Research supported by UKRI Materials 4.0 CDT, Henry Royce Institute, and the University of Oxford.
+              The research forms part of the UKRI Materials 4.0 CDT (EPSRC), led by the Henry Royce Institute, and is carried out in the University of Oxford’s Department of Materials.
             </p>
           </div>
 
-          <div class="col-lg-8">
+          <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
             <img src="assets/img/exafs-main.jpg" alt="" class="img-fluid services-img">
             <h3>Probing Local Atomic Environments</h3>
-            <p>
-              Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter. 
-              <strong>Click "Launch" on a project below to open the interactive tool.</strong>
+            <p style="text-align: justify;">
+              My research interests focus on advancing X-ray imaging techniques at XFEL and synchrotron facilities to enable high-speed, high-resolution investigations of material behaviour under dynamic conditions.
             </p>
 
-            <div class="row gy-4 mt-2">
-              
+            <div class="row gy-4 mt-2 mb-5">
               <div class="col-md-6">
-                <div class="portfolio-content border h-100 p-3">
-                  <img src="assets/img/CSIC-square-image.png" class="img-fluid" alt="">
-                  <div class="portfolio-info mt-3">
-                    <h4>EXAFS Analysis</h4>
-                    <p>Lattice Dynamics & Scattering</p>
-                    <button onclick="openTool('exafs-tool')" class="btn btn-primary btn-sm">
-                      <i class="bi bi-rocket-takeoff"></i> Launch Tool
-                    </button>
-                  </div>
+                <div class="portfolio-content h-100">
+                  <img src="assets/img/CSIC-square-image.png" class="img-fluid mb-2" alt="">
+                  <h4>EXAFS</h4>
+                  <p class="small">X-ray Absorption Spectroscopy & Lattice Dynamics</p>
+                  <button class="btn-launch" onclick="launch('exafs-view')">Launch Interactive</button>
                 </div>
               </div>
-
               <div class="col-md-6">
-                <div class="portfolio-content border h-100 p-3">
-                  <img src="assets/img/OIST-img.png" class="img-fluid" alt="">
-                  <div class="portfolio-info mt-3">
-                    <h4>2D Flows</h4>
-                    <p>Hydrodynamic Chaos</p>
-                    <button onclick="openTool('flow-tool')" class="btn btn-primary btn-sm">
-                      <i class="bi bi-rocket-takeoff"></i> Launch Tool
-                    </button>
-                  </div>
+                <div class="portfolio-content h-100">
+                  <img src="assets/img/OIST-img.png" class="img-fluid mb-2" alt="">
+                  <h4>2D Flows</h4>
+                  <p class="small">Hydrodynamics: Calm in the Chaos</p>
+                  <button class="btn-launch" onclick="launch('flows-view')">Launch Interactive</button>
                 </div>
               </div>
-
             </div>
 
-            <div id="tools-display-area">
+            <div id="project-container">
+              
+              <div id="exafs-view" class="project-detail-view active">
+                <div class="border-top pt-4">
+                  <h3>EXAFS Analysis</h3>
+                  <p style="text-align: justify;">Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter.</p>
+                  
+                  <div class="sim-container"><iframe src="fe-h-sim.html" style="width:100%; height:100%; border:none;"></iframe></div>
+                  <p class="note-text"><strong>Note:</strong> This interactive tool lets you explore how photoelectrons scatter after an iron atom’s K-edge is excited. Use the sliders to observe real-time strain and the Debye-Waller effect.</p>
 
-              <div id="exafs-tool" class="project-tool-container">
-                <h3>EXAFS: Zirconium & Iron Dynamics</h3>
-                <p>Explore how photoelectrons scatter and how lattices warp under strain.</p>
-                
-                <h5>HCP Lattice (Zr-H)</h5>
-                <iframe src="zr-h-sim.html" class="simulation-frame mb-4"></iframe>
+                  <h3 class="mt-5">HCP Lattice Dynamics: Zirconium Hydrides</h3>
+                  <p style="text-align: justify;">While cubic systems provide a foundation, many engineering materials, such as Zirconium, crystallize in a Hexagonal Close-Packed (HCP) structure. notice how the lower symmetry creates a more complex path distribution.</p>
+                  <div class="sim-container" style="border-color: #6a0dad;"><iframe src="zr-h-sim.html" style="width:100%; height:100%; border:none;"></iframe></div>
+                  <p class="note-text"><strong>Note (Zr-H):</strong> Purple spheres represent Zirconium; Hydrogen occupies octahedral interstitial sites.</p>
 
-                <h5>BCC Lattice (Fe-H)</h5>
-                <iframe src="fe-h-bcc-sim.html" class="simulation-frame"></iframe>
+                  <h3 class="mt-5">BCC Lattice Dynamics: Hydrogen in α-Iron</h3>
+                  <p style="text-align: justify;">In BCC metals like Ferritic Iron, Hydrogen diffusion is significantly faster. Observe the physics-based distortion: insertion of Hydrogen causes anisotropic expansion.</p>
+                  <div class="sim-container"><iframe src="fe-h-bcc-sim.html" style="width:100%; height:100%; border:none;"></iframe></div>
+                  <p class="note-text"><strong>Note (Fe-H):</strong> Silver spheres are Iron; Red spheres are Hydrogen in tetrahedral sites.</p>
+                </div>
               </div>
 
-              <div id="flow-tool" class="project-tool-container">
-                <h3>2D Flows Simulation</h3>
-                <p>Visualizing calm within hydrodynamic chaos.</p>
-                <iframe src="2D-Flows.html" class="simulation-frame"></iframe>
+              <div id="flows-view" class="project-detail-view">
+                <div class="border-top pt-4">
+                  <h3>2D Flows: Calm in the Chaos</h3>
+                  <p style="text-align: justify;">Investigating the complex patterns of hydrodynamic flows and the underlying stability of 2D systems.</p>
+                  <div class="sim-container" style="border-color: #00d4ff;"><iframe src="2D-Flows.html" style="width:100%; height:100%; border:none;"></iframe></div>
+                </div>
               </div>
 
-            </div> </div> </div>
+            </div> </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <script>
-    function openTool(toolId) {
-      // Hide all tools first
-      const tools = document.querySelectorAll('.project-tool-container');
-      tools.forEach(t => t.classList.remove('active'));
+  <footer class="footer light-background">
+    <div class="container text-center py-3"><p>© <span>Hiiro Moriyama | Oxford 2026</span></p></div>
+  </footer>
 
-      // Show the selected tool
-      const selected = document.getElementById(toolId);
-      if (selected) {
-        selected.classList.add('active');
-        // Smooth scroll to the tool
-        selected.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+  <script>
+    function launch(id) {
+      // Hide all sections
+      document.querySelectorAll('.project-detail-view').forEach(view => {
+        view.classList.remove('active');
+      });
+      // Show selected section
+      const target = document.getElementById(id);
+      target.classList.add('active');
+      // Scroll to view
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   </script>
 
