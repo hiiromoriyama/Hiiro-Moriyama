@@ -5,39 +5,48 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Scientific Projects - Hiiro Moriyama</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
 
   <link href="assets/img/favicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
-    /* Custom styles for Oxford Logo */
-    .oxford-link:hover img {
-      opacity: 0.7;
-      transform: scale(1.05);
-      transition: 0.3s;
+    /* Portfolio styling adjustments */
+    .portfolio-info .details-link { cursor: pointer; }
+    
+    /* Hide simulation sections by default */
+    .project-detail-section { 
+      display: none; 
+      opacity: 0; 
+      transition: opacity 0.5s ease-in-out; 
+    }
+    
+    .project-detail-section.active { 
+      display: block; 
+      opacity: 1; 
     }
 
-    /* Center the launch icon/link */
-    .center-details-link {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    .simulation-box {
+      width: 100%; 
+      height: 600px; 
+      background: #000; 
+      margin-top: 20px; 
+      border: 2px solid #444; 
+      overflow: hidden; 
+      border-radius: 8px;
     }
+
+    .oxford-link:hover img { opacity: 0.7; transform: scale(1.05); transition: 0.3s; }
   </style>
 </head>
 
@@ -50,25 +59,18 @@
       <h1 class="sitename">Hiiro Moriyama</h1>
     </a>
     <div class="social-links text-center">
-      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama?ev=hdr_xprf" class="researchgate" target="_blank"><i class="bi bi-journal-richtext"></i></a>
-      <a href="https://pam.web.ox.ac.uk/people/hiiro-moriyama" class="processing-advanced-materials" target="_blank"><i class="bi bi-person-workspace"></i></a>
-      <a href="https://www.digitalmaterials-cdt.ac.uk/people/hiiro-moriyama/" class="materials-4.0" target="_blank"><i class="bi bi-buildings"></i></a>
-      <a href="https://orcid.org/0009-0001-9306-3806" class="orcid-link" target="_blank"><i class="bi bi-person-badge"></i></a>
-      <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama" class="researchgate" target="_blank"><i class="bi bi-journal-richtext"></i></a>
+      <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin" target="_blank"><i class="bi bi-linkedin"></i></a>
     </div>
     <nav id="navmenu" class="navmenu">
       <ul>
         <li><a href="index.html#hero"><i class="bi bi-house navicon"></i>Home</a></li>
-        <li><a href="index.html#aboutme"><i class="bi bi-person navicon"></i>About me</a></li>
-        <li><a href="#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
-        <li><a href="index.html#awards"><i class="bi bi-trophy navicon"></i>Awards</a></li>
-        <li><a href="index.html#arts"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
+        <li><a href="index.html#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
       </ul>
     </nav>
-
     <div class="oxford-logo-container mt-auto pb-5 text-center">
-      <a href="https://www.ox.ac.uk/" target="_blank" rel="noopener noreferrer" class="oxford-link">
-        <img src="assets/img/Oxford-University-Circlet.svg" alt="University of Oxford" class="img-fluid" style="max-width: 70px; height: auto;">
+      <a href="https://www.ox.ac.uk/" target="_blank" class="oxford-link">
+        <img src="assets/img/Oxford-University-Circlet.svg" alt="Oxford" class="img-fluid" style="max-width: 70px;">
       </a>
     </div>
   </header>
@@ -76,118 +78,125 @@
   <main class="main">
     <div class="page-title dark-background">
       <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Scientific Projects Portfolio</h1>
+        <h1 class="mb-2 mb-lg-0">Extended X-Ray Absorption Fine Structure (EXAFS)</h1>
         <nav class="breadcrumbs">
-          <ol>
-            <li><a href="index.html">Home</a></li>
-            <li class="current">Scientific Projects</li>
-          </ol>
+          <ol><li><a href="index.html">Home</a></li><li class="current">Scientific Projects</li></ol>
         </nav>
       </div>
     </div>
 
-    <section id="scientificprojects" class="portfolio section light-background">
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Scientific Projects</h2>
-        <p>My research interests focus on advancing X-ray imaging techniques at XFEL and synchrotron facilities to enable high-speed, high-resolution investigations of material behaviour under dynamic conditions.</p>
-      </div>
-
+    <section id="service-details" class="service-details section">
       <div class="container">
-        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
-
-          <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-            <li data-filter="*" class="filter-active">All</li>
-            <li data-filter=".filter-materials">Materials</li>
-            <li data-filter=".filter-xray">X-ray Science</li>
-            <li data-filter=".filter-hydrodynamics">Hydrodynamics</li>
-          </ul>
-
-          <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-materials filter-xray">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/CSIC-square-image.png" class="img-fluid" alt="EXAFS">
-                <div class="portfolio-info center-details-link">
-                  <h4>EXAFS</h4>
-                  <p>A novel approach to X-ray Absorption Spectroscopy</p>
-                  <a href="EXAFS.html" title="Launch Project" class="details-link"><i class="bi bi-box-arrow-up-right"></i></a>
-                </div>
-              </div>
+        <div class="row gy-4">
+          
+          <div class="col-lg-4" data-aos="fade-up">
+            <div class="services-list">
+              <a href="#" class="active">Interactive Project Hub</a>
             </div>
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-materials">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/CSIC-square-image.png" class="img-fluid" alt="Micro-Residual Stress">
-                <div class="portfolio-info center-details-link">
-                  <h4>Micro-Residual Stress</h4>
-                  <p>A new insight into the microstructure</p>
-                  <a href="microresidual-stress.html" title="Launch Project" class="details-link"><i class="bi bi-box-arrow-up-right"></i></a>
-                </div>
-              </div>
+            <h4>Acknowledgement</h4>
+            <p style="text-align: justify; font-size: 0.9em;">
+              Research supported by UKRI Materials 4.0 CDT, Henry Royce Institute, and the University of Oxford Department of Materials.
+            </p>
+            <div class="row align-items-center g-4">
+              <div class="col-6"><img src="assets/img/oxford-logo.png" alt="Oxford" class="img-fluid"></div>
             </div>
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-xray">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/CERN-square-image.png" class="img-fluid" alt="X-ray Prosthesis">
-                <div class="portfolio-info center-details-link">
-                  <h4>X-ray Prosthesis</h4>
-                  <p>Award-winning project at CERN</p>
-                  <a href="xray-prosthesis.html" title="Launch Project" class="details-link"><i class="bi bi-box-arrow-up-right"></i></a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-xray">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/XFEL-square-image.png" class="img-fluid" alt="Ultrafast X-ray Optics">
-                <div class="portfolio-info center-details-link">
-                  <h4>Ultrafast X-ray Optics</h4>
-                  <p>To Ultrafast and Beyond.</p>
-                  <a href="xray-optics.html" title="Launch Project" class="details-link"><i class="bi bi-box-arrow-up-right"></i></a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-hydrodynamics">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/OIST-img.png" class="img-fluid" alt="2D Flows">
-                <div class="portfolio-info center-details-link">
-                  <h4>2D Flows</h4>
-                  <p>Calm in the Chaos</p>
-                  <a href="2D-Flows.html" title="Launch Project" class="details-link"><i class="bi bi-box-arrow-up-right"></i></a>
-                </div>
-              </div>
-            </div>
-
           </div>
+
+          <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
+            <img src="assets/img/exafs-main.jpg" alt="" class="img-fluid services-img">
+            <h3>Probing Local Atomic Environments</h3>
+            <p style="text-align: justify;">
+              Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter. 
+              <strong>Select a project below to launch its interactive simulation environment.</strong>
+            </p>
+
+            <div class="isotope-layout mt-5" data-default-filter="*" data-layout="masonry">
+              <ul class="portfolio-filters isotope-filters">
+                <li data-filter="*" class="filter-active">All</li>
+                <li data-filter=".filter-materials">Materials</li>
+                <li data-filter=".filter-xray">X-ray Science</li>
+              </ul>
+
+              <div class="row gy-4 isotope-container">
+                <div class="col-lg-6 portfolio-item isotope-item filter-materials filter-xray">
+                  <div class="portfolio-content h-100">
+                    <img src="assets/img/CSIC-square-image.png" class="img-fluid" alt="">
+                    <div class="portfolio-info center-details-link">
+                      <h4>EXAFS Analysis</h4>
+                      <p>Lattice Dynamics & Scattering</p>
+                      <a onclick="launchProject('exafs-section')" class="details-link" title="Launch Simulation"><i class="bi bi-play-fill"></i> Launch</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 portfolio-item isotope-item filter-hydrodynamics">
+                  <div class="portfolio-content h-100">
+                    <img src="assets/img/OIST-img.png" class="img-fluid" alt="">
+                    <div class="portfolio-info center-details-link">
+                      <h4>2D Flows</h4>
+                      <p>Hydrodynamic Chaos</p>
+                      <a onclick="launchProject('flows-section')" class="details-link" title="Launch Simulation"><i class="bi bi-play-fill"></i> Launch</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="simulation-display-area" class="mt-5">
+              
+              <div id="exafs-section" class="project-detail-section active">
+                <div class="border-top pt-4">
+                  <h3>HCP Lattice Dynamics: Zirconium Hydrides</h3>
+                  <div class="simulation-box" style="border-color: #6a0dad;">
+                    <iframe src="zr-h-sim.html" style="width:100%; height:100%; border:none;"></iframe>
+                  </div>
+                  
+                  <h3 class="mt-5">BCC Lattice Dynamics: Hydrogen in α-Iron</h3>
+                  <div class="simulation-box">
+                    <iframe src="fe-h-bcc-sim.html" style="width:100%; height:100%; border:none;"></iframe>
+                  </div>
+                </div>
+              </div>
+
+              <div id="flows-section" class="project-detail-section">
+                <div class="border-top pt-4">
+                  <h3>Hydrodynamic 2D Flow Visualization</h3>
+                  <div class="simulation-box" style="border-color: #00d4ff;">
+                    <iframe src="2D-Flows.html" style="width:100%; height:100%; border:none;"></iframe>
+                  </div>
+                </div>
+              </div>
+
+            </div> </div>
         </div>
       </div>
     </section>
   </main>
 
   <footer id="footer" class="footer position-relative light-background">
-    <div style="text-align: center; font-size: 14px; padding: 10px;">
-      <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
-    </div>
-    <div class="container">
-      <div class="copyright text-center">
-        <p>© <span>Hiiro Moriyama | Oxford 2026</span></p>
-      </div>
+    <div class="container text-center py-3">
+      <p>© <span>Hiiro Moriyama | Oxford 2026</span></p>
     </div>
   </footer>
 
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-  <div id="preloader"></div>
+  <script>
+    function launchProject(sectionId) {
+      // Hide all simulation sections
+      document.querySelectorAll('.project-detail-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      // Show targeted section
+      const target = document.getElementById(sectionId);
+      target.classList.add('active');
+      // Scroll to the simulation smoothly
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="assets/js/main.js"></script>
-
 </body>
-
 </html>
