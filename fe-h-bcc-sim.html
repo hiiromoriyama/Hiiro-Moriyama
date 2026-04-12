@@ -10,9 +10,16 @@
             margin:0; padding:0; background:#000; overflow:hidden; 
             font-family: 'Inter', sans-serif; color: #eee; user-select: none;
             width: 100vw; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        #container { display: flex; flex-direction: row; width: 100%; height: 100%; background: #000; }
+        #container { 
+            display: flex; flex-direction: row; 
+            width: 100%; height: 100%; 
+            max-width: 100vw; max-height: 100vh;
+            background: #000; 
+            aspect-ratio: 16 / 9; /* Forces the container to 16:9 */
+        }
 
         #ui-panel { 
             width: 170px; min-width: 170px; height: 100%; 
@@ -59,7 +66,7 @@
 <body>
     <div id="overlay" onclick="startSim()">
         <h2 style="font-weight:900; color:#ffffff; letter-spacing:5px;">INITIALIZE BCC</h2>
-        <p style="font-size:10px; color:#777;">CLICK TO START</p>
+        <p style="font-size:10px; color:#777;">CLICK TO START (16:9 MODE)</p>
     </div>
     <div id="container">
         <div id="ui-panel">
@@ -110,7 +117,7 @@
         let feSize = 20, hConc = 15, emitFreq = 10, speedFactor = 4, lambda_k = 400, particleBaseR = 5, thermalK = 1, emitMode = 'pulse';
         let totalBounces = 0, totalAbsorbed = 0, emitter = null;
         const PX_PER_ANG = 35;
-        const LATTICE_A = 2.86; // BCC Iron lattice constant is approx 2.86 Angstroms
+        const LATTICE_A = 2.86; 
         let audioCtx;
 
         function startSim() {
@@ -146,13 +153,11 @@
             const cy = (canvas.height / dpr) / 2;
             const cells = Math.ceil(feSize / LATTICE_A / 2);
 
-            // Generate BCC Iron (Corners + Body Center)
             for (let i = -cells; i <= cells; i++) {
                 for (let j = -cells; j <= cells; j++) {
                     const ox = cx + i * LATTICE_A * PX_PER_ANG;
                     const oy = cy + j * LATTICE_A * PX_PER_ANG;
                     
-                    // 0,0 (Corner) and 0.5, 0.5 (Body Center)
                     [[0,0], [0.5, 0.5]].forEach(p => {
                         const ax = ox + p[0] * LATTICE_A * PX_PER_ANG;
                         const ay = oy + p[1] * LATTICE_A * PX_PER_ANG;
@@ -161,8 +166,6 @@
                         }
                     });
 
-                    // Tetrahedral Interstitial Sites in BCC (Face centers shifted)
-                    // Common sites are (0.5, 0.25, 0) and permutations
                     [[0.5, 0.25], [0.5, 0.75], [0.25, 0.5], [0.75, 0.5]].forEach(p => {
                         const hx = ox + p[0] * LATTICE_A * PX_PER_ANG;
                         const hy = oy + p[1] * LATTICE_A * PX_PER_ANG;
@@ -173,14 +176,12 @@
                 }
             }
 
-            // Apply Physics-Based Distortion
             atoms.forEach(fe => {
                 let dx_total = 0, dy_total = 0;
                 hAtoms.forEach(h => {
                     const dx = fe.baseX - h.baseX;
                     const dy = fe.baseY - h.baseY;
                     const dist = Math.hypot(dx, dy);
-                    // Tetrahedral sites in BCC are very tight; distortion radius is smaller but stronger
                     if (dist < LATTICE_A * PX_PER_ANG * 0.7) {
                         const force = (LATTICE_A * PX_PER_ANG / dist) * 3.5; 
                         dx_total += (dx / dist) * force;
@@ -297,8 +298,16 @@
         
         function resize() {
             const dpr = window.devicePixelRatio || 1;
-            canvas.width = (window.innerWidth - 170) * dpr;
-            canvas.height = window.innerHeight * dpr;
+            const container = document.getElementById('container');
+            
+            // Get the calculated 16:9 dimensions of the container
+            const rect = container.getBoundingClientRect();
+            
+            // Set canvas size based on the 16:9 area remaining after UI panel
+            canvas.width = (rect.width - 170) * dpr;
+            canvas.height = rect.height * dpr;
+            
+            ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset scale before re-applying
             ctx.scale(dpr, dpr);
             generateLattice();
         }
