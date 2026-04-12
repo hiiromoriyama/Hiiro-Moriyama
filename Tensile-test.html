@@ -5,33 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Process Dynamics Lab</title>
     <style>
-        body { margin: 0; padding: 0; background: #050505; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        :root { 
+            --accent: #E10600; 
+            --panel: #0A0A0A; 
+            --border: #222; 
+        }
+
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: #050505; 
+            overflow: hidden; 
+        }
+
+        #wrapper-div {
+            height: 100vh;
+            width: 100vw;
+            border: 1px solid #222;
+            background: #050505;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        #loading-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            background: #050505;
+            z-index: 10;
+        }
+
+        #sim-main { 
+            display: flex; 
+            height: 100%; 
+            width: 100%;
+            gap: 10px; 
+            padding: 10px; 
+            font-family: 'Inter', sans-serif; 
+            visibility: hidden; 
+            box-sizing: border-box;
+        }
+
+        .sidebar { 
+            width: 280px; 
+            flex-shrink: 0;
+            background: var(--panel); 
+            border: 1px solid var(--border); 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+
+        .canvas-area { 
+            flex: 2; 
+            position: relative; 
+            border: 1px solid var(--border); 
+            background: #000; 
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #three-canvas { 
+            width: 100%; 
+            height: 100%; 
+            display: block;
+        }
+
+        .plot-area { 
+            flex: 1.2; 
+            min-width: 300px;
+            background: var(--panel); 
+            border: 1px solid var(--border); 
+            padding: 15px; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .readout { font-family: monospace; color: var(--accent); font-size: 18px; text-align: right; font-weight: 700; }
+        label { color: #888; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+        
+        button {
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+        button:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
 
-<div id="wrapper-div" style="height: 700px; width: 100%; border: 1px solid #222; background: #050505; position: relative;">
-    <div id="loading-overlay" style="position: absolute; color: white; padding: 20px; font-family: sans-serif;">Loading Lab...</div>
+<div id="wrapper-div">
+    <div id="loading-overlay">Loading Lab Resources...</div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        :root { --accent: #E10600; --panel: #0A0A0A; --border: #222; }
-        #sim-main { display: flex; height: 100%; gap: 10px; padding: 10px; font-family: 'Inter', sans-serif; visibility: hidden; }
-        .sidebar { width: 300px; background: var(--panel); border: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        .canvas-area { flex: 1; position: relative; border: 1px solid var(--border); background: #000; border-radius: 4px; }
-        #three-canvas { width: 100%; height: 100%; }
-        .plot-area { width: 400px; background: var(--panel); border: 1px solid var(--border); padding: 15px; }
-        .readout { font-family: monospace; color: var(--accent); font-size: 18px; text-align: right; font-weight: 700; }
-        label { color: #888; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        input[type="range"] { width: 100%; accent-color: var(--accent); }
-    </style>
-
     <div id="sim-main">
         <div class="sidebar">
-            <div style="font-weight: 1000; color: cyan; letter-spacing: 2px;">Process Dynamics Lab</div>
+            <div style="font-weight: 900; color: cyan; letter-spacing: 2px; font-size: 1.2rem;">PROCESS DYNAMICS</div>
             
             <div class="control-group">
                 <label>Hydrogen Content</label>
@@ -40,17 +119,17 @@
             </div>
 
             <div class="control-group">
-                <label>Strain</label>
+                <label>Manual Strain</label>
                 <input type="range" id="strain-slider" min="0" max="30" value="0" step="0.1">
                 <div class="readout" id="s-value">0.0%</div>
             </div>
 
-            <button id="run-btn" style="padding: 10px; background: #E10600; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight:bold;">RUN</button>
-            <button onclick="window.resetSim()" style="padding: 10px; background: #222; color: white; border: none; cursor: pointer; border-radius: 4px; margin-top:5px;">RESET</button>
+            <button id="run-btn" style="background: #E10600; color: white;">START TEST</button>
+            <button onclick="window.resetSim()" style="background: #222; color: white;">RESET SYSTEM</button>
             
-            <div style="margin-top:auto">
-                <label>Tensile Stress (MPa)</label>
-                <div class="readout" id="stress-val">0</div>
+            <div style="margin-top:auto; border-top: 1px solid #222; pt-10px;">
+                <label>Calculated Tensile Stress (MPa)</label>
+                <div class="readout" id="stress-val" style="font-size: 24px;">0</div>
             </div>
         </div>
 
@@ -62,262 +141,224 @@
             <canvas id="stress-chart"></canvas>
         </div>
     </div>
+</div>
 
-    <script>
-        (function() {
-            const checkLibs = setInterval(() => {
-                if (typeof THREE !== 'undefined' && typeof Chart !== 'undefined') {
-                    clearInterval(checkLibs);
-                    document.getElementById('loading-overlay').style.display = 'none';
-                    document.getElementById('sim-main').style.visibility = 'visible';
-                    startSim();
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<script>
+    (function() {
+        const checkLibs = setInterval(() => {
+            if (typeof THREE !== 'undefined' && typeof Chart !== 'undefined') {
+                clearInterval(checkLibs);
+                document.getElementById('loading-overlay').style.display = 'none';
+                document.getElementById('sim-main').style.visibility = 'visible';
+                startSim();
+            }
+        }, 100);
+
+        function startSim() {
+            let scene, camera, renderer, specimen, gauge, topGrip, bottomGrip;
+            let topHalf, bottomHalf, currentStrain = 0;
+            let isFractured = false, isRunning = false;
+            let shakeIntensity = 0, separationAnim = 0;
+            const baseCameraPos = new THREE.Vector3(0, 50, 550);
+
+            let hParticles = [];
+            const hGeo = new THREE.SphereGeometry(5.5, 32, 32); 
+            const hMat = new THREE.MeshPhysicalMaterial({ color: 0x770000, metalness: 0, roughness: 0.2, emissive: 0x220000 });
+            let lastHValue = 10;
+
+            const canvas = document.getElementById('three-canvas');
+            const container = canvas.parentElement;
+
+            // Renderer Setup
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.toneMapping = THREE.ReinhardToneMapping;
+            
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 1, 2000);
+            camera.position.copy(baseCameraPos);
+            camera.lookAt(0, 0, 0);
+
+            // Lighting
+            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+            const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            keyLight.position.set(200, 300, 400);
+            scene.add(keyLight);
+            const rimLight = new THREE.PointLight(0xffffff, 0.8);
+            rimLight.position.set(-200, 100, 100);
+            scene.add(rimLight);
+
+            // Geometries
+            const metalMat = new THREE.MeshPhongMaterial({ color: 0x999999, shininess: 80, specular: 0x444444 });
+            specimen = new THREE.Group();
+            
+            const gripGeo = new THREE.BoxGeometry(60, 40, 40);
+            topGrip = new THREE.Mesh(gripGeo, metalMat);
+            bottomGrip = new THREE.Mesh(gripGeo, metalMat);
+            topGrip.position.y = 100;
+            bottomGrip.position.y = -100;
+            specimen.add(topGrip, bottomGrip);
+
+            gauge = new THREE.Mesh(new THREE.CylinderGeometry(12, 12, 200, 32), metalMat);
+            specimen.add(gauge);
+
+            const createHalf = (isTop) => {
+                const group = new THREE.Group();
+                const cyl = new THREE.Mesh(new THREE.CylinderGeometry(12, 12, 100, 32), metalMat);
+                cyl.position.y = isTop ? 50 : -50;
+                group.add(cyl);
+                const cap = new THREE.Mesh(new THREE.ConeGeometry(12.5, 15, 8), metalMat);
+                cap.position.y = 0;
+                cap.rotation.x = isTop ? Math.PI : 0;
+                group.add(cap);
+                group.visible = false;
+                return group;
+            };
+            topHalf = createHalf(true);
+            bottomHalf = createHalf(false);
+            specimen.add(topHalf, bottomHalf);
+            scene.add(specimen);
+
+            // Responsive Handling
+            function handleResize() {
+                const w = container.clientWidth;
+                const h = container.clientHeight;
+                renderer.setSize(w, h, false);
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+            }
+            window.addEventListener('resize', handleResize);
+            handleResize();
+
+            // Chart Setup
+            const ctx = document.getElementById('stress-chart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: { datasets: [{ data: [], borderColor: 'cyan', borderWidth: 2, pointRadius: 0, fill: false }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        x: { type: 'linear', min: 0, max: 30, title: {display: true, text: 'Strain (%)', color: '#888'}, grid: {color: '#222'} },
+                        y: { type: 'linear', min: 0, max: 1400, title: {display: true, text: 'Stress (MPa)', color: '#888'}, grid: {color: '#222'} }
+                    },
+                    plugins: { legend: { display: false } },
+                    animation: false
                 }
-            }, 100);
+            });
 
-            function startSim() {
-                let scene, camera, renderer, specimen, gauge, topGrip, bottomGrip;
-                let topHalf, bottomHalf;
-                let currentStrain = 0;
-                let isFractured = false;
-                let isRunning = false;
-                
-                let shakeIntensity = 0;
-                let separationAnim = 0;
-                const baseCameraPos = new THREE.Vector3(0, 50, 550);
-
-                let hParticles = [];
-                const hGeo = new THREE.SphereGeometry(5.5, 32, 32); 
-                const hMat = new THREE.MeshPhysicalMaterial({ 
-                    color: 0x770000, 
-                    metalness: 0.0,
-                    roughness: 0.2,
-                    reflectivity: 0.5,
-                    clearcoat: 1.0,
-                    clearcoatRoughness: 0.1,
-                    emissive: 0x220000
-                });
-                let lastHValue = 10;
-
-                const canvas = document.getElementById('three-canvas');
-                renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-                renderer.toneMapping = THREE.ReinhardToneMapping;
-                
-                scene = new THREE.Scene();
-                camera = new THREE.PerspectiveCamera(45, canvas.clientWidth/canvas.clientHeight, 1, 2000);
-                camera.position.copy(baseCameraPos);
-                camera.lookAt(0, 0, 0);
-
-                scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-                const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
-                keyLight.position.set(200, 300, 400);
-                scene.add(keyLight);
-                
-                const rimLight = new THREE.PointLight(0xffffff, 0.8);
-                rimLight.position.set(-200, 100, 100);
-                scene.add(rimLight);
-
-                const metalMat = new THREE.MeshPhongMaterial({ color: 0x999999, shininess: 80, specular: 0x444444 });
-                specimen = new THREE.Group();
-                
-                const gripGeo = new THREE.BoxGeometry(60, 40, 40);
-                topGrip = new THREE.Mesh(gripGeo, metalMat);
-                bottomGrip = new THREE.Mesh(gripGeo, metalMat);
-                topGrip.position.y = 100;
-                bottomGrip.position.y = -100;
-                specimen.add(topGrip, bottomGrip);
-
-                const gaugeGeo = new THREE.CylinderGeometry(12, 12, 200, 32);
-                gauge = new THREE.Mesh(gaugeGeo, metalMat);
-                specimen.add(gauge);
-
-                const createHalf = (isTop) => {
-                    const group = new THREE.Group();
-                    const cyl = new THREE.Mesh(new THREE.CylinderGeometry(12, 12, 100, 32), metalMat);
-                    cyl.position.y = isTop ? 50 : -50;
-                    group.add(cyl);
-                    const cap = new THREE.Mesh(new THREE.ConeGeometry(12.5, 15, 8), metalMat);
-                    cap.position.y = 0;
-                    cap.rotation.x = isTop ? Math.PI : 0;
-                    group.add(cap);
-                    group.visible = false;
-                    return group;
-                };
-                topHalf = createHalf(true);
-                bottomHalf = createHalf(false);
-                specimen.add(topHalf, bottomHalf);
-
-                scene.add(specimen);
-
-                const ctx = document.getElementById('stress-chart').getContext('2d');
-                const chart = new Chart(ctx, {
-                    type: 'line',
-                    data: { datasets: [{ data: [], borderColor: 'cyan', borderWidth: 2, pointRadius: 0, fill: false }] },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        layout: { padding: { left: 10, right: 25, top: 10, bottom: 10 } },
-                        scales: {
-                            x: { type: 'linear', min: 0, max: 30, title: {display: true, text: 'Strain (%)', color: '#888'}, grid: {color: '#222'} },
-                            y: { type: 'linear', min: 0, max: 1400, title: {display: true, text: 'Stress (MPa)', color: '#888'}, grid: {color: '#222'} }
-                        },
-                        plugins: { legend: { display: false } },
-                        animation: false
-                    }
-                });
-
-                function spawnHParticles(count) {
-                    for(let i=0; i<count; i++) {
-                        const p = new THREE.Mesh(hGeo, hMat);
-                        p.position.set(
-                            camera.position.x + (Math.random() - 0.5) * 300,
-                            camera.position.y + (Math.random() - 0.5) * 300,
-                            450 
-                        );
-                        p.userData = { 
-                            progress: 0,
-                            speed: 0.025 + Math.random() * 0.02,
-                            startPos: p.position.clone(),
-                            targetPos: new THREE.Vector3(0, (Math.random() - 0.5) * 120, 0)
-                        };
-                        scene.add(p);
-                        hParticles.push(p);
-                    }
+            function spawnHParticles(count) {
+                for(let i=0; i<count; i++) {
+                    const p = new THREE.Mesh(hGeo, hMat);
+                    p.position.set(camera.position.x + (Math.random()-0.5)*300, camera.position.y + (Math.random()-0.5)*300, 450);
+                    p.userData = { 
+                        progress: 0, 
+                        speed: 0.025 + Math.random() * 0.02, 
+                        startPos: p.position.clone(),
+                        targetPos: new THREE.Vector3(0, (Math.random()-0.5)*120, 0)
+                    };
+                    scene.add(p);
+                    hParticles.push(p);
                 }
+            }
 
-                function updatePhysics(strainPercent) {
-                    if (isFractured) return;
-                    const s = strainPercent / 100; 
-                    const h = parseFloat(document.getElementById('hydrogen').value);
-                    
-                    const E = 200000; 
-                    const yieldStrain = 0.0025;
-                    const K = 1250; 
-                    const n_base = 0.22;
-                    const n = n_base * Math.exp(-h/150); 
-                    const fractureLimit = 0.25 * Math.exp(-h/50); 
-                    
-                    let stress;
-                    if (s <= yieldStrain) {
-                        stress = E * s;
-                    } else {
-                        stress = K * Math.pow(s, n);
-                        if (s > n) stress *= (1 - (s - n) * 1.5);
-                    }
+            function updatePhysics(strainPercent) {
+                if (isFractured) return;
+                const s = strainPercent / 100;
+                const h = parseFloat(document.getElementById('hydrogen').value);
+                const E = 200000, yieldStrain = 0.0025, K = 1250;
+                const n = 0.22 * Math.exp(-h/150);
+                const fractureLimit = 0.25 * Math.exp(-h/50);
+                
+                let stress = (s <= yieldStrain) ? E * s : K * Math.pow(s, n);
+                if (s > n) stress *= (1 - (s - n) * 1.5);
 
-                    const scaleY = 1 + s;
-                    const neckingFactor = s > n ? 1 - (s - n)*2 : 1;
-                    const scaleXZ = (1 / Math.sqrt(scaleY)) * neckingFactor;
+                const scaleY = 1 + s;
+                const scaleXZ = (1 / Math.sqrt(scaleY)) * (s > n ? 1 - (s - n)*2 : 1);
 
-                    if (s >= fractureLimit) {
-                        isFractured = true; isRunning = false;
-                        gauge.visible = false; topHalf.visible = true; bottomHalf.visible = true;
-                        shakeIntensity = 20.0; separationAnim = 0.01; 
-                        chart.data.datasets[0].data.push({x: strainPercent, y: 0});
-                        chart.update('none');
-                        document.getElementById('stress-val').innerText = "FRACTURE";
-                        return;
-                    }
-
+                if (s >= fractureLimit) {
+                    isFractured = true; isRunning = false;
+                    gauge.visible = false; topHalf.visible = true; bottomHalf.visible = true;
+                    shakeIntensity = 20; separationAnim = 0.01;
+                    chart.data.datasets[0].data.push({x: strainPercent, y: 0});
+                    document.getElementById('stress-val').innerText = "FRACTURE";
+                } else {
                     gauge.scale.set(scaleXZ, scaleY, scaleXZ);
                     topGrip.position.y = 100 * scaleY;
                     bottomGrip.position.y = -100 * scaleY;
                     document.getElementById('s-value').innerText = strainPercent.toFixed(2) + "%";
                     document.getElementById('stress-val').innerText = Math.round(stress);
-                    
                     chart.data.datasets[0].data.push({x: strainPercent, y: stress});
-                    chart.update('none');
                 }
-
-                function animate() {
-                    requestAnimationFrame(animate);
-                    if (isRunning && !isFractured) {
-                        currentStrain += 0.1;
-                        document.getElementById('strain-slider').value = currentStrain;
-                        updatePhysics(currentStrain);
-                    }
-                    for(let i = hParticles.length - 1; i >= 0; i--) {
-                        let p = hParticles[i];
-                        p.userData.progress += p.userData.speed;
-                        p.position.lerpVectors(p.userData.startPos, p.userData.targetPos, p.userData.progress);
-                        p.rotation.x += 0.05;
-                        p.rotation.z += 0.05;
-                        if (p.userData.progress > 0.85) p.scale.setScalar(1 - ((p.userData.progress - 0.85) / 0.15));
-                        if (p.userData.progress >= 1.0) {
-                            scene.remove(p);
-                            hParticles.splice(i, 1);
-                        }
-                    }
-                    if (isFractured && separationAnim > 0) {
-                        if (separationAnim < 1) separationAnim += 0.05;
-                        const s = currentStrain / 100;
-                        const scaleY = 1 + s;
-                        const currentGap = 20 * (1 - Math.pow(1 - separationAnim, 3));
-                        topHalf.position.y = currentGap;
-                        bottomHalf.position.y = -currentGap;
-                        topGrip.position.y = topHalf.position.y + (100 * scaleY);
-                        bottomGrip.position.y = bottomHalf.position.y - (100 * scaleY);
-                    }
-                    if (shakeIntensity > 0) {
-                        camera.position.x = baseCameraPos.x + (Math.random() - 0.5) * shakeIntensity;
-                        camera.position.y = baseCameraPos.y + (Math.random() - 0.5) * shakeIntensity;
-                        shakeIntensity *= 0.9;
-                        if (shakeIntensity < 0.05) {
-                            shakeIntensity = 0;
-                            camera.position.copy(baseCameraPos);
-                        }
-                    }
-                    specimen.rotation.y += 0.01;
-                    renderer.render(scene, camera);
-                }
-                animate();
-
-                window.resetSim = () => {
-                    currentStrain = 0; isFractured = false; isRunning = false;
-                    separationAnim = 0; shakeIntensity = 0;
-                    camera.position.copy(baseCameraPos);
-                    gauge.visible = true; topHalf.visible = false; bottomHalf.visible = false;
-                    gauge.scale.set(1, 1, 1);
-                    topGrip.position.y = 100;
-                    bottomGrip.position.y = -100;
-                    document.getElementById('strain-slider').value = 0;
-                    document.getElementById('s-value').innerText = "0.0%";
-                    document.getElementById('stress-val').innerText = "0";
-                    chart.data.datasets[0].data = [];
-                    chart.update();
-                    hParticles.forEach(p => scene.remove(p));
-                    hParticles = [];
-                };
-
-                document.getElementById('strain-slider').oninput = (e) => {
-                    if (!isFractured) {
-                        let newStrain = parseFloat(e.target.value);
-                        chart.data.datasets[0].data = [];
-                        for(let i=0; i<=newStrain; i+=0.1) {
-                           const s = i/100;
-                           const E = 200000; const h = parseFloat(document.getElementById('hydrogen').value);
-                           const n = 0.22 * Math.exp(-h/150); const K = 1250;
-                           let stress = (s <= 0.0025) ? E*s : K * Math.pow(s, n);
-                           if (s > n) stress *= (1 - (s - n) * 1.5);
-                           chart.data.datasets[0].data.push({x: i, y: stress});
-                        }
-                        currentStrain = newStrain;
-                        updatePhysics(currentStrain);
-                    }
-                };
-
-                document.getElementById('hydrogen').oninput = (e) => {
-                    let newVal = parseFloat(e.target.value);
-                    if (newVal > lastHValue) spawnHParticles(4); 
-                    lastHValue = newVal;
-                    document.getElementById('h-value').innerText = e.target.value + " ppm";
-                };
-                
-                document.getElementById('hydrogen').onchange = (e) => { window.resetSim(); };
-                document.getElementById('run-btn').onclick = () => { if (!isFractured) isRunning = true; };
+                chart.update('none');
             }
-        })();
-    </script>
-</div>
 
+            function animate() {
+                requestAnimationFrame(animate);
+                if (isRunning && !isFractured) {
+                    currentStrain += 0.1;
+                    document.getElementById('strain-slider').value = currentStrain;
+                    updatePhysics(currentStrain);
+                }
+                
+                // Animate Hydrogen Particles
+                for(let i = hParticles.length-1; i >= 0; i--) {
+                    let p = hParticles[i];
+                    p.userData.progress += p.userData.speed;
+                    p.position.lerpVectors(p.userData.startPos, p.userData.targetPos, p.userData.progress);
+                    if (p.userData.progress > 0.85) p.scale.setScalar(1 - ((p.userData.progress-0.85)/0.15));
+                    if (p.userData.progress >= 1) { scene.remove(p); hParticles.splice(i, 1); }
+                }
+
+                if (isFractured && separationAnim > 0) {
+                    if (separationAnim < 1) separationAnim += 0.05;
+                    const gap = 20 * (1 - Math.pow(1 - separationAnim, 3));
+                    topHalf.position.y = gap; bottomHalf.position.y = -gap;
+                    topGrip.position.y = topHalf.position.y + (100 * (1 + currentStrain/100));
+                    bottomGrip.position.y = bottomHalf.position.y - (100 * (1 + currentStrain/100));
+                }
+
+                if (shakeIntensity > 0) {
+                    camera.position.x = baseCameraPos.x + (Math.random()-0.5)*shakeIntensity;
+                    shakeIntensity *= 0.9;
+                    if (shakeIntensity < 0.05) camera.position.copy(baseCameraPos);
+                }
+
+                specimen.rotation.y += 0.005;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.resetSim = () => {
+                currentStrain = 0; isFractured = false; isRunning = false;
+                separationAnim = 0; gauge.visible = true; topHalf.visible = false; bottomHalf.visible = false;
+                gauge.scale.set(1, 1, 1); topGrip.position.y = 100; bottomGrip.position.y = -100;
+                chart.data.datasets[0].data = []; chart.update();
+                document.getElementById('stress-val').innerText = "0";
+                document.getElementById('s-value').innerText = "0.0%";
+            };
+
+            document.getElementById('hydrogen').oninput = (e) => {
+                let newVal = parseFloat(e.target.value);
+                if (newVal > lastHValue) spawnHParticles(4);
+                lastHValue = newVal;
+                document.getElementById('h-value').innerText = newVal + " ppm";
+            };
+            
+            document.getElementById('hydrogen').onchange = () => window.resetSim();
+            document.getElementById('run-btn').onclick = () => { if (!isFractured) isRunning = true; };
+            
+            document.getElementById('strain-slider').oninput = (e) => {
+                if (!isFractured) {
+                    currentStrain = parseFloat(e.target.value);
+                    chart.data.datasets[0].data = chart.data.datasets[0].data.filter(p => p.x <= currentStrain);
+                    updatePhysics(currentStrain);
+                }
+            };
+        }
+    })();
+</script>
 </body>
 </html>
