@@ -41,72 +41,47 @@
     .project-card p { font-size: 0.8rem; color: #666; margin-bottom: 10px; }
     
     .btn-launch {
-      background: #666666;
-      color: white;
-      border: none;
-      padding: 5px 12px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      cursor: pointer;
-      width: 100%;
+      background: #666666; color: white; border: none; padding: 5px 12px;
+      border-radius: 4px; font-size: 0.8rem; font-weight: 500; cursor: pointer; width: 100%;
     }
     .btn-launch:hover { background: #000000; }
 
     /* Full View Overlay */
     .project-section { 
-      display: none; 
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #000;
-      z-index: 9999;
-      padding: 0;
-      margin: 0;
+      display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #000; z-index: 9999; padding: 0; margin: 0;
     }
     .project-section.active { display: block; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Exit Button */
     .btn-exit-tool {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      background: rgba(220, 53, 69, 0.9);
-      color: white;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      z-index: 10001;
-      transition: 0.2s;
+      position: absolute; top: 20px; right: 30px; background: rgba(220, 53, 69, 0.9);
+      color: white; border: none; padding: 8px 20px; border-radius: 50px;
+      font-weight: 600; font-size: 0.9rem; cursor: pointer; z-index: 10001; transition: 0.2s;
     }
     .btn-exit-tool:hover { background: #dc3545; transform: scale(1.05); }
 
-    .simulation-container {
-      width: 100%;
-      height: 100%;
-      background: #000;
-      overflow: hidden;
-    }
+    .simulation-container { width: 100%; height: 100%; background: #000; overflow: hidden; }
     .simulation-container iframe { width: 100%; height: 100%; border: none; }
 
     .select-dropdown {
-      width: 100%;
-      padding: 5px;
-      margin-bottom: 15px;
-      border-radius: 4px;
-      border: 1px solid #dee2e6;
-      font-size: 0.85rem;
+      width: 100%; padding: 5px; margin-bottom: 15px; border-radius: 4px;
+      border: 1px solid #dee2e6; font-size: 0.85rem;
     }
 
     body.tool-open { overflow: hidden; }
 
-    .main { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+    /* Fix for Footer Height and Sidebar Alignment */
+    #footer {
+      padding: 15px 0;
+      background: #f8f9fa;
+      border-top: 1px solid #eee;
+    }
+    @media (min-width: 1200px) {
+      #footer {
+        margin-left: 300px; /* Aligns with the sidebar layout */
+      }
+    }
   </style>
 </head>
 
@@ -119,11 +94,11 @@
       <h1 class="sitename">Hiiro Moriyama</h1>
     </a>
     <div class="social-links text-center">
-      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama?ev=hdr_xprf" class="researchgate" target="_blank"><i class="bi bi-journal-richtext"></i></a>
-      <a href="https://pam.web.ox.ac.uk/people/hiiro-moriyama" class="processing-advanced-materials" target="_blank"><i class="bi bi-person-workspace"></i></a>
-      <a href="https://www.digitalmaterials-cdt.ac.uk/people/hiiro-moriyama/" class="materials-4.0" target="_blank"><i class="bi bi-buildings"></i></a>
-      <a href="https://orcid.org/0009-0001-9306-3806" class="orcid-link" target="_blank"><i class="bi bi-person-badge"></i></a>
-      <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama?ev=hdr_xprf" target="_blank"><i class="bi bi-journal-richtext"></i></a>
+      <a href="https://pam.web.ox.ac.uk/people/hiiro-moriyama" target="_blank"><i class="bi bi-person-workspace"></i></a>
+      <a href="https://www.digitalmaterials-cdt.ac.uk/people/hiiro-moriyama/" target="_blank"><i class="bi bi-buildings"></i></a>
+      <a href="https://orcid.org/0009-0001-9306-3806" target="_blank"><i class="bi bi-person-badge"></i></a>
+      <a href="https://www.linkedin.com/in/hiiro-moriyama/" target="_blank"><i class="bi bi-linkedin"></i></a>
     </div>
     <nav id="navmenu" class="navmenu">
       <ul>
@@ -134,10 +109,9 @@
         <li><a href="index.html#arts"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
       </ul>
     </nav>
-
     <div class="oxford-logo-container mt-auto pb-5 text-center">
-      <a href="https://www.ox.ac.uk/" target="_blank" rel="noopener noreferrer" class="oxford-link">
-        <img src="assets/img/Oxford-University-Circlet.svg" alt="University of Oxford" class="img-fluid" style="max-width: 70px; height: auto; transition: 0.3s;">
+      <a href="https://www.ox.ac.uk/" target="_blank" rel="noopener noreferrer">
+        <img src="assets/img/Oxford-University-Circlet.svg" alt="University of Oxford" class="img-fluid" style="max-width: 70px; height: auto;">
       </a>
     </div>
   </header>
@@ -155,7 +129,7 @@
     <section id="service-details" class="service-details section">
       <div class="container">
         <div class="row gy-4">
-          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-4">
             <div class="services-list">
               <a href="microresidual-stress.html">Micro-Residual Stress</a>
               <a href="xray-prosthesis.html">X-ray Prosthesis</a>
@@ -165,20 +139,19 @@
             </div>
             <h4>Acknowledgement</h4>
             <p style="text-align: justify;">
-              The research forms part of the UKRI <a href="https://www.digitalmaterials-cdt.ac.uk" target="_blank" rel="noopener noreferrer">Materials 4.0</a> CDT (<a href="https://www.ukri.org/councils/epsrc/" target="_blank" rel="noopener noreferrer">EPSRC</a>), led by the <a href="https://www.royce.ac.uk" target="_blank" rel="noopener noreferrer">Henry Royce Institute</a>, and is carried out in the University of Oxford’s <a href="https://www.materials.ox.ac.uk" target="_blank" rel="noopener noreferrer">Department of Materials</a>, with additional funding from the <a href="https://www.britishcouncil.org" target="_blank" rel="noopener noreferrer">British Council</a> Japan Association (<a href="https://www.bcja.net/scholarship_students/2025.html" target="_blank" rel="noopener noreferrer">BCJA</a>).
+              The research forms part of the UKRI <a href="https://www.digitalmaterials-cdt.ac.uk" target="_blank">Materials 4.0</a> CDT (<a href="https://www.ukri.org/councils/epsrc/" target="_blank">EPSRC</a>), led by the <a href="https://www.royce.ac.uk" target="_blank">Henry Royce Institute</a>, and is carried out in the University of Oxford’s <a href="https://www.materials.ox.ac.uk" target="_blank">Department of Materials</a>, with additional funding from the <a href="https://www.britishcouncil.org" target="_blank">British Council</a> Japan Association (<a href="https://www.bcja.net/scholarship_students/2025.html" target="_blank">BCJA</a>).
             </p>
             <div class="row align-items-center g-4">
-              <div class="col-6 col-md-6">
+              <div class="col-6 col-md-5">
                 <a href="https://www.ox.ac.uk" target="_blank"><img src="assets/img/oxford-logo.png" alt="University of Oxford" class="img-fluid"></a>
               </div>
             </div>
           </div>
 
-          <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-lg-8">
             <img src="assets/img/exafs-main.jpg" alt="" class="img-fluid services-img">
             <h3>Process Dynamics Lab</h3>
             <p>Select a model to launch the interactive simulation environment:</p>
-
             <div class="row g-3 mb-4">
               <div class="col-md-6 col-12">
                 <div class="project-card">
@@ -194,7 +167,6 @@
                   <button class="btn-launch" onclick="launchExafs()">Launch</button>
                 </div>
               </div>
-
               <div class="col-md-6 col-12">
                 <div class="project-card">
                   <div>
@@ -208,7 +180,6 @@
                   <button class="btn-launch" onclick="launchHCharging()">Launch</button>
                 </div>
               </div>
-              
               <div class="col-md-6 col-12">
                 <div class="project-card">
                   <div>
@@ -248,11 +219,15 @@
     </section>
   </main>
 
-  <footer id="footer" class="footer position-relative light-background">
-    <div class="container text-center" style="font-size: 14px; padding: 20px 0 10px 0;">
-      <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
-      <div class="copyright">
-        <p>© <span>Hiiro Moriyama | Oxford 2026</span></p>
+  <footer id="footer" class="footer">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 text-center">
+          <p style="font-size: 14px; margin-bottom: 5px;">Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
+          <div class="copyright" style="font-size: 14px;">
+            &copy; <span>Hiiro Moriyama | Oxford 2026</span>
+          </div>
+        </div>
       </div>
     </div>
   </footer>
@@ -265,34 +240,20 @@
   <script src="assets/js/main.js"></script>
 
   <script>
-    function launchExafs() {
-      const selectedId = document.getElementById('exafs-select').value;
-      showProject(selectedId);
-    }
-    function launchHCharging() {
-      const selectedId = document.getElementById('h-charging-select').value;
-      showProject(selectedId);
-    }
+    function launchExafs() { showProject(document.getElementById('exafs-select').value); }
+    function launchHCharging() { showProject(document.getElementById('h-charging-select').value); }
     function closeAllProjects() {
-      const sections = document.querySelectorAll('.project-section');
       document.body.classList.remove('tool-open');
-      sections.forEach(s => {
+      document.querySelectorAll('.project-section').forEach(s => {
         const iframe = s.querySelector('iframe');
-        if (iframe) {
-          const currentSrc = iframe.src;
-          iframe.src = ""; 
-          iframe.src = currentSrc;
-        }
+        if (iframe) { const src = iframe.src; iframe.src = ""; iframe.src = src; }
         s.classList.remove('active');
       });
     }
     function showProject(id) {
       closeAllProjects();
       const target = document.getElementById(id);
-      if (target) {
-        document.body.classList.add('tool-open');
-        target.classList.add('active');
-      }
+      if (target) { document.body.classList.add('tool-open'); target.classList.add('active'); }
     }
   </script>
 </body>
