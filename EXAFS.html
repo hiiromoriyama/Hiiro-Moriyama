@@ -240,12 +240,12 @@
                   <div>
                     <h4>Hydrogen Charging in Metals</h4>
                     <p>Electrolytic and Gas Modes</p>
-                    <select id="h-charging" class="select-dropdown">
+                    <select id="h-charging-select" class="select-dropdown">
                       <option value="h-charging">H-Charging</option>
                       <option value="exafs-bcc">BCC</option>
                     </select>
                   </div>
-                  <button class="btn-launch" onclick="launchExafs()">Launch</button>
+                  <button class="btn-launch" onclick="launchHCharging()">Launch</button>
                 </div>
               </div>
               
@@ -307,6 +307,11 @@
   <script>
     function launchExafs() {
       const selectedId = document.getElementById('exafs-select').value;
+      showProject(selectedId);
+    }
+
+    function launchHCharging() {
+      const selectedId = document.getElementById('h-charging-select').value;
       showProject(selectedId);
     }
 
