@@ -6,13 +6,14 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Tensile Test - Hiiro Moriyama</title>
 
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
-    /* Dashboard Styling */
+    /* Dashboard Cards */
     .project-card {
       background: #fff;
       border: 1px solid #dee2e6;
@@ -20,42 +21,57 @@
       border-radius: 8px;
       height: 100%;
       transition: 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .project-card:hover { border-color: #0563af; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-    .project-card h4 { font-size: 1rem; margin-bottom: 5px; }
-    .project-card p { font-size: 0.8rem; color: #666; margin-bottom: 10px; }
+    .project-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 5px; color: #333; }
+    .project-card p { font-size: 0.8rem; color: #666; margin-bottom: 15px; }
     
     .btn-launch {
       background: #0563af;
       color: white;
       border: none;
-      padding: 5px 12px;
+      padding: 6px 0;
+      width: 100%;
       border-radius: 4px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
       cursor: pointer;
     }
     .btn-launch:hover { background: #0675d1; }
 
-    /* Layout & Visibility */
-    .project-section { display: none; margin-top: 30px; }
-    .project-section.active { display: block; animation: fadeIn 0.5s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    /* Layout Logic */
+    .project-section { display: none; }
+    .project-section.active { display: block; animation: fadeIn 0.6s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Responsive iframe containers - preserving aspect ratios */
-    .simulation-container {
+    /* Tool Canvas Styling: This is the Full-Width Logic */
+    .simulation-wrapper {
+      position: relative;
       width: 100%;
-      background: #000;
-      border-radius: 8px;
+      background: #050505;
+      border-radius: 12px;
       overflow: hidden;
-      border: 1px solid #333;
+      border: 1px solid #222;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    /* Specific Aspect Ratios for different tools */
-    .ratio-exafs { aspect-ratio: 16 / 9; }
-    .ratio-tensile { aspect-ratio: 4 / 3; }
-    .ratio-lattice { aspect-ratio: 1 / 1; max-height: 80vh; }
+    /* Aspect Ratio Preservations */
+    .ratio-wide { aspect-ratio: 16 / 9; }    /* EXAFS */
+    .ratio-standard { aspect-ratio: 4 / 3; } /* Tensile Test */
+    .ratio-square { aspect-ratio: 1 / 1; max-height: 85vh; } /* Lattices */
 
-    iframe { width: 100%; height: 100%; border: none; }
+    .simulation-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
 
     .oxford-link:hover img { opacity: 0.7; transform: scale(1.05); }
   </style>
@@ -70,8 +86,8 @@
       <h1 class="sitename">Hiiro Moriyama</h1>
     </a>
     <div class="social-links text-center">
-      <a href="#" class="researchgate"><i class="bi bi-journal-richtext"></i></a>
-      <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://www.linkedin.com/in/hiiro-moriyama/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      <a href="https://orcid.org/0009-0001-9306-3806" class="orcid"><i class="bi bi-person-badge"></i></a>
     </div>
     <nav id="navmenu" class="navmenu">
       <ul>
@@ -84,9 +100,9 @@
   <main class="main">
     <div class="page-title dark-background">
       <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Tensile Test Lab & EXAFS</h1>
+        <h1 class="mb-2 mb-lg-0">Interactive Lab Environments</h1>
         <nav class="breadcrumbs">
-          <ol><li><a href="index.html">Home</a></li><li class="current">Tensile Test</li></ol>
+          <ol><li><a href="index.html">Home</a></li><li class="current">Tensile & EXAFS</li></ol>
         </nav>
       </div>
     </div>
@@ -95,118 +111,136 @@
       <div class="container">
         
         <div class="row gy-4">
+          
           <div class="col-lg-4" data-aos="fade-up">
             <div class="services-list">
               <a href="Tensile-test.html" class="active">Tensile Test Lab</a>
-              <a href="EXAFS.html">EXAFS</a>
+              <a href="EXAFS.html">EXAFS & Lattice</a>
             </div>
-            <h4>Acknowledgement</h4>
-            <p style="text-align: justify; font-size: 0.9rem;">
-              The research forms part of the UKRI Materials 4.0 CDT (EPSRC), led by the Henry Royce Institute, and is carried out in the University of Oxford’s Department of Materials.
+            <h4 class="mt-4">Acknowledgement</h4>
+            <p style="text-align: justify; font-size: 0.85rem; line-height: 1.6;">
+              The research forms part of the UKRI <a href="https://www.digitalmaterials-cdt.ac.uk" target="_blank">Materials 4.0</a> CDT (EPSRC), led by the <a href="https://www.royce.ac.uk" target="_blank">Henry Royce Institute</a>, and is carried out in the University of Oxford’s <a href="https://www.materials.ox.ac.uk" target="_blank">Department of Materials</a>.
             </p>
+            <div class="mt-3">
+               <img src="assets/img/oxford-logo.png" alt="Oxford" class="img-fluid" style="max-width: 120px;">
+            </div>
           </div>
 
           <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
-            <img src="assets/img/exafs-main.jpg" alt="" class="img-fluid services-img mb-3">
+            <img src="assets/img/exafs-main.jpg" alt="" class="img-fluid services-img mb-4" style="border-radius: 8px;">
             <h3>Material Science Dynamics</h3>
-            <p>Select a model to launch the interactive simulation environment below:</p>
+            <p>Select a specialized tool to initialize the interactive solver:</p>
 
             <div class="row gy-3">
               <div class="col-md-3">
                 <div class="project-card">
-                  <h4>EXAFS</h4>
-                  <p>Lattice basics.</p>
-                  <button class="btn-launch" onclick="showProject('exafs-base')">Launch</button>
+                  <div>
+                    <h4>EXAFS Base</h4>
+                    <p>Lattice local environments.</p>
+                  </div>
+                  <button class="btn-launch" onclick="showProject('exafs-base')">Launch Tool</button>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="project-card">
-                  <h4>HCP</h4>
-                  <p>Zr-Hydride.</p>
-                  <button class="btn-launch" onclick="showProject('exafs-hcp')">Launch</button>
+                  <div>
+                    <h4>HCP Lattice</h4>
+                    <p>Zr-Hydride simulations.</p>
+                  </div>
+                  <button class="btn-launch" onclick="showProject('exafs-hcp')">Launch Tool</button>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="project-card">
-                  <h4>BCC</h4>
-                  <p>Iron sims.</p>
-                  <button class="btn-launch" onclick="showProject('exafs-bcc')">Launch</button>
+                  <div>
+                    <h4>BCC Lattice</h4>
+                    <p>Iron-Hydrogen studies.</p>
+                  </div>
+                  <button class="btn-launch" onclick="showProject('exafs-bcc')">Launch Tool</button>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="project-card">
-                  <h4>Tensile</h4>
-                  <p>Fracture.</p>
-                  <button class="btn-launch" onclick="showProject('tensile-lab')">Launch</button>
+                  <div>
+                    <h4>Tensile Lab</h4>
+                    <p>Fracture & Stress analysis.</p>
+                  </div>
+                  <button class="btn-launch" onclick="showProject('tensile-lab')">Launch Tool</button>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="row mt-5">
+        </div> <div class="row mt-5">
           <div class="col-12" data-aos="fade-up">
             <div id="project-display-area">
 
               <div id="exafs-base" class="project-section">
-                <h3>EXAFS: Probing Local Environments</h3>
-                <div class="simulation-container ratio-exafs">
+                <h3 class="mb-3">EXAFS: Probing Local Environments</h3>
+                <div class="simulation-wrapper ratio-wide">
                   <iframe src="fe-h-sim.html" title="EXAFS"></iframe>
                 </div>
               </div>
 
               <div id="exafs-hcp" class="project-section">
-                <h3>HCP Lattice Dynamics</h3>
-                <div class="simulation-container ratio-lattice">
+                <h3 class="mb-3">HCP Lattice Dynamics</h3>
+                <div class="simulation-wrapper ratio-square">
                   <iframe src="zr-h-sim.html" title="HCP"></iframe>
                 </div>
               </div>
 
               <div id="exafs-bcc" class="project-section">
-                <h3>BCC Lattice Dynamics</h3>
-                <div class="simulation-container ratio-lattice">
+                <h3 class="mb-3">BCC Lattice Dynamics</h3>
+                <div class="simulation-wrapper ratio-square">
                   <iframe src="fe-h-bcc-sim.html" title="BCC"></iframe>
                 </div>
               </div>
 
               <div id="tensile-lab" class="project-section active">
-                <h3>Tensile Test Lab</h3>
-                <div class="simulation-container ratio-tensile">
+                <h3 class="mb-3">Tensile Test Lab</h3>
+                <div class="simulation-wrapper ratio-standard">
                   <iframe src="Tensile-test.html" title="Tensile Lab"></iframe>
                 </div>
-                <p class="mt-3" style="font-style: italic; font-size: 0.85em; color: #666;">
-                  <strong>Note:</strong> Adjust Hydrogen Content to see the fracture point shift.
-                </p>
+                <div class="mt-3 p-3 bg-light border-start border-4 border-primary">
+                   <p class="mb-0" style="font-size: 0.9rem;"><strong>P:</strong> A</p>
+                </div>
               </div>
 
             </div>
           </div>
-        </div>
-
-      </div>
+        </div> </div>
     </section>
   </main>
 
   <footer id="footer" class="footer position-relative light-background">
-    <div class="container text-center py-3">
-      <p>© <span>Hiiro Moriyama | Oxford 2026</span></p>
+    <div class="container text-center py-4">
+      <div class="copyright">
+        <p>© <span>Hiiro Moriyama | Oxford 2026</span><br>
+        <small>Department of Materials, University of Oxford</small></p>
+      </div>
     </div>
   </footer>
 
   <script>
     function showProject(id) {
+      // Hide all sections
       const sections = document.querySelectorAll('.project-section');
       sections.forEach(s => s.classList.remove('active'));
+      
+      // Show targeted section
       const target = document.getElementById(id);
       if (target) {
         target.classList.add('active');
-        // Scroll to the tool so the user sees it immediately after clicking launch
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Smooth scroll to the tool area
+        const yOffset = -100; 
+        const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({top: y, behavior: 'smooth'});
       }
     }
   </script>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
+
 </body>
 </html>
