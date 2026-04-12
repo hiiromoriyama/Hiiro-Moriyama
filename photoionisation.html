@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Dynamics Lab</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+
+<div id="simulation-container" style="background-color: #050505; padding: 15px; border: 1px solid #222; border-radius: 8px; font-family: 'Inter', sans-serif; width: 90vw; max-width: 1000px;">
+<div id="sim-viewport" style="background: #000; width: 100%; height: 550px; position: relative; overflow: hidden; display: flex; border: 1px solid #333;">
+    <div id="sidebar" style="width: 240px; background: rgba(10, 10, 10, 0.9); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 20px; z-index: 20; color: white;">
+        <div style="font-size: 14px; font-weight: 900; color: #00e5ff; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1.5px;">Process Dynamics Lab</div>
+        
+        <div style="flex-grow: 1;">
+            <button style="margin-bottom: 10px; padding: 12px; background: #E10600; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; font-size: 10px;" onclick="triggerInteraction('eject')">Photoionization</button>
+            <button style="margin-bottom: 10px; padding: 12px; background: #E10600; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; font-size: 10px;" onclick="triggerInteraction('transmit')">Transmission</button>
+            <button style="margin-bottom: 10px; padding: 12px; background: #E10600; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; font-size: 10px;" onclick="triggerInteraction('jump')">Excitation</button>
+        </div>
+
+        <div style="border-top: 1px solid #222; pt: 15px;">
+            <div style="font-size: 10px; font-weight: 900; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px;">Status</div>
+            <div id="sim-status" style="font-size: 16px; font-weight: 900; color: #28a745;">SYSTEM READY</div>
+        </div>
+    </div>
+    <div id="three-target" style="flex-grow: 1; position: relative;"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+    const container = document.getElementById('three-target');
+    const statusEl = document.getElementById('sim-status');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / 550, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, 550);
+    container.appendChild(renderer.domElement);
+    scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+
+    const nucleus = new THREE.Mesh(new THREE.SphereGeometry(0.8, 32, 32), new THREE.MeshStandardMaterial({ color: 0x999999, metalness: 0.8, roughness: 0.2 }));
+    scene.add(nucleus);
+
+    const orbitalRadius = 4.5;
+    const pointsCount = 2000;
+    
+    const pointsGeo = new THREE.BufferGeometry();
+    const pointsPos = new Float32Array(pointsCount * 3);
+    for(let i=0; i<pointsCount; i++) {
+        let phi = Math.acos(-1 + (2 * i) / pointsCount);
+        let theta = Math.sqrt(pointsCount * Math.PI) * phi;
+        pointsPos[i*3] = orbitalRadius * Math.cos(theta) * Math.sin(phi);
+        pointsPos[i*3+1] = orbitalRadius * Math.sin(theta) * Math.sin(phi);
+        pointsPos[i*3+2] = orbitalRadius * Math.cos(phi);
+    }
+    pointsGeo.setAttribute('position', new THREE.BufferAttribute(pointsPos, 3));
+    
+    const cloudMat = new THREE.PointsMaterial({ color: 0x00e5ff, size: 0.12, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+    const cloud = new THREE.Points(pointsGeo, cloudMat);
+    scene.add(cloud);
+
+    const excitedGeo = pointsGeo.clone();
+    const excitedMat = new THREE.PointsMaterial({ color: 0xff00ff, size: 0.15, transparent: true, opacity: 0, blending: THREE.AdditiveBlending });
+    const excitedCloud = new THREE.Points(excitedGeo, excitedMat);
+    excitedCloud.scale.setScalar(1.8);
+    scene.add(excitedCloud);
+
+    const eMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 5 });
+    let electrons = [];
+    for(let i=0; i<2; i++) {
+        const group = new THREE.Group();
+        group.add(new THREE.Mesh(new THREE.SphereGeometry(0.3, 24, 24), eMat));
+        group.add(new THREE.PointLight(0x00ffff, 4, 8));
+        scene.add(group);
+        electrons.push({ group, active: true });
+    }
+
+    function createPhotonGroup(isOutbound = false) {
+        const group = new THREE.Group();
+        const particles = [];
+        const count = isOutbound ? 40 : 50; 
+        const mat = new THREE.MeshBasicMaterial({ 
+            color: 0xffdd00, 
+            transparent: true, 
+            blending: THREE.AdditiveBlending 
+        });
+
+        for(let i=0; i<count; i++) {
+            const geo = isOutbound ? new THREE.SphereGeometry(0.08, 6, 6) : new THREE.SphereGeometry(0.15, 8, 8);
+            const p = new THREE.Mesh(geo, mat.clone());
+            group.add(p);
+            particles.push(p);
+        }
+        return { group, particles };
+    }
+
+    const inboundPhoton = createPhotonGroup(false);
+    inboundPhoton.group.visible = false;
+    scene.add(inboundPhoton.group);
+
+    const outboundPhoton = createPhotonGroup(true);
+    outboundPhoton.group.visible = false;
+    scene.add(outboundPhoton.group);
+
+    camera.position.set(0, 5, 25);
+    camera.lookAt(0, 0, 0);
+    const travelDir = new THREE.Vector3(1, 0.4, 0).normalize();
+    let sim = { 
+        active: false, 
+        progress: -60, 
+        mode: null, 
+        ejectedE: null, 
+        refillE: null, 
+        outboundActive: false, 
+        outboundProgress: 0,
+        outboundDir: new THREE.Vector3(1, 0.4, 0).normalize() 
+    };
+    let rotationTime = 0;
+    let orbitTilt = new THREE.Euler(0.5, 0.3, 0);
+
+    window.triggerInteraction = (mode) => {
+        if(sim.active || sim.refillE || sim.mode === 'excited') return;
+        sim.mode = mode;
+        sim.progress = -60; 
+        sim.active = true;
+        inboundPhoton.group.visible = true;
+        inboundPhoton.group.scale.setScalar(1);
+        statusEl.innerText = "PHOTON INBOUND";
+    };
+
+    window.resetSimulation = () => {
+        if(electrons[0].active || sim.refillE) return;
+        sim.refillE = electrons[0].group.clone();
+        sim.refillE.visible = true;
+        sim.refillE.position.set(-25, 20, 0); 
+        scene.add(sim.refillE);
+        statusEl.innerText = "RELAXATION";
+    };
+
+    function animate() {
+        requestAnimationFrame(animate);
+        const time = performance.now() * 0.001;
+        rotationTime += 0.03;
+        cloud.rotation.y += 0.005;
+        excitedCloud.rotation.y -= 0.005;
+
+        let proximity = 0;
+        if (sim.active) proximity = Math.max(0, 1 - (Math.abs(sim.progress) / orbitalRadius));
+
+        electrons.forEach((e, i) => {
+            if(e.active) {
+                let jump = (Math.random() > 0.96) ? (Math.random() - 0.5) * 1.5 : 0;
+                let curAngle = (i === 1) ? rotationTime + jump : (rotationTime + Math.PI) + jump;
+                let currentR = (sim.mode === 'excited' && i === 0) ? orbitalRadius * 1.8 : orbitalRadius;
+                let vec = new THREE.Vector3(Math.cos(curAngle) * currentR, Math.sin(curAngle) * currentR, 0);
+                vec.applyEuler(orbitTilt);
+                
+                let jitterBase = 0.5;
+                let jitterMult = 1.5;
+                if (sim.mode === 'transmit') { jitterBase = 0.1; jitterMult = 0.2; }
+                const jitterMag = (sim.active) ? (jitterBase + (proximity * jitterMult)) : 0.5;
+                
+                e.group.position.set(
+                    vec.x + (Math.random()-0.5) * jitterMag, 
+                    vec.y + (Math.random()-0.5) * jitterMag, 
+                    vec.z + (Math.random()-0.5) * jitterMag
+                );
+            }
+        });
+
+        if(sim.outboundActive) {
+            sim.outboundProgress += 1.2;
+            const pCount = outboundPhoton.particles.length;
+            const packetSpread = 10; 
+            
+            outboundPhoton.particles.forEach((p, i) => {
+                let offset = (i / pCount) * packetSpread - (packetSpread / 2);
+                let step = sim.outboundProgress + offset;
+                let envelope = Math.exp(-Math.pow(offset, 2) / 15);
+                
+                let pos = sim.outboundDir.clone().multiplyScalar(step + orbitalRadius);
+                p.position.copy(pos);
+                let axis = new THREE.Vector3(0, 1, 0).cross(sim.outboundDir).normalize();
+                if (axis.length() < 0.1) axis = new THREE.Vector3(0, 0, 1);
+                p.position.addScaledVector(axis, Math.sin(step * 1.5 + time * 20) * 0.8 * envelope);
+                
+                p.material.opacity = envelope * 0.45; 
+            });
+            
+            if(sim.outboundProgress - (packetSpread / 2) > 80) {
+                sim.outboundActive = false;
+                outboundPhoton.group.visible = false;
+            }
+        }
+
+        if(sim.active) {
+            sim.progress += 1.2;
+            const headPos = sim.progress + 15;
+            const tailPos = sim.progress - 15;
+
+            inboundPhoton.particles.forEach((p, i) => {
+                let offset = (i / 50) * 20 - 10;
+                let step = sim.progress + offset;
+                let envelope = Math.exp(-Math.pow(offset, 2) / 40);
+                p.position.copy(travelDir).multiplyScalar(step);
+                p.position.y += Math.sin(step * 1.5 + time * 20) * 3 * envelope;
+                p.material.opacity = envelope * 0.6; 
+            });
+
+            if (headPos > -orbitalRadius && tailPos < orbitalRadius) {
+                cloud.material.color.setHex(0xffdd00); 
+                let dilationAmt = 0.25;
+                let shakeIntensity = 0.5;
+                if (sim.mode === 'transmit') { dilationAmt = 0.04; shakeIntensity = 0.1; }
+
+                cloud.scale.setScalar(1.0 + (proximity * dilationAmt));
+                const intensity = shakeIntensity + (proximity * shakeIntensity);
+                const sx = (Math.random() - 0.5) * intensity;
+                const sy = (Math.random() - 0.5) * intensity;
+                const sz = (Math.random() - 0.5) * intensity;
+                cloud.position.set(sx, sy, sz);
+                nucleus.position.set(sx*0.4, sy*0.4, sz*0.4);
+
+                inboundPhoton.group.scale.multiplyScalar(0.92); 
+
+                if (sim.progress >= -1) {
+                    if (sim.mode === 'eject' && electrons[0].active) {
+                        sim.active = false; sim.progress = -1000; inboundPhoton.group.visible = false;
+                        cloud.material.color.setHex(0x00e5ff); cloud.scale.setScalar(1.0);
+                        cloud.position.set(0,0,0); nucleus.position.set(0,0,0);
+                        electrons[0].active = false; electrons[0].group.visible = false;
+                        sim.ejectedE = electrons[0].group.clone();
+                        sim.ejectedE.visible = true; scene.add(sim.ejectedE);
+                        const ePos = new THREE.Vector3(); electrons[0].group.getWorldPosition(ePos);
+                        sim.ejectDir = ePos.clone().normalize().add(new THREE.Vector3(1, 0.5, 0)).normalize();
+                        statusEl.innerText = "PHOTON ABSORBED";
+                        setTimeout(() => { resetSimulation(); }, 2000);
+                    } 
+                    else if (sim.mode === 'jump' && electrons[0].active) {
+                        sim.active = false; sim.mode = 'excited'; inboundPhoton.group.visible = false;
+                        statusEl.innerText = "EXCITED STATE";
+                        excitedCloud.material.opacity = 0.9;
+                        cloud.material.color.setHex(0x00e5ff); cloud.scale.setScalar(1.0);
+                        cloud.position.set(0,0,0); nucleus.position.set(0,0,0);
+                        
+                        setTimeout(() => { excitedCloud.material.opacity = 0; }, 2550); 
+                        setTimeout(() => { excitedCloud.material.opacity = 0.9; }, 2685); 
+                        setTimeout(() => { excitedCloud.material.opacity = 0; }, 2750); 
+                        setTimeout(() => { excitedCloud.material.opacity = 0.9; }, 2800); 
+
+                        setTimeout(() => {
+                            sim.mode = 'decaying'; excitedCloud.material.opacity = 0;
+                            sim.outboundDir.set(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5).normalize();
+                            sim.outboundActive = true; sim.outboundProgress = 0;
+                            outboundPhoton.group.visible = true;
+                            sim.mode = null; statusEl.innerText = "SYSTEM READY";
+                        }, 3000);
+                    }
+                    else if (sim.mode === 'transmit') {
+                        statusEl.innerText = "TRANSMISSION";
+                    }
+                }
+            } else {
+                if(sim.mode !== 'excited') {
+                    cloud.material.color.setHex(0x00e5ff); cloud.scale.setScalar(1.0);
+                    cloud.position.set(0,0,0); nucleus.position.set(0,0,0);
+                }
+            }
+
+            if(tailPos > 80 || inboundPhoton.group.scale.x < 0.05) { 
+                sim.active = false; inboundPhoton.group.visible = false; 
+                if(sim.mode !== 'excited') statusEl.innerText = "SYSTEM READY";
+            }
+        }
+
+        if(sim.ejectedE) {
+            sim.ejectedE.position.addScaledVector(sim.ejectDir, 0.9);
+            if(sim.ejectedE.position.length() > 80) { scene.remove(sim.ejectedE); sim.ejectedE = null; }
+        }
+
+        if(sim.refillE) {
+            let toCenter = new THREE.Vector3(0,0,0).sub(sim.refillE.position);
+            let dist = sim.refillE.position.length();
+            sim.refillE.position.addScaledVector(toCenter.normalize(), 0.4 + (15.0 / (dist + 1)));
+            if(dist <= orbitalRadius) {
+                scene.remove(sim.refillE); sim.refillE = null;
+                electrons[0].active = true; electrons[0].group.visible = true;
+                statusEl.innerText = "SYSTEM READY";
+            }
+        }
+        renderer.render(scene, camera);
+    }
+    animate();
+})();
+</script>
+</div>
+
+</body>
+</html>
