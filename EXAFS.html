@@ -107,47 +107,7 @@
 
     body.tool-open { overflow: hidden; }
 
-    /* --- DECOUPLED FOOTER CSS --- */
-    .footer-decoupled {
-      all: unset; /* Strip all inherited template styles */
-      display: block;
-      width: 100%;
-      background-color: #f8f9fa;
-      border-top: 1px solid #dee2e6;
-      padding: 6px 0; /* Tight vertical spacing */
-      text-align: center;
-      position: relative;
-      z-index: 99;
-      box-sizing: border-box;
-    }
-
-    .footer-decoupled .content {
-      font-family: "Roboto", sans-serif;
-      font-size: 10px; /* Precise design spec */
-      line-height: 1.2;
-      color: #444;
-    }
-
-    .footer-decoupled a {
-      color: inherit;
-      text-decoration: underline;
-    }
-
-    .footer-decoupled .copyright {
-      font-weight: 600;
-      color: #000;
-      margin-top: 2px;
-      display: block;
-    }
-
-    /* Account for sidebar header on wide screens */
-    @media (min-width: 1200px) {
-      .footer-decoupled {
-        padding-left: 300px; 
-      }
-    }
-    
-    /* Remove padding/margin gaps from main to keep footer tight */
+    /* Removed .footer-decoupled styles to fix footer size issue */
     .main { margin-bottom: 0 !important; padding-bottom: 0 !important; }
   </style>
 </head>
@@ -289,16 +249,15 @@
 </main>
 
   <footer id="footer" class="footer position-relative light-background">
-      <footer style="text-align: center; font-size: 14px; padding: 10px;">
-        <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a>
-        </p>
-      </footer>
+    <div style="text-align: center; font-size: 14px; padding: 10px 0;">
+      <p>Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a>
+      </p>
+    </div>
     <div class="container">
       <div class="copyright text-center ">
         <p>© <span>Hiiro Moriyama | Oxford 2026</span></p>
       </div>
     </div>
-
   </footer>
   
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
