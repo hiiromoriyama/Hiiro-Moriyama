@@ -193,6 +193,19 @@
               <div class="col-md-6 col-12">
                 <div class="project-card">
                   <div>
+                    <h4>Electron excitation and photoionization</h4>
+                    <p>TBD</p>
+                    <select id="h-charging-select" class="select-dropdown">
+                      <option value="photoionization">H-Charging</option>
+                      <option value="exafs-bcc">BCC</option>
+                    </select>
+                  </div>
+                  <button class="btn-launch" onclick="launchPhotoionization()">Launch</button>
+                </div>
+              </div>
+              <div class="col-md-6 col-12">
+                <div class="project-card">
+                  <div>
                     <h4>Tensile Test with Hydrogen Exposure</h4>
                     <p>Deformation and Stress–Strain Visualization</p>
                   </div>
@@ -224,13 +237,17 @@
             <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
             <div class="simulation-container"><iframe src="H-charging.html"></iframe></div>
           </div>
+          <div id="photoionization" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="photoionisation.html"></iframe></div>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
   <footer id="footer" class="footer light-background">
-    <div class="container text-center" style="padding: 20px 0;">
+    <div class="container text-center" style="padding: 10px 0;">
       <p style="font-size: 14px; margin-bottom: 5px;">Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
       <div class="copyright" style="font-size: 14px;">
         &copy; <span>Hiiro Moriyama | Oxford 2026</span>
@@ -247,6 +264,7 @@
 
   <script>
     function launchExafs() { showProject(document.getElementById('exafs-select').value); }
+    function launchPhotoionization() { showProject(document.getElementById('photoionization-select').value); }
     function launchHCharging() { showProject(document.getElementById('h-charging-select').value); }
     function closeAllProjects() {
       document.body.classList.remove('tool-open');
