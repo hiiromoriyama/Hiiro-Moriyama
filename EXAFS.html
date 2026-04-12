@@ -53,24 +53,48 @@
     }
     .btn-launch:hover { background: #0675d1; }
 
-    /* Toggle visibility logic */
-    .project-section { display: none; }
-    .project-section.active { display: block; animation: fadeIn 0.5s ease; }
+    /* Full View Overlay Logic */
+    .project-section { 
+      display: none; 
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      z-index: 9999;
+      padding: 0;
+      margin: 0;
+    }
+    .project-section.active { display: block; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Aspect Ratio Containers */
+    /* Exit Button Top Right */
+    .btn-exit-tool {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: rgba(220, 53, 69, 0.9);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      z-index: 10001;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transition: 0.2s;
+    }
+    .btn-exit-tool:hover { background: #dc3545; transform: scale(1.05); }
+
+    /* Aspect Ratio Containers for Full View */
     .simulation-container {
       width: 100%;
+      height: 100%;
       background: #000;
-      margin-top: 20px;
-      border-radius: 8px;
       overflow: hidden;
-      border: 1px solid #333;
     }
-
-    .ratio-16-9 { aspect-ratio: 16 / 9; }
-    .ratio-4-3 { aspect-ratio: 4 / 3; }
-    .ratio-square { aspect-ratio: 1 / 1; max-height: 80vh; }
 
     .simulation-container iframe {
       width: 100%;
@@ -92,6 +116,9 @@
       border: 1px solid #dee2e6;
       font-size: 0.85rem;
     }
+
+    /* Prevent scrolling when tool is open */
+    body.tool-open { overflow: hidden; }
   </style>
 </head>
 
@@ -192,43 +219,32 @@
           </div>
         </div>
 
-        <div class="row mt-4">
-          <div class="col-12" data-aos="fade-up">
-            <div id="project-display-area">
-              
-              <div id="exafs-base" class="project-section">
-                <h3>EXAFS: FCC Lattice</h3>
-                <p style="text-align: justify;">Determining the geometric and electronic structure of matter.</p>
-                <div class="simulation-container ratio-16-9">
-                  <iframe src="fe-h-sim.html" title="Simulation"></iframe>
-                </div>
-              </div>
+        <div id="project-display-area">
+          <div id="exafs-base" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit Simulation</button>
+            <div class="simulation-container">
+              <iframe src="fe-h-sim.html"></iframe>
+            </div>
+          </div>
 
-              <div id="exafs-hcp" class="project-section">
-                <h3>HCP Lattice Dynamics</h3>
-                <div class="simulation-container ratio-square" style="border-color: #6a0dad;">
-                  <iframe src="zr-h-sim.html" title="Zr-H HCP Simulation"></iframe>
-                </div>
-              </div>
+          <div id="exafs-hcp" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit Simulation</button>
+            <div class="simulation-container">
+              <iframe src="zr-h-sim.html"></iframe>
+            </div>
+          </div>
 
-              <div id="exafs-bcc" class="project-section">
-                <h3>BCC Lattice Dynamics</h3>
-                <div class="simulation-container ratio-square" style="border-color: #444;">
-                  <iframe src="fe-h-bcc-sim.html" title="Fe-H BCC Simulation"></iframe>
-                </div>
-              </div>
+          <div id="exafs-bcc" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit Simulation</button>
+            <div class="simulation-container">
+              <iframe src="fe-h-bcc-sim.html"></iframe>
+            </div>
+          </div>
 
-              <div id="tensile-lab" class="project-section">
-                <h3>Tensile Test</h3>
-                <p style="text-align: justify;">Investigating the mechanical properties of metals under tensile load, specifically the impact of hydrogen concentration on yield strength and fracture strain.</p>
-                <div class="simulation-container ratio-4-3">
-                  <iframe src="Tensile-test.html" title="Tensile Lab Simulation"></iframe>
-                </div>
-                <p class="mt-3" style="font-style: italic; font-size: 0.85em; color: #666;">
-                  <strong>Note:</strong> Adjust the Hydrogen Content to see how it shifts the fracture point on the Stress-Strain curve.
-                </p>
-              </div>
-
+          <div id="tensile-lab" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit Simulation</button>
+            <div class="simulation-container">
+              <iframe src="Tensile-test.html"></iframe>
             </div>
           </div>
         </div>
@@ -252,15 +268,26 @@
       showProject(selectedId);
     }
 
-    function showProject(id) {
+    function closeAllProjects() {
       const sections = document.querySelectorAll('.project-section');
-      sections.forEach(s => s.classList.remove('active'));
+      document.body.classList.remove('tool-open');
+      sections.forEach(s => {
+        const iframe = s.querySelector('iframe');
+        if (iframe) {
+          const currentSrc = iframe.src;
+          iframe.src = ""; 
+          iframe.src = currentSrc;
+        }
+        s.classList.remove('active');
+      });
+    }
+
+    function showProject(id) {
+      closeAllProjects();
       const target = document.getElementById(id);
       if (target) {
+        document.body.classList.add('tool-open');
         target.classList.add('active');
-        setTimeout(() => {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 50);
       }
     }
   </script>
