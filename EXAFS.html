@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>EXAFS - Hiiro Moriyama</title>
+  <title>Tensile Test - Hiiro Moriyama</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -95,9 +95,9 @@
   <main class="main">
     <div class="page-title dark-background">
       <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Extended X-Ray Absorption Fine Structure (EXAFS)</h1>
+        <h1 class="mb-2 mb-lg-0">Tensile Test Lab & EXAFS</h1>
         <nav class="breadcrumbs">
-          <ol><li><a href="index.html">Home</a></li><li class="current">EXAFS</li></ol>
+          <ol><li><a href="index.html">Home</a></li><li class="current">Tensile Test</li></ol>
         </nav>
       </div>
     </div>
@@ -111,7 +111,8 @@
               <a href="xray-prosthesis.html">X-ray Prosthesis</a>
               <a href="xray-optics.html">Ultrafast X-ray Optics</a>
               <a href="2D-Flows.html">2D Flows</a>
-              <a href="EXAFS.html" class="active">EXAFS</a>
+              <a href="EXAFS.html">EXAFS</a>
+              <a href="Tensile-test.html" class="active">Tensile Test Lab</a>
             </div>
             <h4>Acknowledgement</h4>
             <p style="text-align: justify;">
@@ -124,64 +125,71 @@
 
           <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
             <img src="assets/img/exafs-main.jpg" alt="" class="img-fluid services-img">
-            <h3>Probing Local Atomic Environments</h3>
+            <h3>Material Science Dynamics</h3>
             <p>Select a model to launch the interactive simulation environment:</p>
 
             <div class="row gy-3 mb-4">
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="project-card">
                   <h4>EXAFS Analysis</h4>
-                  <p>Lattice Dynamics & Scattering basics.</p>
-                  <button class="btn-launch" onclick="showProject('exafs-base')">Launch Tool</button>
+                  <p>Lattice Dynamics basics.</p>
+                  <button class="btn-launch" onclick="showProject('exafs-base')">Launch</button>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="project-card">
                   <h4>HCP Lattice</h4>
-                  <p>Zirconium Hydride investigations.</p>
-                  <button class="btn-launch" onclick="showProject('exafs-hcp')">Launch Tool</button>
+                  <p>Zr-Hydride studies.</p>
+                  <button class="btn-launch" onclick="showProject('exafs-hcp')">Launch</button>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="project-card">
                   <h4>BCC Lattice</h4>
-                  <p>Hydrogen in alpha-Iron simulations.</p>
-                  <button class="btn-launch" onclick="showProject('exafs-bcc')">Launch Tool</button>
+                  <p>Iron simulations.</p>
+                  <button class="btn-launch" onclick="showProject('exafs-bcc')">Launch</button>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="project-card">
+                  <h4>Tensile Test</h4>
+                  <p>Fracture & Stress.</p>
+                  <button class="btn-launch" onclick="showProject('tensile-lab')">Launch</button>
                 </div>
               </div>
             </div>
 
             <div id="project-display-area">
-              <div id="exafs-base" class="project-section active">
+              <div id="exafs-base" class="project-section">
                 <h3>EXAFS: Probing Local Environments</h3>
-                <p style="text-align: justify;">Extended X-Ray Absorption Fine Structure (EXAFS) is a premier spectroscopic technique used to determine the local geometric and electronic structure of matter.</p>
+                <p style="text-align: justify;">Determining the geometric and electronic structure of matter.</p>
                 <div style="width: 100%; height: 600px; background: #000; margin-top: 30px; border: 1px solid #333; overflow: hidden;">
                   <iframe src="fe-h-sim.html" style="width: 100%; height: 100%; border: none;" title="Simulation"></iframe>
                 </div>
-                <p class="mt-3" style="font-style: italic; font-size: 0.85em; color: #666;">
-                  <strong>Note:</strong> This interactive tool lets you explore how photoelectrons scatter after an iron atom’s K-edge is excited. Use the H-Conc slider to see how adding Hydrogen atoms creates real-time strain and warps the iron lattice.
-                </p>
               </div>
 
               <div id="exafs-hcp" class="project-section">
-                <h3>HCP Lattice Dynamics: Zirconium Hydrides</h3>
-                <p style="text-align: justify;">Zirconium alloys are pivotal in nuclear cladding applications, where the absorption of hydrogen leads to the formation of brittle hydride phases.</p>
+                <h3>HCP Lattice Dynamics</h3>
                 <div style="width: 100%; height: 600px; background: #000; margin-top: 20px; border: 2px solid #6a0dad; overflow: hidden; border-radius: 8px;">
                   <iframe src="zr-h-sim.html" style="width: 100%; height: 100%; border: none;" title="Zr-H HCP Simulation"></iframe>
                 </div>
-                <p class="mt-3" style="font-style: italic; font-size: 0.85em; color: #666;">
-                  <strong>Note (Zr-H Simulation):</strong> Purple spheres represent Zirconium in hexagonal layers. Hydrogen occupies the octahedral interstitial sites.
-                </p>
               </div>
 
               <div id="exafs-bcc" class="project-section">
-                <h3>BCC Lattice Dynamics: Hydrogen in α-Iron</h3>
-                <p style="text-align: justify;">In BCC metals, Hydrogen atoms preferentially occupy the tetrahedral interstitial sites, acting as precursors to hydrogen-induced cracking.</p>
+                <h3>BCC Lattice Dynamics</h3>
                 <div style="width: 100%; height: 600px; background: #000; margin-top: 20px; border: 2px solid #444; overflow: hidden; border-radius: 8px;">
                   <iframe src="fe-h-bcc-sim.html" style="width: 100%; height: 100%; border: none;" title="Fe-H BCC Simulation"></iframe>
                 </div>
+              </div>
+
+              <div id="tensile-lab" class="project-section active">
+                <h3>Tensile Test</h3>
+                <p style="text-align: justify;">Investigating the mechanical properties of metals under tensile load, specifically the impact of hydrogen concentration on yield strength and fracture strain.</p>
+                <div style="width: 100%; height: 750px; background: #050505; margin-top: 20px; border: 1px solid #222; overflow: hidden; border-radius: 8px;">
+                  <iframe src="fe-h-sim.html" style="width: 100%; height: 100%; border: none;" title="Tensile Lab Simulation"></iframe>
+                </div>
                 <p class="mt-3" style="font-style: italic; font-size: 0.85em; color: #666;">
-                  <strong>Note (Fe-H Simulation):</strong> Insertion of Hydrogen causes a significant anisotropic expansion of the Iron lattice.
+                  <strong>Note:</strong> Adjust the Hydrogen Content to see how it shifts the fracture point on the Stress-Strain curve.
                 </p>
               </div>
             </div>
@@ -204,15 +212,11 @@
 
   <script>
     function showProject(id) {
-      // Hide all sections
       const sections = document.querySelectorAll('.project-section');
       sections.forEach(s => s.classList.remove('active'));
-      
-      // Show the selected one
       const target = document.getElementById(id);
       if (target) {
         target.classList.add('active');
-        // Scroll to the content for better mobile experience
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
