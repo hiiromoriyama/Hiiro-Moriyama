@@ -82,6 +82,16 @@
       opacity: 0.7;
       transform: scale(1.05);
     }
+    
+    /* Dropdown styling */
+    .select-dropdown {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 
@@ -154,31 +164,27 @@
             <p>Select a model to launch the interactive simulation environment:</p>
 
             <div class="row g-3 mb-4">
-              <div class="col-md-3 col-6">
+              <div class="col-md-6 col-12">
                 <div class="project-card">
-                  <h4>EXAFS Analysis</h4>
-                  <p>Lattice Dynamics basics.</p>
-                  <button class="btn-launch" onclick="showProject('exafs-base')">Launch</button>
+                  <div>
+                    <h4>EXAFS Analysis</h4>
+                    <p>Lattice Dynamics & Structure.</p>
+                    <select id="exafs-select" class="select-dropdown">
+                      <option value="exafs-base">FCC</option>
+                      <option value="exafs-bcc">BCC</option>
+                      <option value="exafs-hcp">HCP</option>
+                    </select>
+                  </div>
+                  <button class="btn-launch" onclick="launchExafs()">Launch</button>
                 </div>
               </div>
-              <div class="col-md-3 col-6">
+              
+              <div class="col-md-6 col-12">
                 <div class="project-card">
-                  <h4>HCP Lattice</h4>
-                  <p>Zr-Hydride studies.</p>
-                  <button class="btn-launch" onclick="showProject('exafs-hcp')">Launch</button>
-                </div>
-              </div>
-              <div class="col-md-3 col-6">
-                <div class="project-card">
-                  <h4>BCC Lattice</h4>
-                  <p>Iron simulations.</p>
-                  <button class="btn-launch" onclick="showProject('exafs-bcc')">Launch</button>
-                </div>
-              </div>
-              <div class="col-md-3 col-6">
-                <div class="project-card">
-                  <h4>Tensile Test</h4>
-                  <p>Fracture & Stress.</p>
+                  <div>
+                    <h4>Tensile Test</h4>
+                    <p>Fracture & Stress Analysis.</p>
+                  </div>
                   <button class="btn-launch" onclick="showProject('tensile-lab')">Launch</button>
                 </div>
               </div>
@@ -191,7 +197,7 @@
             <div id="project-display-area">
               
               <div id="exafs-base" class="project-section">
-                <h3>EXAFS: Probing Local Environments</h3>
+                <h3>EXAFS: FCC Lattice</h3>
                 <p style="text-align: justify;">Determining the geometric and electronic structure of matter.</p>
                 <div class="simulation-container ratio-16-9">
                   <iframe src="fe-h-sim.html" title="Simulation"></iframe>
@@ -212,7 +218,7 @@
                 </div>
               </div>
 
-              <div id="tensile-lab" class="project-section active">
+              <div id="tensile-lab" class="project-section">
                 <h3>Tensile Test</h3>
                 <p style="text-align: justify;">Investigating the mechanical properties of metals under tensile load, specifically the impact of hydrogen concentration on yield strength and fracture strain.</p>
                 <div class="simulation-container ratio-4-3">
@@ -241,6 +247,11 @@
   <div id="preloader"></div>
 
   <script>
+    function launchExafs() {
+      const selectedId = document.getElementById('exafs-select').value;
+      showProject(selectedId);
+    }
+
     function showProject(id) {
       const sections = document.querySelectorAll('.project-section');
       sections.forEach(s => s.classList.remove('active'));
