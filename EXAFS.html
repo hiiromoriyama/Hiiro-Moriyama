@@ -24,7 +24,23 @@
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
-    /* Styling for the launcher dashboard */
+    /* STICKY FOOTER LOGIC */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    .main {
+      flex: 1 0 auto; /* This forces the main content to grow and push the footer down */
+    }
+    #footer {
+      flex-shrink: 0; /* Prevents the footer from squishing */
+    }
+
+    /* Project Cards styling */
     .project-card {
       background: #fff;
       border: 1px solid #dee2e6;
@@ -46,7 +62,7 @@
     }
     .btn-launch:hover { background: #000000; }
 
-    /* Full View Overlay */
+    /* Overlay styling */
     .project-section { 
       display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: #000; z-index: 9999; padding: 0; margin: 0;
@@ -57,9 +73,8 @@
     .btn-exit-tool {
       position: absolute; top: 20px; right: 30px; background: rgba(220, 53, 69, 0.9);
       color: white; border: none; padding: 8px 20px; border-radius: 50px;
-      font-weight: 600; font-size: 0.9rem; cursor: pointer; z-index: 10001; transition: 0.2s;
+      font-weight: 600; font-size: 0.9rem; cursor: pointer; z-index: 10001;
     }
-    .btn-exit-tool:hover { background: #dc3545; transform: scale(1.05); }
 
     .simulation-container { width: 100%; height: 100%; background: #000; overflow: hidden; }
     .simulation-container iframe { width: 100%; height: 100%; border: none; }
@@ -71,15 +86,10 @@
 
     body.tool-open { overflow: hidden; }
 
-    /* Fix for Footer Height and Sidebar Alignment */
-    #footer {
-      padding: 15px 0;
-      background: #f8f9fa;
-      border-top: 1px solid #eee;
-    }
+    /* Footer Alignment with Sidebar */
     @media (min-width: 1200px) {
       #footer {
-        margin-left: 300px; /* Aligns with the sidebar layout */
+        margin-left: 300px;
       }
     }
   </style>
@@ -142,7 +152,7 @@
               The research forms part of the UKRI <a href="https://www.digitalmaterials-cdt.ac.uk" target="_blank">Materials 4.0</a> CDT (<a href="https://www.ukri.org/councils/epsrc/" target="_blank">EPSRC</a>), led by the <a href="https://www.royce.ac.uk" target="_blank">Henry Royce Institute</a>, and is carried out in the University of Oxford’s <a href="https://www.materials.ox.ac.uk" target="_blank">Department of Materials</a>, with additional funding from the <a href="https://www.britishcouncil.org" target="_blank">British Council</a> Japan Association (<a href="https://www.bcja.net/scholarship_students/2025.html" target="_blank">BCJA</a>).
             </p>
             <div class="row align-items-center g-4">
-              <div class="col-6 col-md-5">
+              <div class="col-6">
                 <a href="https://www.ox.ac.uk" target="_blank"><img src="assets/img/oxford-logo.png" alt="University of Oxford" class="img-fluid"></a>
               </div>
             </div>
@@ -219,15 +229,11 @@
     </section>
   </main>
 
-  <footer id="footer" class="footer">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 text-center">
-          <p style="font-size: 14px; margin-bottom: 5px;">Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
-          <div class="copyright" style="font-size: 14px;">
-            &copy; <span>Hiiro Moriyama | Oxford 2026</span>
-          </div>
-        </div>
+  <footer id="footer" class="footer light-background">
+    <div class="container text-center" style="padding: 20px 0;">
+      <p style="font-size: 14px; margin-bottom: 5px;">Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
+      <div class="copyright" style="font-size: 14px;">
+        &copy; <span>Hiiro Moriyama | Oxford 2026</span>
       </div>
     </div>
   </footer>
