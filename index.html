@@ -406,9 +406,9 @@
     
     </section><!-- /Testimonials Section -->
 
-      <!-- /Art Section -->
+  <!-- /Art Section -->
 
-<section id="arts" class="portfolio section light-background">
+      <section id="arts" class="portfolio section light-background">
 
   <style>
     /* --- Writing Items (Navy Boxes) --- */
@@ -419,13 +419,12 @@
       height: 100% !important; 
       min-height: 250px;
       display: flex;
-      align-items: center; /* Center text vertically when not hovered */
+      align-items: center; 
       justify-content: center;
       padding: 30px;
       text-align: center;
     }
 
-    /* Writing Title: Always visible, centered in the box */
     .slim-writing-item h3 {
       color: #ffffff !important;
       font-family: "Raleway", sans-serif !important;
@@ -433,16 +432,14 @@
       font-size: 1.2rem;
       margin: 0;
       z-index: 1;
-      transition: 0.3s;
     }
 
-    /* Writing Hover Overlay */
     .slim-writing-item .custom-toggle-overlay {
       position: absolute;
       inset: 0;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: center; 
+      justify-content: center; 
       background: rgba(0, 33, 71, 0.95);
       opacity: 0;
       transition: 0.3s ease-in-out;
@@ -456,6 +453,7 @@
     .slim-writing-item .custom-toggle-overlay i {
       color: #ffffff !important;
       font-size: 35px;
+      line-height: 0;
     }
 
     /* --- Photography/Art Items (Images) --- */
@@ -467,11 +465,11 @@
       transition: 0.3s;
       z-index: 3;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: center; 
+      justify-content: center; 
     }
 
-    /* Photography Title: TOP LEFT (Only for pictures) */
+    /* Photography Title: TOP LEFT only */
     .portfolio-item .portfolio-info h4 {
       position: absolute;
       top: 20px;
@@ -487,9 +485,17 @@
       opacity: 1;
     }
 
+    .portfolio-info a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+    }
+
     .portfolio-info a i {
       color: #fff;
-      font-size: 28px;
+      font-size: 32px;
+      line-height: 0;
     }
   </style>
 
@@ -499,7 +505,7 @@
   </div>
 
   <div class="container">
-    <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+    <div class="isotope-layout" data-default-filter="*" data-layout="masonry">
 
       <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
         <li data-filter="*" class="filter-active">All</li>
@@ -508,7 +514,7 @@
         <li data-filter=".filter-writing">Writings</li>
       </ul>
 
-      <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
+      <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200" id="portfolio-grid">
 
         <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-pic">
           <div class="portfolio-content h-100">
@@ -674,9 +680,27 @@
           </div>
         </div>
 
-      </div></div></div></section>
+      </div></div></div><script>
+    window.addEventListener('load', () => {
+      // Find the Isotope container
+      let portfolioContainer = document.querySelector('.isotope-layout');
+      if (portfolioContainer) {
+        // We look for the Isotope instance. 
+        // Most templates initialize Isotope on a child element or via a global function.
+        // This command triggers the shuffle immediately.
+        let iso = new Isotope(portfolioContainer.querySelector('.isotope-container'), {
+          itemSelector: '.portfolio-item',
+          layoutMode: 'masonry',
+          sortBy: 'random' // This is the built-in Isotope magic
+        });
+      }
+    });
+  </script>
+
+</section>
+
       
-      <!-- /End Art Section -->
+  <!-- /End Art Section -->
 
       
   </main>
