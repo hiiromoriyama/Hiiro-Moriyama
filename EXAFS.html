@@ -34,10 +34,10 @@
       flex-direction: column;
     }
     .main {
-      flex: 1 0 auto; /* This forces the main content to grow and push the footer down */
+      flex: 1 0 auto;
     }
     #footer {
-      flex-shrink: 0; /* Prevents the footer from squishing */
+      flex-shrink: 0;
     }
 
     /* Project Cards styling */
@@ -62,10 +62,10 @@
     }
     .btn-launch:hover { background: #000000; }
 
-    /* Overlay styling */
+    /* Overlay styling - TOGGLED TO FULL VIEW WITHOUT BLACK SPACES */
     .project-section { 
       display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: #000; z-index: 9999; padding: 0; margin: 0;
+      background: #fff; z-index: 9999; padding: 0; margin: 0;
     }
     .project-section.active { display: block; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -76,8 +76,8 @@
       font-weight: 600; font-size: 0.9rem; cursor: pointer; z-index: 10001;
     }
 
-    .simulation-container { width: 100%; height: 100%; background: #000; overflow: hidden; }
-    .simulation-container iframe { width: 100%; height: 100%; border: none; }
+    .simulation-container { width: 100%; height: 100%; background: #fff; overflow: hidden; }
+    .simulation-container iframe { width: 100%; height: 100%; border: none; display: block; }
 
     .select-dropdown {
       width: 100%; padding: 5px; margin-bottom: 15px; border-radius: 4px;
@@ -141,11 +141,11 @@
         <div class="row gy-4">
           <div class="col-lg-4">
             <div class="services-list">
+              <a href="EXAFS.html" class="active">Materials 4.0</a>
               <a href="microresidual-stress.html">Micro-Residual Stress</a>
               <a href="xray-prosthesis.html">X-ray Prosthesis</a>
               <a href="xray-optics.html">Ultrafast X-ray Optics</a>
               <a href="2D-Flows.html">2D Flows</a>
-              <a href="EXAFS.html" class="active">EXAFS</a>
             </div>
             <h4>Acknowledgement</h4>
             <p style="text-align: justify;">
@@ -183,7 +183,7 @@
                     <h4>Hydrogen Charging in Metals</h4>
                     <p>Electrolytic and Gas Modes</p>
                   </div>
-                  <button class="btn-launch" onclick="launchHCharging()">Launch</button>
+                  <button class="btn-launch" onclick="showProject('h-charging')">Launch</button>
                 </div>
               </div>
               <div class="col-md-6 col-12">
@@ -265,7 +265,6 @@
   <script>
     function launchExafs() { showProject(document.getElementById('exafs-select').value); }
     function launchPhotoionization() { showProject(document.getElementById('photoionization-select').value); }
-    function launchHCharging() { showProject(document.getElementById('h-charging-select').value); }
     function closeAllProjects() {
       document.body.classList.remove('tool-open');
       document.querySelectorAll('.project-section').forEach(s => {
