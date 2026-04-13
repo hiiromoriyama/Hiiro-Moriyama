@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Materials 4.0 - Hiiro Moriyama</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    /* STICKY FOOTER LOGIC */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    .main {
+      flex: 1 0 auto;
+    }
+    #footer {
+      flex-shrink: 0;
+    }
+
+    /* Project Cards styling */
+    .project-card {
+      background: #fff;
+      border: 1px solid #dee2e6;
+      padding: 15px;
+      border-radius: 8px;
+      height: 100%;
+      transition: 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .project-card:hover { border-color: #000000; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    .project-card h4 { font-size: 1rem; margin-bottom: 5px; }
+    .project-card p { font-size: 0.8rem; color: #666; margin-bottom: 10px; }
+    
+    .btn-launch {
+      background: #666666; color: white; border: none; padding: 5px 12px;
+      border-radius: 4px; font-size: 0.8rem; font-weight: 500; cursor: pointer; width: 100%;
+    }
+    .btn-launch:hover { background: #000000; }
+
+    /* Overlay styling - UPDATED FOR FULL VIEW WITHOUT BORDERS */
+    .project-section { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100vw; 
+      height: 100vh;
+      background: #ffffff; 
+      z-index: 9999; 
+      padding: 0 !important; 
+      margin: 0 !important;
+      border: none;
+    }
+    .project-section.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .btn-exit-tool {
+      position: absolute; 
+      top: 20px; 
+      right: 30px; 
+      background: rgba(220, 53, 69, 0.9);
+      color: white; 
+      border: none; 
+      padding: 8px 20px; 
+      border-radius: 50px;
+      font-weight: 600; 
+      font-size: 0.9rem; 
+      cursor: pointer; 
+      z-index: 10001;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .simulation-container { 
+      width: 100vw; 
+      height: 100vh; 
+      background: #fff; 
+      overflow: hidden; 
+      margin: 0;
+      padding: 0;
+    }
+    .simulation-container iframe { 
+      width: 100%; 
+      height: 100%; 
+      border: none; 
+      display: block; 
+      margin: 0;
+      padding: 0;
+    }
+
+    .select-dropdown {
+      width: 100%; padding: 5px; margin-bottom: 15px; border-radius: 4px;
+      border: 1px solid #dee2e6; font-size: 0.85rem;
+    }
+
+    /* Prevent body scrolling when a tool is open */
+    body.tool-open { 
+      overflow: hidden !important; 
+    }
+
+    /* Footer Alignment with Sidebar */
+    @media (min-width: 1200px) {
+      #footer {
+        margin-left: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body class="service-details-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+    <div class="profile-img"><img src="assets/img/prof3.jpg" alt="" class="img-fluid rounded-circle"></div>
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Hiiro Moriyama</h1>
+    </a>
+    <div class="social-links text-center">
+      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama?ev=hdr_xprf" target="_blank"><i class="bi bi-journal-richtext"></i></a>
+      <a href="https://pam.web.ox.ac.uk/people/hiiro-moriyama" target="_blank"><i class="bi bi-person-workspace"></i></a>
+      <a href="https://www.digitalmaterials-cdt.ac.uk/people/hiiro-moriyama/" target="_blank"><i class="bi bi-buildings"></i></a>
+      <a href="https://orcid.org/0009-0001-9306-3806" target="_blank"><i class="bi bi-person-badge"></i></a>
+      <a href="https://www.linkedin.com/in/hiiro-moriyama/" target="_blank"><i class="bi bi-linkedin"></i></a>
+    </div>
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="index.html#hero"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="index.html#aboutme"><i class="bi bi-person navicon"></i>About me</a></li>
+        <li><a href="index.html#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
+        <li><a href="index.html#awards"><i class="bi bi-trophy navicon"></i>Awards</a></li>
+        <li><a href="index.html#arts"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
+      </ul>
+    </nav>
+    <div class="oxford-logo-container mt-auto pb-5 text-center">
+      <a href="https://www.ox.ac.uk/" target="_blank" rel="noopener noreferrer">
+        <img src="assets/img/Oxford-University-Circlet.svg" alt="University of Oxford" class="img-fluid" style="max-width: 70px; height: auto;">
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Tensile Test Lab & EXAFS</h1>
+        <nav class="breadcrumbs">
+          <ol><li><a href="index.html">Home</a></li><li class="current">Tensile Test</li></ol>
+        </nav>
+      </div>
+    </div>
+
+    <section id="service-details" class="service-details section">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-4">
+            <div class="services-list">
+              <a href="EXAFS.html" class="active">Materials 4.0</a>
+              <a href="microresidual-stress.html">Micro-Residual Stress</a>
+              <a href="xray-prosthesis.html">X-ray Prosthesis</a>
+              <a href="xray-optics.html">Ultrafast X-ray Optics</a>
+              <a href="2D-Flows.html">2D Flows</a>
+            </div>
+            <h4>Acknowledgement</h4>
+            <p style="text-align: justify;">
+              The research forms part of the UKRI <a href="https://www.digitalmaterials-cdt.ac.uk" target="_blank">Materials 4.0</a> CDT (<a href="https://www.ukri.org/councils/epsrc/" target="_blank">EPSRC</a>), led by the <a href="https://www.royce.ac.uk" target="_blank">Henry Royce Institute</a>, and is carried out in the University of Oxford’s <a href="https://www.materials.ox.ac.uk" target="_blank">Department of Materials</a>, with additional funding from the <a href="https://www.britishcouncil.org" target="_blank">British Council</a> Japan Association (<a href="https://www.bcja.net/scholarship_students/2025.html" target="_blank">BCJA</a>).
+            </p>
+            <div class="row align-items-center g-4">
+              <div class="col-6">
+                <a href="https://www.ox.ac.uk" target="_blank"><img src="assets/img/oxford-logo.png" alt="University of Oxford" class="img-fluid"></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-8">
+            <img src="assets/img/exafs-main.jpg" alt="" class="img-fluid services-img">
+            <h3>Process Dynamics Lab</h3>
+            <p>Select a model to launch the interactive simulation environment:</p>
+            <div class="row g-3 mb-4">
+              <div class="col-md-6 col-12">
+                <div class="project-card">
+                  <div>
+                    <h4>Photoelectron–Hydride Interaction</h4>
+                    <p>Lattice Dynamics and Structure</p>
+                    <select id="exafs-select" class="select-dropdown">
+                      <option value="exafs-base">FCC</option>
+                      <option value="exafs-bcc">BCC</option>
+                      <option value="exafs-hcp">HCP</option>
+                    </select>
+                  </div>
+                  <button class="btn-launch" onclick="launchExafs()">Launch</button>
+                </div>
+              </div>
+              <div class="col-md-6 col-12">
+                <div class="project-card">
+                  <div>
+                    <h4>Hydrogen Charging in Metals</h4>
+                    <p>Electrolytic and Gas Modes</p>
+                  </div>
+                  <button class="btn-launch" onclick="showProject('h-charging')">Launch</button>
+                </div>
+              </div>
+              <div class="col-md-6 col-12">
+                <div class="project-card">
+                  <div>
+                    <h4>Electron Dynamics in Atoms</h4>
+                    <p>Excited-State and Photoionization</p>
+                    <select id="photoionization-select" class="select-dropdown">
+                      <option value="photoionization">3D Photoionization</option>
+                      <option value="emission">X-ray Emission</option>
+                    </select>
+                  </div>
+                  <button class="btn-launch" onclick="launchPhotoionization()">Launch</button>
+                </div>
+              </div>
+              <div class="col-md-6 col-12">
+                <div class="project-card">
+                  <div>
+                    <h4>Tensile Test with Hydrogen Exposure</h4>
+                    <p>Deformation and Stress–Strain Visualization</p>
+                  </div>
+                  <button class="btn-launch" onclick="showProject('tensile-lab')">Launch</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="project-display-area">
+          <div id="exafs-base" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="fe-h-sim.html"></iframe></div>
+          </div>
+          <div id="exafs-hcp" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="zr-h-sim.html"></iframe></div>
+          </div>
+          <div id="exafs-bcc" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="fe-h-bcc-sim.html"></iframe></div>
+          </div>
+          <div id="tensile-lab" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="Tensile-test.html"></iframe></div>
+          </div>
+          <div id="h-charging" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="H-charging.html"></iframe></div>
+          </div>
+          <div id="photoionization" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="photoionisation.html"></iframe></div>
+          </div>
+           <div id="emission" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="Emission.html"></iframe></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer light-background">
+    <div class="container text-center" style="padding: 10px 0;">
+      <p style="font-size: 14px; margin-bottom: 5px;">Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
+      <div class="copyright" style="font-size: 14px;">
+        &copy; <span>Hiiro Moriyama | Oxford 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/js/main.js"></script>
+
+  <script>
+    function launchExafs() { showProject(document.getElementById('exafs-select').value); }
+    function launchPhotoionization() { showProject(document.getElementById('photoionization-select').value); }
+    
+    function closeAllProjects() {
+      document.body.classList.remove('tool-open');
+      document.querySelectorAll('.project-section').forEach(s => {
+        const iframe = s.querySelector('iframe');
+        if (iframe) { 
+          // Reset iframe to stop simulation CPU usage when closed
+          const src = iframe.src; 
+          iframe.src = ""; 
+          iframe.src = src; 
+        }
+        s.classList.remove('active');
+      });
+    }
+
+    function showProject(id) {
+      closeAllProjects();
+      const target = document.getElementById(id);
+      if (target) { 
+        document.body.classList.add('tool-open'); 
+        target.classList.add('active'); 
+      }
+    }
+
+    // Keyboard shortcut to close tools
+    document.addEventListener('keydown', function(event) {
+      if (event.key === "Escape") {
+        closeAllProjects();
+      }
+    });
+  </script>
+</body>
+</html>
