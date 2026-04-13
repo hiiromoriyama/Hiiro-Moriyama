@@ -429,6 +429,59 @@
 
           <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
 
+            <style>
+  /* Use a unique prefix 'sw-' (slim-writing) to prevent conflicts */
+  
+  /* Container styling */
+  .slim-writing-item .portfolio-content {
+    background-color: #002147 !important; /* Forces your navy color */
+    position: relative;
+    overflow: hidden;
+    height: auto !important; /* Overrides template fixed heights */
+    min-height: 0 !important;
+  }
+
+  /* Text area styling */
+  .slim-writing-item .custom-panel {
+    padding: 18px 10px; 
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Specific Font Styling */
+  .slim-writing-item h3 {
+    color: #ffffff !important;
+    font-family: "Raleway", sans-serif !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    font-size: 1.1rem;
+    line-height: 1.2;
+  }
+
+  /* Overlay Toggle - specifically scoped */
+  .slim-writing-item .custom-toggle-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 33, 71, 0.95); 
+    opacity: 0;
+    transition: 0.3s ease;
+    z-index: 2;
+  }
+
+  /* Only show toggle for this specific class */
+  .slim-writing-item:hover .custom-toggle-overlay {
+    opacity: 1;
+  }
+
+  .slim-writing-item .custom-toggle-overlay i {
+    color: #ffffff !important;
+    font-size: 24px;
+  }
+</style>
+
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-pic">
               <div class="portfolio-content h-100">
                 <img src="assets/img/sf/sf-8.jpg" class="img-fluid" alt="">
@@ -455,28 +508,29 @@
                 </div>
               </div>
             </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/writings/writing-2.jpg" class="img-fluid" alt="">
-                <div class="portfolio-info center-details-link">
-                  <h4>Fugitives from Unreality</h4>
-                  <p></p>
-                  <a href="Fugitives-from-unreality.html" class="details-link"><i class="bi bi-link-45deg"></i></a>
+            
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing slim-writing-item">
+                <div class="portfolio-content">
+                  <div class="custom-panel">
+                    <h3>Fugitives from Unreality</h3>
+                  </div>
+                  <div class="custom-toggle-overlay">
+                    <a href="Fugitives-from-unreality.html" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                  </div>
                 </div>
               </div>
-            </div><!-- End Portfolio Item -->
-
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/writings/writing-5.jpg" class="img-fluid" alt="">
-                <div class="portfolio-info center-details-link">
-                  <h4>Strings within</h4>
-                  <p></p>
+            
+              <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing slim-writing-item">
+              <div class="portfolio-content">
+                <div class="custom-panel">
+                  <h3>Strings within</h3>
+                </div>
+                <div class="custom-toggle-overlay">
                   <a href="Strings-within.html" class="details-link"><i class="bi bi-link-45deg"></i></a>
                 </div>
               </div>
-            </div><!-- End Portfolio Item -->
+            </div>
+          </div>
 
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-pic">
               <div class="portfolio-content h-100">
@@ -497,16 +551,16 @@
               </div>
             </div><!-- End Portfolio Item -->
 
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/writings/writing-1.jpg" class="img-fluid" alt="">
-                <div class="portfolio-info center-details-link">
-                  <h4>Melancholy Expanse</h4>
-                  <p></p>
-                  <a href="melancholyexpanse.html" class="details-link"><i class="bi bi-link-45deg"></i></a>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing slim-writing-item">
+    <div class="portfolio-content">
+      <div class="custom-panel">
+        <h3>Melancholy Expanse</h3>
+      </div>
+      <div class="custom-toggle-overlay">
+        <a href="melancholyexpanse.html" class="details-link"><i class="bi bi-link-45deg"></i></a>
+      </div>
+    </div>
+  </div>
 
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-pic">
               <div class="portfolio-content h-100">
@@ -535,16 +589,17 @@
               </div>
             </div><!-- End Portfolio Item -->
 
-             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/writings/writing-4.jpg" class="img-fluid" alt="">
-                <div class="portfolio-info center-details-link">
-                  <h4>Eau de nil</h4>
-                  <p></p>
-                  <a href="Eau-de-nil.html" class="details-link"><i class="bi bi-link-45deg"></i></a>
-                </div>
-              </div>
-            </div><!-- End Portfolio Item -->
+             <div class="row">
+  <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing slim-writing-item">
+    <div class="portfolio-content">
+      <div class="custom-panel">
+        <h3>Eau de nil</h3>
+      </div>
+      <div class="custom-toggle-overlay">
+        <a href="Eau-de-nil.html" class="details-link"><i class="bi bi-link-45deg"></i></a>
+      </div>
+    </div>
+  </div>
 
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-pic">
               <div class="portfolio-content h-100">
@@ -577,16 +632,16 @@
               </div>
             </div><!-- End Portfolio Item -->
 
-            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing">
-              <div class="portfolio-content h-100">
-                <img src="assets/img/writings/writing-6.png" class="img-fluid" alt="">
-                <div class="portfolio-info center-details-link">
-                  <h4>The parable of the two brothers</h4>
-                  <p></p>
-                  <a href="parable-brothers.html" class="details-link"><i class="bi bi-link-45deg"></i></a>
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing slim-writing-item">
+              <div class="portfolio-content">
+                <div class="custom-panel">
+                  <h3>The parable of the two brothers</h3>
+                </div>
+                <div class="custom-toggle-overlay">
+                  <a href="parable-brothers.html" class="details-link" title="More Details"><i class="bi bi-link-45deg"></i></a>
                 </div>
               </div>
-            </div><!-- End Portfolio Item -->
+            </div>
 
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-pic">
               <div class="portfolio-content h-100">
@@ -603,55 +658,6 @@
                 </div>
               </div>
             </div><!-- End Portfolio Item -->
-
-
-<div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing slim-writing-item">
-  <div class="portfolio-content" style="position: relative; overflow: hidden; background-color: #002147;">
-    
-    <div class="custom-panel" style="padding: 20px 10px; text-align: center;">
-      <h3 style="
-          color: #ffffff; 
-          font-family: 'Raleway', sans-serif; 
-          font-weight: 700; 
-          margin: 0;">
-        EAU DE NIL
-      </h3>
-    </div>
-
-    <div class="portfolio-info custom-toggle-overlay">
-      <a href="Eau-de-nil.html" class="details-link" title="More Details">
-        <i class="bi bi-link-45deg"></i>
-      </a>
-    </div>
-
-  </div>
-</div>
-
-<style>
-  /* Only target the items with the 'slim-writing-item' class */
-  .slim-writing-item .custom-toggle-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 33, 71, 0.9); /* Darker overlay */
-    opacity: 0;
-    transition: 0.4s;
-  }
-
-  .slim-writing-item .portfolio-content:hover .custom-toggle-overlay {
-    opacity: 1;
-  }
-
-  /* Keep the icon white and visible */
-  .slim-writing-item .custom-toggle-overlay i {
-    color: #fff;
-    font-size: 24px;
-  }
-</style>
-
-            
             
           </div><!-- End Portfolio Container -->
         </div>
