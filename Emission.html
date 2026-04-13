@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Dynamics Lab</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #physics-engine-container {
+            background-color: #050505;
+            padding: 15px;
+            border: 1px solid #222;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        #sim-viewport {
+            background: #000;
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            height: 56.25vw; /* 16:9 Aspect Ratio */
+            max-height: 70vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+        }
+
+        #sidebar {
+            width: 260px;
+            background: rgba(10, 10, 10, 1);
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            z-index: 20;
+            box-sizing: border-box;
+        }
+
+        #canvas-container { flex-grow: 1; position: relative; overflow: hidden; }
+        .status-header { font-size: 10px; font-weight: 900; letter-spacing: 2px; color: #666; margin-bottom: 5px; text-transform: uppercase; }
+        .lab-header { font-size: 12px; font-weight: 900; letter-spacing: 1px; color: #00FFFF; margin-bottom: 25px; text-transform: uppercase; }
+        #interaction-status { font-size: 20px; font-weight: 900; color: #444; margin-bottom: 10px; transition: color 0.2s; }
+        #realtime-transition { flex-grow: 1; padding-top: 15px; border-top: 1px solid #333; }
+        
+        .active-entry { padding: 12px; border-left: 3px solid #E10600; background: rgba(225, 6, 0, 0.08); animation: flashIn 0.4s ease-out; }
+        @keyframes flashIn { from { opacity: 0; background: rgba(225, 6, 0, 0.3); } to { opacity: 1; background: rgba(225, 6, 0, 0.08); } }
+        
+        .log-name { font-size: 18px; font-weight: 900; color: #FFF; margin-bottom: 4px; }
+        .log-trans { font-size: 11px; color: #AAA; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .log-val { font-size: 14px; color: #E10600; font-weight: 900; }
+        
+        canvas { cursor: crosshair; display: block; width: 100%; height: 100%; }
+        .bottom-status-group { margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <div id="physics-engine-container">
+        <div id="sim-viewport">
+            <div id="sidebar">
+                <div class="lab-header">Process Dynamics Lab</div>
+                <div class="status-header">Transition Info</div>
+                <div id="realtime-transition"></div>
+                
+                <div class="bottom-status-group">
+                    <div class="status-header">Selection Rule</div>
+                    <div id="interaction-status">READY</div>
+                </div>
+            </div>
+            <div id="canvas-container">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const statusEl = document.getElementById('interaction-status');
+        const transitionBox = document.getElementById('realtime-transition');
+        const viewport = document.getElementById('canvas-container');
+
+        const shells = [
+            {label:'N7', shell:'4f 7/2', y_pct: 0.04, l:3, j:3.5, color: '#888'},
+            {label:'N6', shell:'4f 5/2', y_pct: 0.07, l:3, j:2.5, color: '#888'},
+            {label:'N5', shell:'4d 5/2', y_pct: 0.11, l:2, j:2.5, color: '#888'},
+            {label:'N4', shell:'4d 3/2', y_pct: 0.14, l:2, j:1.5, color: '#888'},
+            {label:'N3', shell:'4p 3/2', y_pct: 0.18, l:1, j:1.5, color: '#888'},
+            {label:'N2', shell:'4p 1/2', y_pct: 0.21, l:1, j:0.5, color: '#888'},
+            {label:'N1', shell:'4s',     y_pct: 0.25, l:0, j:0.5, color: '#888'},
+            {label:'M5', shell:'3d 5/2', y_pct: 0.38, l:2, j:2.5, color: '#FF3B30'},
+            {label:'M4', shell:'3d 3/2', y_pct: 0.41, l:2, j:1.5, color: '#888'},
+            {label:'M3', shell:'3p 3/2', y_pct: 0.45, l:1, j:1.5, color: '#888'},
+            {label:'M2', shell:'3p 1/2', y_pct: 0.48, l:1, j:0.5, color: '#888'},
+            {label:'M1', shell:'3s',     y_pct: 0.52, l:0, j:0.5, color: '#888'},
+            {label:'L3', shell:'2p 3/2', y_pct: 0.65, l:1, j:1.5, color: '#FF3B30'},
+            {label:'L2', shell:'2p 1/2', y_pct: 0.70, l:1, j:0.5, color: '#00FFFF'}, 
+            {label:'L1', shell:'2s',     y_pct: 0.75, l:0, j:0.5, color: '#00FFFF'}, 
+            {label:'K',  shell:'1s',     y_pct: 0.90, l:0, j:0.5, color: '#FF3B30'}
+        ];
+
+        function getXrayReference(from, to) {
+            const pair = `${from.label}->${to.label}`;
+            const map = {
+                'L3->K': { name: 'Kα1', desc: '2p3/2 -> 1s' },
+                'L2->K': { name: 'Kα2', desc: '2p1/2 -> 1s' },
+                'M3->K': { name: 'Kβ1', desc: '3p3/2 -> 1s' },
+                'N3->K': { name: 'Kβ2', desc: '4p3/2 -> 1s' },
+                'M2->K': { name: 'Kβ3', desc: '3p1/2 -> 1s' },
+                'N2->K': { name: 'Kβ4', desc: '4p1/2 -> 1s' },
+                'M5->L3': { name: 'Lα1', desc: '3d5/2 -> 2p3/2' },
+                'M4->L3': { name: 'Lα2', desc: '3d3/2 -> 2p3/2' },
+                'N5->L3': { name: 'Lβ2', desc: '4d5/2 -> 2p3/2' },
+                'M1->L3': { name: 'Ll',  desc: '3s -> 2p3/2' },
+                'N1->L3': { name: 'Lu',  desc: '4s -> 2p3/2' },
+                'M4->L2': { name: 'Lβ1', desc: '3d3/2 -> 2p1/2' },
+                'N4->L2': { name: 'Lγ1', desc: '4d3/2 -> 2p1/2' },
+                'M1->L2': { name: 'Lη',  desc: '3s -> 2p1/2' },
+                'N1->L2': { name: 'Lν',  desc: '4s -> 2p1/2' },
+                'M3->L1': { name: 'Lβ3', desc: '3p3/2 -> 2s' },
+                'M2->L1': { name: 'Lβ4', desc: '3p1/2 -> 2s' },
+                'N3->L1': { name: 'Lγ2', desc: '4p3/2 -> 2s' },
+                'N2->L1': { name: 'Lγ3', desc: '4p1/2 -> 2s' },
+                'N7->M5': { name: 'Mα1', desc: '4f7/2 -> 3d5/2' },
+                'N6->M5': { name: 'Mα2', desc: '4f5/2 -> 3d5/2' },
+                'N3->M5': { name: 'Mζ1', desc: '4p3/2 -> 3d5/2' },
+                'N6->M4': { name: 'Mβ',  desc: '4f5/2 -> 3d3/2' },
+                'N2->M4': { name: 'Mζ2', desc: '4p1/2 -> 3d3/2' },
+                'N5->M3': { name: 'Mγ',  desc: '4d5/2 -> 3p3/2' }
+            };
+            return map[pair];
+        }
+
+        let selected = null, animation = null, mouse = { x: 0, y: 0 };
+
+        function resize() {
+            canvas.width = viewport.clientWidth;
+            canvas.height = viewport.clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function getHovered() {
+            return shells.find(s => Math.abs(mouse.y - (s.y_pct * canvas.height)) < 12);
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+
+        canvas.addEventListener('mousedown', () => {
+            const hit = getHovered();
+            if (!hit || animation) return;
+            
+            if (!selected) {
+                selected = hit;
+                statusEl.innerText = "ORIGIN: " + hit.label;
+                statusEl.style.color = "#888";
+            } else if (selected === hit) {
+                selected = null;
+                statusEl.innerText = "READY";
+            } else {
+                const dl = Math.abs(selected.l - hit.l);
+                const dj = Math.abs(selected.j - hit.j);
+                const isRadiative = (dl === 1) && (dj <= 1);
+                const data = getXrayReference(selected, hit);
+
+                if (isRadiative) {
+                    statusEl.innerText = "ALLOWED";
+                    statusEl.style.color = "#00FF00"; 
+                    transitionBox.innerHTML = `
+                        <div class="active-entry">
+                            <div class="log-name">${data ? data.name : 'Allowed'}</div>
+                            <div class="log-trans">${selected.label} → ${hit.label}</div>
+                            <div class="log-val">${data ? data.desc : 'Δl=1, Δj='+dj}</div>
+                        </div>
+                    `;
+                    if (selected.y_pct < hit.y_pct) {
+                        animation = { type: 'electron_drop', from: selected, to: hit, start: Date.now(), duration: 800 };
+                    } else {
+                        animation = { type: 'absorption_photon', from: selected, to: hit, start: Date.now(), duration: 1200 };
+                    }
+                } else {
+                    statusEl.innerText = "FORBIDDEN";
+                    statusEl.style.color = "#E10600";
+                    transitionBox.innerHTML = `
+                        <div class="active-entry" style="border-left-color: #444; background: rgba(255,255,255,0.05)">
+                            <div class="log-name">Forbidden</div>
+                            <div class="log-trans">${selected.label} → ${hit.label}</div>
+                            <div class="log-val" style="color: #666">Δl=${dl}, Δj=${dj.toFixed(1)}</div>
+                        </div>
+                    `;
+                    animation = { type: 'forbidden_shake', start: Date.now(), duration: 400 };
+                }
+                selected = null;
+            }
+        });
+
+        function drawElectron(x, y) {
+            ctx.shadowBlur = 10; ctx.shadowColor = "#00e5ff"; 
+            ctx.fillStyle = "#00e5ff"; 
+            ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        function drawPhoton(x, y, prog, angle, isIncoming) {
+            const alpha = isIncoming ? Math.min(1, prog * 3) : Math.min(1, (1 - prog) * 3);
+            const time = Date.now() * 0.04;
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(255, 215, 0, ${alpha})`;
+            ctx.lineWidth = 1.5;
+            for (let i = 0; i < 20; i++) {
+                const sx = -i * 3;
+                const sy = Math.sin(time - (i * 0.8)) * (3 * Math.sin((i/20)*Math.PI));
+                if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function loop() {
+            const now = Date.now();
+            ctx.setTransform(1, 0, 0, 1, 0, 0); 
+            
+            if (animation && animation.type === 'forbidden_shake') {
+                const dx = (Math.random() - 0.5) * 6;
+                const dy = (Math.random() - 0.5) * 6;
+                ctx.translate(dx, dy);
+            }
+
+            ctx.fillStyle = "#000"; ctx.fillRect(-10, -10, canvas.width+20, canvas.height+20);
+            
+            const hovered = getHovered();
+            const elapsed = animation ? (now - animation.start) : 0;
+            const p = animation ? Math.min(1, elapsed / animation.duration) : 0;
+
+            shells.forEach(s => {
+                let y = s.y_pct * canvas.height;
+                let glow = 0;
+                let jolt = 0;
+
+                if (animation) {
+                    if (animation.type === 'absorption_photon' && animation.from === s) {
+                        glow = p * 20;
+                        y += Math.sin(now * 0.1) * 2;
+                    }
+                    if (animation.type === 'electron_drop' && animation.to === s && p > 0.8) {
+                        jolt = (Math.random() - 0.5) * 5;
+                        glow = 15;
+                    }
+                    if (animation.type === 'emission_photon' && animation.from === s && p < 0.3) {
+                        jolt = (Math.random() - 0.5) * 8;
+                    }
+                    if (animation.type === 'electron_jump' && animation.to === s && p > 0.8) {
+                        glow = 15;
+                        y += Math.sin(now * 0.1) * 2;
+                    }
+                }
+
+                const isSel = selected === s, isHov = hovered === s;
+                ctx.beginPath();
+                ctx.shadowBlur = glow > 0 ? glow : (isSel ? 10 : 0);
+                ctx.shadowColor = isSel ? "#E10600" : "#FFF";
+                ctx.strokeStyle = isSel ? "#E10600" : (isHov ? "#FFF" : (s.color || "#333"));
+                ctx.lineWidth = isSel || isHov || glow > 0 ? 2 : 1;
+                
+                const finalY = y + jolt;
+                ctx.moveTo(80, finalY); ctx.lineTo(canvas.width - 150, finalY);
+                ctx.stroke();
+                
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = isSel ? "#E10600" : (isHov ? "#FFF" : "#666");
+                ctx.font = "bold 12px 'Inter'"; ctx.fillText(s.label, 30, finalY + 4);
+                ctx.font = "400 9px 'Inter'"; ctx.fillText(s.shell, canvas.width - 130, finalY + 4);
+            });
+
+            if (animation) {
+                const centerX = canvas.width / 2;
+                if (animation.type === 'electron_drop') {
+                    const y1 = animation.from.y_pct * canvas.height, y2 = animation.to.y_pct * canvas.height;
+                    drawElectron(centerX, y1 + (y2 - y1) * p);
+                    if (p >= 1) animation = { type: 'emission_photon', from: animation.to, origin: {x: centerX, y: y2}, start: now, duration: 1000 };
+                } else if (animation.type === 'emission_photon') {
+                    drawPhoton(animation.origin.x + p*400, animation.origin.y - p*400, p, -Math.PI/4, false);
+                    if (p >= 1) { animation = null; statusEl.innerText = "READY"; }
+                } else if (animation.type === 'absorption_photon') {
+                    const y1 = animation.from.y_pct * canvas.height;
+                    drawPhoton(centerX + (1-p)*400, y1 - (1-p)*400, p, -Math.PI/4, true);
+                    if (p >= 1) animation = { type: 'electron_jump', from: animation.from, to: animation.to, start: now, duration: 800 };
+                } else if (animation.type === 'electron_jump') {
+                    const y1 = animation.from.y_pct * canvas.height, y2 = animation.to.y_pct * canvas.height;
+                    drawElectron(centerX, y1 + (y2 - y1) * p);
+                    if (p >= 1) { animation = null; statusEl.innerText = "READY"; }
+                } else if (animation.type === 'forbidden_shake') {
+                    if (p >= 1) { animation = null; statusEl.innerText = "READY"; }
+                }
+            }
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+</html>
