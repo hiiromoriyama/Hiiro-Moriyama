@@ -604,34 +604,54 @@
               </div>
             </div><!-- End Portfolio Item -->
 
-<div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing">
-  <div class="portfolio-content" style="position: relative; overflow: hidden;">
+
+<div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-writing slim-writing-item">
+  <div class="portfolio-content" style="position: relative; overflow: hidden; background-color: #002147;">
     
-    <a href="Eau-de-nil.html" style="text-decoration: none; display: block;">
-      <div class="custom-panel" style="
-          background-color: #002147; 
-          height: auto; 
-          padding: 15px 10px; 
-          display: flex; 
-          align-items: center; 
-          justify-content: center; 
-          transition: 0.3s;">
-        
-        <h3 style="
-            color: #ffffff; 
-            font-family: 'Raleway', sans-serif; 
-            font-weight: 700; 
-            margin: 0; 
-            text-align: center;
-            text-transform: uppercase;
-            font-size: 1.25rem;">
-          Eau de nil
-        </h3>
-      </div>
-    </a>
+    <div class="custom-panel" style="padding: 20px 10px; text-align: center;">
+      <h3 style="
+          color: #ffffff; 
+          font-family: 'Raleway', sans-serif; 
+          font-weight: 700; 
+          margin: 0;">
+        EAU DE NIL
+      </h3>
+    </div>
+
+    <div class="portfolio-info custom-toggle-overlay">
+      <a href="Eau-de-nil.html" class="details-link" title="More Details">
+        <i class="bi bi-link-45deg"></i>
+      </a>
+    </div>
 
   </div>
 </div>
+
+<style>
+  /* Only target the items with the 'slim-writing-item' class */
+  .slim-writing-item .custom-toggle-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 33, 71, 0.9); /* Darker overlay */
+    opacity: 0;
+    transition: 0.4s;
+  }
+
+  .slim-writing-item .portfolio-content:hover .custom-toggle-overlay {
+    opacity: 1;
+  }
+
+  /* Keep the icon white and visible */
+  .slim-writing-item .custom-toggle-overlay i {
+    color: #fff;
+    font-size: 24px;
+  }
+</style>
+
+            
             
           </div><!-- End Portfolio Container -->
         </div>
