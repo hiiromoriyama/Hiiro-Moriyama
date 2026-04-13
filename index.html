@@ -408,14 +408,9 @@
 
       <!-- /Art Section -->
 
-      <section id="arts" class="portfolio section light-background">
+<section id="arts" class="portfolio section light-background">
 
   <style>
-    /* --- General Layout Fixes --- */
-    .isotope-container {
-      display: block; /* Ensures Isotope controls the flow */
-    }
-
     /* --- Writing Items (Navy Boxes) --- */
     .slim-writing-item .portfolio-content {
       background-color: #002147 !important;
@@ -424,30 +419,31 @@
       height: 100% !important; 
       min-height: 250px;
       display: flex;
-      flex-direction: column;
-      justify-content: flex-start; 
-      padding: 20px;
+      align-items: center; /* Center text vertically when not hovered */
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
     }
 
-    /* Writing Title: Top Left */
+    /* Writing Title: Always visible, centered in the box */
     .slim-writing-item h3 {
       color: #ffffff !important;
       font-family: "Raleway", sans-serif !important;
       font-weight: 700 !important;
-      font-size: 1.1rem;
-      text-align: left;
+      font-size: 1.2rem;
       margin: 0;
       z-index: 1;
+      transition: 0.3s;
     }
 
-    /* Writing Overlay Icon: Centered */
+    /* Writing Hover Overlay */
     .slim-writing-item .custom-toggle-overlay {
       position: absolute;
       inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 33, 71, 0.9);
+      background: rgba(0, 33, 71, 0.95);
       opacity: 0;
       transition: 0.3s ease-in-out;
       z-index: 2;
@@ -459,7 +455,7 @@
 
     .slim-writing-item .custom-toggle-overlay i {
       color: #ffffff !important;
-      font-size: 32px;
+      font-size: 35px;
     }
 
     /* --- Photography/Art Items (Images) --- */
@@ -475,7 +471,7 @@
       justify-content: center;
     }
 
-    /* Image Title: Top Left on Hover */
+    /* Photography Title: TOP LEFT (Only for pictures) */
     .portfolio-item .portfolio-info h4 {
       position: absolute;
       top: 20px;
@@ -484,6 +480,7 @@
       font-size: 1.1rem;
       font-weight: 600;
       margin: 0;
+      text-align: left;
     }
 
     .portfolio-item:hover .portfolio-info {
@@ -678,7 +675,6 @@
         </div>
 
       </div></div></div></section>
-      
       
       <!-- /End Art Section -->
 
