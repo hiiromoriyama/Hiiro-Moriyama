@@ -182,10 +182,6 @@
                   <div>
                     <h4>Hydrogen Charging in Metals</h4>
                     <p>Electrolytic and Gas Modes</p>
-                    <select id="h-charging-select" class="select-dropdown">
-                      <option value="h-charging">H-Charging</option>
-                      <option value="exafs-bcc">BCC</option>
-                    </select>
                   </div>
                   <button class="btn-launch" onclick="launchHCharging()">Launch</button>
                 </div>
@@ -196,8 +192,8 @@
                     <h4>Electron Dynamics in Atoms</h4>
                     <p>Excited-State and Photoionization</p>
                     <select id="photoionization-select" class="select-dropdown">
-                      <option value="photoionization">H-Charging</option>
-                      <option value="exafs-bcc">BCC</option>
+                      <option value="photoionization">3D Photoionization</option>
+                      <option value="emission">X-ray Emission</option>
                     </select>
                   </div>
                   <button class="btn-launch" onclick="launchPhotoionization()">Launch</button>
@@ -240,6 +236,10 @@
           <div id="photoionization" class="project-section">
             <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
             <div class="simulation-container"><iframe src="photoionisation.html"></iframe></div>
+          </div>
+           <div id="emission" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="Emission.html"></iframe></div>
           </div>
         </div>
       </div>
