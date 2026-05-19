@@ -214,14 +214,14 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
   <div class="sinner">
     <div class="stag">Interactive Learning</div>
     <div class="stitle">Educational Tools</div>
-    <p class="ssub">Our suite of interactive tools is designed for researchers, educators, students, and the curious public — from facility deep-dives to guided science modules.</p>
+    <p class="ssub">Our suite of interactive tools is designed for researchers, educators, students, and the curious public, from facility deep-dives to guided science modules.</p>
     <div class="tools-grid">
       <div class="tcard fu">
         <div class="tico">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
         </div>
         <div class="tname">Beam parameters through a quadrupole</div>
-        <p class="tdesc">Track how a quadrupole alters your beam parameters by reshaping its transverse phase space ellipse, focusing one plane while defocusing the other.</p>
+        <p class="tdesc">Track how a quadrupole alters your beam parameters.</p>
         <span class="tbadge">Interactive</span>
       </div>
       <div class="tcard fu">
@@ -229,7 +229,7 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h5l4 8 5-16 3 8h3"/></svg>
         </div>
         <div class="tname">Chromaticity through a quadrupole</div>
-        <p class="tdesc">Pass your beam through a quadrupole to focus it, causing high-energy particles to focus further downstream and low-energy particles closer.</p>
+        <p class="tdesc">Pass your beam through a quadrupole and observe the different energies of your beam being focused differently.</p>
         <span class="tbadge">Interactive</span>
       </div>
       <div class="tcard fu">
@@ -252,8 +252,8 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
         <div class="tico">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
         </div>
-        <div class="tname">The whole ring</div>
-        <p class="tdesc">Step inside the heavily shielded tunnel to observe the ultra-high vacuum beamline, where a lattice of superconducting magnets bends and focuses relativistic particle streams around the massive ring.</p>
+        <div class="tname">Generator Ring</div>
+        <p class="tdesc"></p>
         <span class="tbadge">Education</span>
       </div>
     </div>
@@ -477,7 +477,7 @@ let mapMode = 'fallback';
 
 async function loadRealisticBasemap() {
   if (typeof topojson === 'undefined') {
-    mapBadge.textContent = 'EQUIRECTANGULAR PROJECTION · WGS84 · FALLBACK BASEMAP';
+    mapBadge.textContent = '';
     return;
   }
   try {
@@ -490,10 +490,10 @@ async function loadRealisticBasemap() {
     }
     worldFeatures = countries.features;
     mapMode = 'realistic';
-    mapBadge.textContent = 'EQUIRECTANGULAR PROJECTION · WGS84 · NATURAL EARTH BASEMAP';
+    mapBadge.textContent = '';
   } catch (err) {
     mapMode = 'fallback';
-    mapBadge.textContent = 'EQUIRECTANGULAR PROJECTION · WGS84 · FALLBACK BASEMAP';
+    mapBadge.textContent = '';
     console.warn('Realistic map failed to load; using fallback map.', err);
   }
 }
