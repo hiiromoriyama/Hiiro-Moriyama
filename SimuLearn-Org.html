@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SimuLearn — Global Synchrotron Network</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600;700&family=Barlow:wght@300;400;500;600&family=Space+Mono&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.65;overflow-x:hidden;}
+:root{
+  --bg:#ffffff;--navy:#f4f8fc;--navy2:#e9f1f8;
+  --cyan:#0d7fcc;--cyan2:#075f99;
+  --cfaint:rgba(13,127,204,0.08);--cglow:rgba(13,127,204,0.2);
+  --white:#10263f;--muted:#5f748a;
+  --card:rgba(255,255,255,0.95);
+  --bd:rgba(13,127,204,0.18);--bd2:rgba(13,127,204,0.36);
+}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 2.8rem;height:60px;background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);}
+.logo{display:flex;align-items:center;gap:.55rem;font-family:'Chakra Petch',monospace;font-weight:700;font-size:1.05rem;color:var(--white);letter-spacing:.04em;text-decoration:none;}
+.ldot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:blink 2.5s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 10px var(--cyan);}50%{opacity:.5;box-shadow:0 0 22px var(--cyan);}}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-family:'Chakra Petch',monospace;font-size:.77rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;}
+.nav-links a:hover{color:var(--cyan);}
+.nav-btn{background:transparent;border:1px solid var(--bd2);color:var(--cyan);padding:.38rem 1.2rem;font-family:'Chakra Petch',monospace;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;}
+.nav-btn:hover{background:var(--cfaint);box-shadow:0 0 22px var(--cglow);}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;padding:60px 0 0;position:relative;overflow:hidden;background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);}
+.hbg{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 65% 80% at 18% 60%, rgba(106,165,212,.18) 0%, transparent 65%),
+             radial-gradient(ellipse 40% 55% at 88% 15%, rgba(13,127,204,.08) 0%, transparent 55%);}
+.hgrid{position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(13,127,204,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(13,127,204,.035) 1px,transparent 1px);
+  background-size:58px 58px;}
+.orbit1,.orbit2,.orbit3{position:absolute;border-radius:50%;border:1px solid rgba(13,127,204,.1);pointer-events:none;}
+.orbit1{width:560px;height:560px;top:50%;left:16%;transform:translate(-50%,-50%);}
+.orbit2{width:380px;height:380px;top:50%;left:16%;transform:translate(-50%,-50%);}
+.orbit3{width:200px;height:200px;top:50%;left:16%;transform:translate(-50%,-50%);border-color:rgba(13,127,204,.2);}
+.hero-inner{flex:1;display:block;padding:0;position:relative;z-index:1;min-height:calc(100vh - 60px);}
+.eyebrow{font-family:'Space Mono',monospace;font-size:.67rem;color:var(--cyan);letter-spacing:.22em;text-transform:uppercase;margin-bottom:1.3rem;display:flex;align-items:center;gap:.55rem;}
+.eyebrow::before{content:'';display:inline-block;width:22px;height:1px;background:var(--cyan);}
+h1{font-family:'Chakra Petch',monospace;font-weight:700;font-size:clamp(1.9rem,3.1vw,2.8rem);line-height:1.12;color:var(--white);margin-bottom:1.4rem;}
+h1 .hl{color:var(--cyan);}
+.tagline{font-size:.97rem;color:var(--muted);line-height:1.78;max-width:420px;margin-bottom:2rem;}
+.stats{display:flex;gap:2rem;margin-bottom:2.2rem;flex-wrap:wrap;}
+.stat{border-left:2px solid rgba(13,127,204,.38);padding-left:.75rem;}
+.sn{font-family:'Chakra Petch',monospace;font-size:1.5rem;font-weight:700;color:var(--cyan);line-height:1;}
+.sl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:.15rem;}
+.btns{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-a{background:var(--cyan);color:#ffffff;border:none;padding:.68rem 1.7rem;font-family:'Chakra Petch',monospace;font-size:.81rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;}
+.btn-a:hover{box-shadow:0 0 26px var(--cglow);transform:translateY(-1px);}
+.btn-b{background:transparent;color:var(--muted);border:1px solid var(--bd2);padding:.68rem 1.7rem;font-family:'Chakra Petch',monospace;font-size:.81rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;}
+.btn-b:hover{color:var(--white);border-color:var(--cyan);}
+
+/* MAP */
+.map-wrap{position:relative;border-top:1px solid #c6d9eb;border-bottom:1px solid #c6d9eb;overflow:hidden;background:#f6fbff;box-shadow:0 22px 70px rgba(23,82,124,.12),inset 0 0 70px rgba(255,255,255,.45);height:calc(100vh - 60px);}
+#mapCanvas{display:block;width:100%;height:100%;}
+.mbadge{position:absolute;bottom:10px;left:14px;font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(40,94,136,.62);letter-spacing:.08em;pointer-events:none;}
+.mbadge2{position:absolute;top:10px;right:14px;display:flex;align-items:center;gap:.4rem;font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(32,90,130,.7);letter-spacing:.08em;pointer-events:none;}
+.ldot2{width:5px;height:5px;border-radius:50%;background:var(--cyan);animation:blink 2s infinite;}
+.mlegend{position:absolute;top:10px;left:14px;display:flex;align-items:center;gap:.65rem;padding:.3rem .5rem;background:rgba(255,255,255,.7);border:1px solid rgba(13,127,204,.25);border-radius:4px;font-family:'Space Mono',monospace;font-size:.55rem;color:#234760;letter-spacing:.04em;}
+.mlegend .lg{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:.2rem;}
+.lg-sesame{background:#d45500;}
+.lg-sirius{background:#15803d;}
+
+/* TOOLTIP */
+#tooltip{position:fixed;background:rgba(255,255,255,.97);border:1px solid var(--bd2);border-radius:6px;padding:.9rem 1.1rem;font-size:.78rem;pointer-events:none;z-index:2000;display:none;backdrop-filter:blur(14px);box-shadow:0 6px 24px rgba(15,53,84,.22);min-width:215px;max-width:275px;}
+#tooltip.show{display:block;}
+.tt-n{font-family:'Chakra Petch',monospace;font-weight:700;color:var(--cyan);margin-bottom:.25rem;font-size:.9rem;}
+.tt-f{color:var(--white);margin-bottom:.35rem;line-height:1.35;}
+.tt-l{color:var(--muted);font-size:.72rem;}
+.tt-row{display:flex;gap:1.2rem;margin-top:.55rem;padding-top:.55rem;border-top:1px solid var(--bd);}
+.tt-m{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);}
+.tt-m b{color:var(--cyan);}
+
+/* SECTIONS */
+section{padding:6rem 2.8rem;position:relative;}
+.sinner{max-width:1280px;margin:0 auto;}
+.stag{font-family:'Space Mono',monospace;font-size:.66rem;color:var(--cyan);letter-spacing:.22em;text-transform:uppercase;margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem;}
+.stag::before{content:'';display:inline-block;width:18px;height:1px;background:var(--cyan);}
+.stitle{font-family:'Chakra Petch',monospace;font-weight:700;font-size:clamp(1.6rem,2.7vw,2.25rem);color:var(--white);margin-bottom:.9rem;line-height:1.18;}
+.ssub{color:var(--muted);font-size:.95rem;max-width:520px;line-height:1.78;margin-bottom:3rem;}
+
+/* TOOLS */
+#tools{background:var(--navy);}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:1.4rem;}
+.tcard{background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:1.8rem;cursor:pointer;transition:all .32s;backdrop-filter:blur(8px);position:relative;overflow:hidden;}
+.tcard::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:0;transition:opacity .3s;}
+.tcard:hover{border-color:var(--bd2);transform:translateY(-4px);box-shadow:0 14px 35px rgba(19,74,116,.14),0 0 24px var(--cglow);}
+.tcard:hover::after{opacity:1;}
+.tico{width:46px;height:46px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--cfaint);border:1px solid rgba(13,127,204,.2);margin-bottom:1.2rem;}
+.tico svg{width:22px;height:22px;stroke:var(--cyan);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.tname{font-family:'Chakra Petch',monospace;font-weight:600;font-size:.95rem;color:var(--white);margin-bottom:.5rem;}
+.tdesc{font-size:.82rem;color:var(--muted);line-height:1.65;margin-bottom:1.1rem;}
+.tbadge{display:inline-flex;align-items:center;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--cyan);border:1px solid rgba(13,127,204,.35);padding:.12rem .5rem;border-radius:2px;letter-spacing:.08em;}
+.tbadge.soon{color:var(--muted);border-color:rgba(80,110,140,.35);}
+
+/* QUADRUPOLE DEMO */
+#quadrupole-demo{background:var(--bg);}
+.demo-panel{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:.8rem;box-shadow:0 14px 35px rgba(19,74,116,.14);}
+.q3d-shell{width:100%;margin:0;padding:0;display:block;}
+.q3d-widget{position:relative;width:100%;height:clamp(420px,64vh,700px);margin:0;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.5);box-shadow:0 20px 35px rgba(32,60,90,.18),inset 0 1px 0 rgba(255,255,255,.9);background:radial-gradient(120% 160% at 8% 0%,rgba(255,255,255,.9),transparent 52%),radial-gradient(80% 90% at 100% 100%,rgba(106,144,186,.28),transparent 60%),linear-gradient(180deg,#f9fcff,#ebf2f8);}
+#quad-scene{width:100%;height:100%;}
+.q3d-controls{position:absolute;right:14px;bottom:14px;display:flex;gap:8px;flex-wrap:wrap;justify-content:end;max-width:min(86vw,380px);}
+.q3d-controls button{border:1px solid rgba(34,48,63,.24);background:rgba(255,255,255,.9);color:#1f2b36;border-radius:999px;padding:8px 12px;font-size:12px;cursor:pointer;transition:transform .16s ease,background .16s ease;}
+.q3d-controls button:hover{transform:translateY(-1px);background:#ffffff;}
+.q3d-controls button[data-active="true"]{background:#1f2b36;color:#f7fbff;}
+.q3d-status{position:absolute;right:14px;top:14px;padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid rgba(34,48,63,.2);background:rgba(255,255,255,.88);color:#243241;backdrop-filter:blur(6px);}
+.q3d-status[data-state="loading"]{background:rgba(255,246,225,.95);color:#6f5111;}
+.q3d-status[data-state="ok"]{background:rgba(224,255,239,.95);color:#0a5e35;}
+.q3d-status[data-state="error"]{background:rgba(255,228,228,.95);color:#7a1821;}
+
+/* SUPPLIERS */
+#suppliers{background:var(--bg);}
+.sup-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem;}
+.sup-card{background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:1.6rem;transition:all .28s;display:flex;flex-direction:column;gap:.8rem;}
+.sup-card:hover{transform:translateY(-4px);border-color:var(--bd2);box-shadow:0 10px 24px rgba(19,74,116,.14);}
+.sup-name{font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:700;color:var(--white);}
+.sup-role{font-size:.82rem;color:var(--muted);line-height:1.65;}
+.sup-link{font-family:'Space Mono',monospace;font-size:.66rem;color:var(--cyan);letter-spacing:.05em;text-decoration:none;text-transform:uppercase;}
+.sup-link:hover{text-decoration:underline;}
+
+/* TEAM */
+#team{background:var(--bg);}
+#team .sinner{text-align:center;}
+#team .ssub{margin:0 auto 3rem;}
+.team-wrap{display:flex;flex-wrap:wrap;gap:2.5rem;justify-content:center;}
+.tperson{text-align:center;flex:0 0 148px;transition:transform .2s;}
+.tperson:hover{transform:translateY(-4px);}
+.av{width:88px;height:88px;border-radius:50%;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',monospace;font-weight:700;font-size:1.2rem;color:#fff;position:relative;}
+.av::before{content:'';position:absolute;inset:-2.5px;border-radius:50%;border:1.5px solid rgba(13,127,204,.35);box-shadow:0 0 14px var(--cglow);}
+.tpname{font-family:'Chakra Petch',monospace;font-weight:600;font-size:.87rem;color:var(--white);margin-bottom:.22rem;}
+.tpaffil{font-size:.74rem;color:var(--muted);line-height:1.45;}
+
+/* GOALS */
+#goals{background:var(--navy);}
+.sdg-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:-.6rem 0 2rem;}
+.sdg-item{background:rgba(255,255,255,0.85);border:1px solid var(--bd);border-radius:8px;padding:.65rem;display:flex;flex-direction:column;align-items:center;gap:.55rem;}
+.sdg-item img{width:100%;max-width:130px;height:auto;border-radius:5px;box-shadow:0 6px 18px rgba(16,38,63,.14);}
+.sdg-label{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center;line-height:1.35;}
+
+/* FOOTER */
+footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2rem;}
+.ftop{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+.fbrand .logo{display:inline-flex;margin-bottom:1rem;}
+.fabout{font-size:.82rem;color:var(--muted);line-height:1.78;max-width:265px;margin-bottom:1.5rem;}
+.scimsg{font-family:'Space Mono',monospace;font-size:.63rem;color:rgba(13,127,204,.48);letter-spacing:.04em;line-height:1.7;border-left:2px solid rgba(13,127,204,.2);padding-left:.75rem;}
+.fh{font-family:'Chakra Petch',monospace;font-size:.74rem;color:var(--white);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;}
+.flist{list-style:none;display:flex;flex-direction:column;gap:.44rem;}
+.flist a{color:var(--muted);text-decoration:none;font-size:.82rem;transition:color .2s;}
+.flist a:hover{color:var(--cyan);}
+.fbot{border-top:1px solid var(--bd);padding-top:1.8rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.fcopy{font-family:'Space Mono',monospace;font-size:.62rem;color:rgba(16,38,63,.55);}
+.fsoc{display:flex;gap:1rem;}
+.fsoc a{color:var(--muted);text-decoration:none;font-size:.74rem;font-family:'Space Mono',monospace;letter-spacing:.05em;transition:color .2s;}
+.fsoc a:hover{color:var(--cyan);}
+
+/* FADE */
+.fu{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease;}
+.fu.in{opacity:1;transform:none;}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  nav{padding:0 1.4rem;}
+  .nav-links{display:none;}
+  .hero-inner{padding:0;}
+  section{padding:4rem 1.5rem;}
+  .sup-grid{grid-template-columns:1fr;}
+  .sdg-row{grid-template-columns:1fr;}
+  .ftop{grid-template-columns:1fr 1fr;gap:2rem;}
+  .mlegend{position:static;margin:10px;display:inline-flex;}
+  .q3d-widget{height:560px;}
+}
+@media(max-width:600px){
+  .stats{gap:1rem;}
+  .btns{flex-direction:column;}
+  .ftop{grid-template-columns:1fr;}
+  .team-wrap{gap:1.8rem;}
+  .q3d-widget{height:480px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#"><span class="ldot"></span>SimuLearn</a>
+  <ul class="nav-links">
+    <li><a href="#hero">Map</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#suppliers">Suppliers</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#goals">Goals</a></li>
+    <li><a href="#footer">Contact</a></li>
+  </ul>
+  <button class="nav-btn" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">Explore Tools</button>
+</nav>
+
+<div id="tooltip">
+  <div class="tt-n" id="tt-n"></div>
+  <div class="tt-f" id="tt-f"></div>
+  <div class="tt-l" id="tt-l"></div>
+  <div class="tt-row">
+    <div class="tt-m"><b id="tt-e"></b><br>Energy</div>
+    <div class="tt-m"><b id="tt-y"></b><br>Founded</div>
+    <div class="tt-m"><b id="tt-b"></b><br>Beamlines</div>
+  </div>
+</div>
+
+<section id="hero">
+  <div class="hbg"></div>
+  <div class="hgrid"></div>
+  <div class="orbit1"></div>
+  <div class="orbit2"></div>
+  <div class="orbit3"></div>
+  <div class="hero-inner">
+    <div class="map-wrap">
+      <canvas id="mapCanvas"></canvas>
+      <div class="mlegend"><span class="lg lg-sesame"></span>SESAME (Jordan) <span class="lg lg-sirius"></span>SIRIUS (Brazil)</div>
+      <div class="mbadge"></div>
+      <div class="mbadge2"><span class="ldot2"></span><span id="fcount">28 FACILITIES</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="sinner">
+    <div class="stag">Interactive Learning</div>
+    <div class="stitle">Educational Tools</div>
+    <p class="ssub">Our suite of interactive tools is designed for researchers, educators, students, and the curious public, from facility deep-dives to guided science modules.</p>
+    <div class="tools-grid">
+      <div class="tcard fu">
+        <div class="tico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+        </div>
+        <div class="tname">Beam parameters through a quadrupole</div>
+        <p class="tdesc">Track how a quadrupole alters your beam parameters.</p>
+        <span class="tbadge">Interactive</span>
+      </div>
+      <div class="tcard fu">
+        <div class="tico">
+         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h5l4 8 5-16 3 8h3"/></svg>
+        </div>
+        <div class="tname">Chromaticity through a quadrupole</div>
+        <p class="tdesc">Pass your beam through a quadrupole and observe the different energies of your beam being focused differently.</p>
+        <span class="tbadge">Interactive</span>
+      </div>
+      <div class="tcard fu">
+        <div class="tico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </div>
+        <div class="tname">Generator Ring</div>
+        <p class="tdesc">Explore, monitor and tune the core parameters and operate this virtual accelerator</p>
+        <span class="tbadge">Education</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quadrupole-demo">
+  <div class="sinner">
+    <div class="stag">Interactive Demo</div>
+    <div class="stitle">Quadrupole</div>
+    <p class="ssub">Explore the 3D quadrupole model and tune beam settings interactively.</p>
+    <div class="demo-panel fu">
+      <div class="q3d-shell">
+        <div class="q3d-widget" aria-label="Interactive 3D quadrupole model">
+          <div id="quad-scene"></div>
+          <div class="q3d-controls">
+            <button id="quadToggleSpin" data-active="true">Auto rotate: on</button>
+            <button id="quadToggleBeam" data-active="true">Beam pulse: on</button>
+          </div>
+          <div class="q3d-status" id="quadLoadStatus" data-state="loading">Loading 3D...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="suppliers">
+  <div class="sinner">
+    <div class="stag">Industry Partners</div>
+    <div class="stitle">Beamline Component Suppliers</div>
+    <p class="ssub">Example companies that provide optics, precision positioning, and beam conditioning components frequently used around synchrotron beamlines.</p>
+    <div class="sup-grid">
+      <article class="sup-card fu">
+        <div class="sup-name">XDS Oxford</div>
+        <p class="sup-role">They specialize in entire, end-to-end beamline engineering. This includes massive infrastructure components like insertion devices (undulators and wigglers), advanced monochromator systems for filtering specific X-ray wavelengths, and full in-vacuum, multi-purpose experimental end stations.</p>
+        <a class="sup-link" href="https://xds-oxford.com" target="_blank" rel="noopener noreferrer">Visit</a>
+      </article>
+      <article class="sup-card fu">
+        <div class="sup-name">SmarAct</div>
+        <p class="sup-role">PI provides heavy-duty yet incredibly precise sample positioning stages, multi-axis goniometers, six-degree-of-freedom hexapods (used to align complex X-ray optics mirrors), and vacuum-compatible/cryogenic manipulation systems for hostile radiation environments.</p>
+        <a class="sup-link" href="https://www.physikinstrumente.co.uk/en/" target="_blank" rel="noopener noreferrer">Visit</a>
+      </article>
+      <article class="sup-card fu">
+        <div class="sup-name">RI Research Instruments GmbH</div>
+        <p class="sup-role">They are highly sought after for state-of-the-art X-ray mirror systems and ultra-low vibration cryocooler systems. They are also unique for producing specialized experimental setups, such as full-field and scanning X-ray microscopes (TXM/STXM) and protein crystallography end stations.</p>
+        <a class="sup-link" href="https://www.research-instruments.de/en/" target="_blank" rel="noopener noreferrer">Visit</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="sinner">
+    <div class="stag">The People Behind the Platform</div>
+    <div class="stitle">Our Team</div>
+    <p class="ssub">Built by a passionate community of physicists from leading synchrotron facilities and institutions across the globe.</p>
+    <div class="team-wrap">
+      <div class="tperson fu">
+        <div class="av" style="background:linear-gradient(145deg,#001e44,#0060b0)">SW</div>
+        <div class="tpname">Sverker Werin</div>
+        <div class="tpaffil">MAX IV<br>Sweden</div>
+      </div>
+      <div class="tperson fu">
+        <div class="av" style="background:linear-gradient(145deg,#001e44,#0060b0)">FC</div>
+        <div class="tpname">Francesca Curbis</div>
+        <div class="tpaffil">MAX IV<br>Sweden</div>
+      </div>
+      <div class="tperson fu">
+        <div class="av" style="background:linear-gradient(145deg,#001e44,#0060b0)">HA</div>
+        <div class="tpname">Helena Alamprese</div>
+        <div class="tpaffil">Michigan State University<br>USA</div>
+      </div>
+      <div class="tperson fu">
+        <div class="av" style="background:linear-gradient(145deg,#001830,#004480)">HM</div>
+        <div class="tpname">Hiiro Moriyama</div>
+        <div class="tpaffil">University of Oxford<br>United Kingdom</div>
+      </div>
+      <div class="tperson fu">
+        <div class="av" style="background:linear-gradient(145deg,#001020,#005566)">LB</div>
+        <div class="tpname">Laury Batista</div>
+        <div class="tpaffil">Université Paris-Saclay, CEA<br>France</div>
+      </div>
+      <div class="tperson fu">
+        <div class="av" style="background:linear-gradient(145deg,#001828,#006070)">MÜ</div>
+        <div class="tpname">Maria Ünal</div>
+        <div class="tpaffil">SOLARIS<br>Poland</div>
+      </div>
+      <div class="tperson fu">
+        <div class="av" style="background:linear-gradient(145deg,#130820,#440899)">WH</div>
+        <div class="tpname">Weibo Hu</div>
+        <div class="tpaffil">University of Science and Technology of China<br>China</div>
+      </div>
+      <div class="tperson fu">
+        <div class="av" style="background:linear-gradient(145deg,#130820,#440899)">WW</div>
+        <div class="tpname">Wiktoria Wiatrowska</div>
+        <div class="tpaffil">SOLARIS<br>Poland</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="goals">
+  <div class="sinner">
+    <div class="stag">Our Mission</div>
+    <div class="stitle">UN Sustainable Development Goals</div>
+    <p class="ssub">SimuLearn directly supports these three goals.</p>
+    <div class="sdg-row">
+      <div class="sdg-item fu">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Sustainable_Development_Goal_4.png" alt="UN SDG 4 Quality Education logo">
+        <div class="sdg-label">SDG 4 · Quality Education</div>
+      </div>
+      <div class="sdg-item fu">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Sustainable_Development_Goal_9.png" alt="UN SDG 9 Industry, Innovation and Infrastructure logo">
+        <div class="sdg-label">SDG 9 · Industry, Innovation and Infrastructure</div>
+      </div>
+      <div class="sdg-item fu">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Sustainable_Development_Goal_17.png" alt="UN SDG 17 Partnerships for the Goals logo">
+        <div class="sdg-label">SDG 17 · Partnerships for the Goals</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="footer">
+  <div class="ftop">
+    <div class="fbrand">
+      <a class="logo" href="#"><span class="ldot"></span>SimuLearn</a>
+      <p class="fabout">A global platform dedicated to connecting the synchrotron community through open data, interactive education, and collaborative tools.</p>
+    </div>
+    <div>
+      <div class="fh">Platform</div>
+      <ul class="flist">
+        <li><a href="#">Interactive Map</a></li>
+        <li><a href="#">Facility Explorer</a></li>
+        <li><a href="#">Beamline Tool</a></li>
+        <li><a href="#">Timeline</a></li>
+        <li><a href="#">Glossary</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="fh">Community</div>
+      <ul class="flist">
+        <li><a href="#">About the Project</a></li>
+        <li><a href="#">Contribute Data</a></li>
+        <li><a href="#">Educator Resources</a></li>
+        <li><a href="#">Research Partners</a></li>
+        <li><a href="#">Open Data</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="fh">Contact</div>
+      <ul class="flist">
+        <li><a href="#">support@simulearn.org</a></li>
+        <li><a href="#">GitHub</a></li>
+        <li><a href="#">Twitter / X</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fbot">
+    <span class="fcopy">© 2026 SimuLearn</span>
+    <div class="fsoc">
+      <a href="#">GitHub</a>
+      <a href="#">Twitter</a>
+      <a href="#">ORCID</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<script>
+const FAC = [
+  {abbr:'APS',      name:'Advanced Photon Source',                          loc:'Argonne, USA',              lat:41.7,  lon:-87.9,  energy:'7 GeV',    year:1996, beams:68, url:'https://www.aps.anl.gov/'},
+  {abbr:'NSLS-II',  name:'National Synchrotron Light Source II',            loc:'Brookhaven, USA',           lat:40.9,  lon:-72.9,  energy:'3 GeV',    year:2015, beams:60, url:'https://www.bnl.gov/nsls2/'},
+  {abbr:'ALS',      name:'Advanced Light Source',                           loc:'Berkeley, USA',             lat:37.8,  lon:-122.2, energy:'1.9 GeV',  year:1993, beams:41, url:'https://als.lbl.gov/'},
+  {abbr:'SSRL',     name:'Stanford Synchrotron Radiation Lightsource',      loc:'Stanford, USA',             lat:37.35, lon:-122.2, energy:'3 GeV',    year:1974, beams:30, url:'https://www-ssrl.slac.stanford.edu/'},
+  {abbr:'CHESS',    name:'Cornell High Energy Synchrotron Source',          loc:'Cornell, USA',              lat:42.4,  lon:-76.5,  energy:'6 GeV',    year:1980, beams:14, url:'https://www.chess.cornell.edu/'},
+  {abbr:'CLS',      name:'Canadian Light Source',                           loc:'Saskatoon, Canada',         lat:52.1,  lon:-106.6, energy:'2.9 GeV',  year:2004, beams:21, url:'https://www.lightsource.ca/'},
+  {abbr:'SIRIUS',   name:'Sirius Light Source (LNLS)',                      loc:'Campinas, Brazil',          lat:-22.8, lon:-47.1,  energy:'3 GeV',    year:2020, beams:13, url:'https://lnls.cnpem.br/sirius-en/'},
+  {abbr:'ESRF',     name:'European Synchrotron Radiation Facility',         loc:'Grenoble, France',          lat:45.21, lon:5.69,   energy:'6 GeV',    year:1994, beams:44, url:'https://www.esrf.fr/'},
+  {abbr:'Diamond',  name:'Diamond Light Source',                            loc:'Didcot, UK',                lat:51.57, lon:-1.31,  energy:'3 GeV',    year:2007, beams:33, url:'https://www.diamond.ac.uk/'},
+  {abbr:'PETRA III',name:'PETRA III at DESY',                               loc:'Hamburg, Germany',          lat:53.58, lon:9.88,   energy:'6 GeV',    year:2009, beams:25, url:'https://www.desy.de/research/facilities__projects/petra_iii/index_eng.html'},
+  {abbr:'BESSY II', name:'Berliner Elektronenspeicherring',                 loc:'Berlin, Germany',           lat:52.43, lon:13.28,  energy:'1.7 GeV',  year:1998, beams:46, url:'https://www.helmholtz-berlin.de/forschung/quellen/bessy/index_en.html'},
+  {abbr:'SLS',      name:'Swiss Light Source',                              loc:'Villigen, Switzerland',     lat:47.54, lon:8.23,   energy:'2.4 GeV',  year:2001, beams:19, url:'https://www.psi.ch/en/sls'},
+  {abbr:'SOLEIL',   name:'Synchrotron SOLEIL',                              loc:'Saint-Aubin, France',       lat:48.71, lon:2.15,   energy:'2.75 GeV', year:2006, beams:29, url:'https://www.synchrotron-soleil.fr/en'},
+  {abbr:'ALBA',     name:'ALBA Synchrotron',                                loc:'Barcelona, Spain',          lat:41.6,  lon:2.11,   energy:'3 GeV',    year:2010, beams:11, url:'https://www.albasynchrotron.es/en'},
+  {abbr:'Elettra',  name:'Elettra Sincrotrone Trieste',                     loc:'Trieste, Italy',            lat:45.64, lon:13.85,  energy:'2 GeV',    year:1993, beams:30, url:'https://www.elettra.eu/'},
+  {abbr:'MAX IV',   name:'MAX IV Laboratory',                               loc:'Lund, Sweden',              lat:55.72, lon:13.23,  energy:'3 GeV',    year:2016, beams:16, url:'https://www.maxiv.lu.se/'},
+  {abbr:'Solaris',  name:'Solaris National Synchrotron',                    loc:'Kraków, Poland',            lat:50.07, lon:19.9,   energy:'1.5 GeV',  year:2015, beams:6,  url:'https://synchrotron.uj.edu.pl/en_GB/'},
+  {abbr:'SPring-8', name:'Super Photon Ring 8 GeV',                         loc:'Hyogo, Japan',              lat:34.84, lon:134.84, energy:'8 GeV',    year:1997, beams:61, url:'https://www.spring8.or.jp/en/'},
+  {abbr:'PF',       name:'Photon Factory (KEK)',                            loc:'Tsukuba, Japan',            lat:36.15, lon:140.08, energy:'2.5 GeV',  year:1982, beams:28, url:'https://www2.kek.jp/imss/pf/eng/'},
+  {abbr:'SSRF',     name:'Shanghai Synchrotron Radiation Facility',         loc:'Shanghai, China',           lat:31.18, lon:121.44, energy:'3.5 GeV',  year:2009, beams:38, url:'https://e-ssrf.sari.ac.cn/'},
+  {abbr:'BSRF',     name:'Beijing Synchrotron Radiation Facility',          loc:'Beijing, China',            lat:39.91, lon:116.28, energy:'2.5 GeV',  year:1991, beams:14, url:'https://english.ihep.cas.cn/se/fs/bsrf/'},
+  {abbr:'HEPS',     name:'High Energy Photon Source',                       loc:'Beijing, China',            lat:40.32, lon:116.62, energy:'6 GeV',    year:2024, beams:14, url:'https://english.heps.ihep.ac.cn/'},
+  {abbr:'TPS',      name:'Taiwan Photon Source',                            loc:'Hsinchu, Taiwan',           lat:24.79, lon:120.99, energy:'3 GeV',    year:2016, beams:48, url:'https://www.nsrrc.org.tw/english/index.aspx'},
+  {abbr:'PAL',      name:'Pohang Accelerator Laboratory',                   loc:'Pohang, South Korea',       lat:36.01, lon:129.52, energy:'3 GeV',    year:1995, beams:35, url:'https://pal.postech.ac.kr/en/intro/greeting.do'},
+  {abbr:'Indus-2',  name:'Indus-2 Synchrotron',                             loc:'Indore, India',             lat:22.73, lon:75.91,  energy:'2.5 GeV',  year:2005, beams:17, url:'https://www.rrcat.gov.in/technology/accel/indus2.html'},
+  {abbr:'SLRI',     name:'Synchrotron Light Research Institute',            loc:'Nakhon Ratchasima, Thailand',lat:14.89,lon:102.02, energy:'1.2 GeV', year:2004, beams:8,  url:'https://www.slri.or.th/en_web'},
+  {abbr:'SESAME',   name:'SESAME Synchrotron',                              loc:'Allan, Jordan',             lat:32.05, lon:35.87,  energy:'2.5 GeV',  year:2017, beams:5,  url:'https://www.sesame.org.jo/'},
+  {abbr:'AS',       name:'Australian Synchrotron',                          loc:'Melbourne, Australia',      lat:-37.9, lon:145.14, energy:'3 GeV',    year:2007, beams:10, url:'https://www.ansto.gov.au/facilities/australian-synchrotron'},
+];
+
+const FEATURED = {
+  SESAME: '#d45500',
+  SIRIUS: '#15803d'
+};
+const DEFAULT_MARKER = '#ffd166';
+
+document.getElementById('fcount').textContent = FAC.length + ' FACILITIES MAPPED';
+
+const LAND_FALLBACK = [
+  [[-168,72],[-140,70],[-110,72],[-84,74],[-65,68],[-53,50],[-56,47],[-66,44],[-70,42],[-73,38],[-76,35],[-80,26],[-83,10],[-86,16],[-92,15],[-98,20],[-108,24],[-115,30],[-120,35],[-124,46],[-126,52],[-132,56],[-138,58],[-145,60],[-155,60],[-160,58],[-165,62],[-170,66],[-168,72]],
+  [[-45,84],[-20,84],[-14,76],[-20,70],[-28,68],[-44,60],[-52,65],[-52,70],[-46,76],[-44,80],[-45,84]],
+  [[-24,64],[-14,64],[-12,65],[-14,66],[-18,68],[-24,66],[-26,65],[-24,64]],
+  [[-82,8],[-75,12],[-65,10],[-60,5],[-52,4],[-50,2],[-36,-5],[-35,-10],[-38,-18],[-42,-23],[-48,-28],[-52,-33],[-55,-38],[-62,-42],[-65,-46],[-68,-52],[-68,-55],[-60,-55],[-55,-52],[-55,-50],[-52,-46],[-44,-38],[-40,-22],[-38,-15],[-38,-5],[-50,0],[-55,2],[-62,5],[-70,5],[-77,5],[-80,8],[-82,8]],
+  [[-10,36],[0,36],[8,38],[12,38],[16,40],[20,40],[24,40],[28,42],[32,42],[36,42],[36,38],[34,36],[30,36],[26,38],[22,38],[18,42],[14,44],[12,46],[10,44],[6,44],[2,44],[-2,44],[-6,44],[-8,44],[-10,42],[-10,38],[-10,36]],
+  [[5,58],[8,57],[12,56],[16,56],[20,58],[24,60],[26,64],[28,70],[26,72],[22,70],[18,70],[14,66],[10,63],[6,60],[5,58]],
+  [[22,60],[26,60],[30,62],[32,64],[30,68],[28,68],[26,64],[22,60]],
+  [[-6,50],[-3,50],[0,52],[2,54],[0,58],[-2,58],[-4,60],[-6,58],[-6,56],[-8,54],[-8,52],[-6,50]],
+  [[-10,52],[-6,52],[-6,54],[-8,54],[-10,53],[-10,52]],
+  [[-17,37],[-8,36],[0,37],[10,36],[20,33],[25,32],[31,31],[34,30],[33,27],[32,23],[34,21],[40,15],[43,12],[46,11],[50,10],[49,4],[44,1],[42,-2],[40,-3],[39,-7],[42,-12],[44,-16],[42,-19],[40,-22],[37,-25],[34,-28],[31,-30],[28,-32],[24,-34],[20,-35],[17,-34],[14,-33],[12,-30],[11,-26],[10,-22],[9,-18],[8,-14],[6,-9],[5,-5],[5,-1],[7,2],[9,4],[6,5],[2,6],[-3,6],[-6,5],[-10,6],[-13,9],[-15,13],[-16,17],[-17,22],[-16,28],[-17,33],[-17,37]],
+  [[44,-12],[50,-15],[50,-22],[44,-25],[44,-12]],
+  [[26,42],[36,36],[40,38],[44,40],[52,42],[60,44],[70,44],[80,48],[86,50],[90,52],[100,54],[110,54],[118,52],[128,48],[132,48],[136,46],[140,44],[140,38],[136,34],[130,30],[126,24],[120,22],[114,22],[110,18],[106,10],[104,2],[100,2],[98,6],[92,8],[80,10],[72,20],[66,22],[60,22],[56,24],[52,28],[46,28],[42,30],[36,36]],
+  [[68,24],[72,22],[76,20],[80,10],[80,8],[82,8],[86,20],[82,26],[76,28],[72,24],[68,24]],
+  [[98,20],[102,16],[104,12],[102,6],[104,2],[104,4],[102,8],[100,14],[98,18],[98,20]],
+  [[96,5],[104,2],[108,0],[116,0],[118,-4],[112,-8],[106,-8],[96,2],[96,5]],
+  [[38,28],[50,28],[58,22],[56,12],[46,12],[42,16],[36,22],[36,28],[38,28]],
+  [[130,34],[133,33],[136,34],[138,36],[140,38],[142,40],[142,44],[140,44],[138,40],[136,36],[134,34],[130,34]],
+  [[126,34],[128,34],[130,36],[130,38],[128,38],[126,36],[126,34]],
+  [[114,-22],[116,-34],[120,-34],[124,-34],[128,-34],[134,-36],[138,-36],[142,-38],[146,-38],[150,-38],[152,-28],[150,-24],[148,-20],[144,-16],[138,-14],[132,-14],[126,-14],[120,-22],[114,-22]],
+  [[168,-46],[172,-44],[174,-42],[172,-42],[170,-44],[168,-46]],
+  [[174,-38],[178,-38],[178,-40],[176,-42],[172,-40],[172,-38],[174,-38]],
+];
+
+const WORLD_ATLAS_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
+let CW=0, CH=0, DPR=window.devicePixelRatio||1;
+let hovered = null;
+const tip = document.getElementById('tooltip');
+const mapBadge = document.querySelector('.mbadge');
+let worldFeatures = null;
+let mapMode = 'fallback';
+
+async function loadRealisticBasemap() {
+  if (typeof topojson === 'undefined') {
+    mapBadge.textContent = '';
+    return;
+  }
+  try {
+    const res = await fetch(WORLD_ATLAS_URL);
+    if (!res.ok) throw new Error('Basemap download failed');
+    const topo = await res.json();
+    const countries = topojson.feature(topo, topo.objects.countries);
+    if (!countries || !Array.isArray(countries.features) || countries.features.length === 0) {
+      throw new Error('Invalid basemap data');
+    }
+    worldFeatures = countries.features;
+    mapMode = 'realistic';
+    mapBadge.textContent = '';
+  } catch (err) {
+    mapMode = 'fallback';
+    mapBadge.textContent = '';
+    console.warn('Realistic map failed to load; using fallback map.', err);
+  }
+}
+
+function resize() {
+  const container = canvas.parentElement;
+  CW = container.clientWidth;
+  CH = container.clientHeight > 0 ? container.clientHeight : Math.round(CW * 0.5);
+  canvas.width = CW * DPR;
+  canvas.height = CH * DPR;
+  canvas.style.width = CW + 'px';
+  canvas.style.height = CH + 'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+
+function proj(lon, lat) {
+  return [(lon+180)/360*CW, (90-lat)/180*CH];
+}
+
+function drawLabel(text, x, y, color) {
+  const fs = Math.max(9, CW * 0.009);
+  ctx.font = `700 ${fs}px 'Chakra Petch', monospace`;
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'rgba(255,255,255,0.92)';
+  ctx.strokeText(text, x + 9, y - 8);
+  ctx.fillStyle = color;
+  ctx.fillText(text, x + 9, y - 8);
+}
+
+function traceRing(ring) {
+  let prevX = null;
+  ring.forEach(([lon, lat], idx) => {
+    const [x, y] = proj(lon, lat);
+    if (idx === 0 || prevX === null || Math.abs(x - prevX) > CW * 0.5) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+    prevX = x;
+  });
+}
+
+function drawFallbackLand() {
+  LAND_FALLBACK.forEach(poly => {
+    ctx.beginPath();
+    poly.forEach(([lon, lat], i) => {
+      const [x, y] = proj(lon, lat);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.closePath();
+    ctx.fillStyle = '#d1dece';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(91,125,148,0.72)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+}
+
+function drawRealisticLand() {
+  if (!worldFeatures) {
+    drawFallbackLand();
+    return;
+  }
+
+  const landGradient = ctx.createLinearGradient(0, 0, CW, CH);
+  landGradient.addColorStop(0, '#1ca3e4');
+  landGradient.addColorStop(1, '#165fbe');
+
+  worldFeatures.forEach(feature => {
+    const geometry = feature && feature.geometry;
+    if (!geometry) return;
+    ctx.beginPath();
+    if (geometry.type === 'Polygon') {
+      geometry.coordinates.forEach(traceRing);
+    } else if (geometry.type === 'MultiPolygon') {
+      geometry.coordinates.forEach(polygon => polygon.forEach(traceRing));
+    }
+    ctx.closePath();
+    ctx.fillStyle = landGradient;
+    ctx.fill('evenodd');
+    ctx.strokeStyle = 'rgba(255,255,255,0.62)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  });
+}
+
+function draw(t) {
+  ctx.clearRect(0,0,CW,CH);
+
+  const og = ctx.createLinearGradient(0,0,0,CH);
+  og.addColorStop(0,'#f3fbff');
+  og.addColorStop(1,'#dceffd');
+  ctx.fillStyle = og;
+  ctx.fillRect(0,0,CW,CH);
+
+  ctx.lineWidth = 0.7;
+  ctx.strokeStyle = 'rgba(50,105,145,0.16)';
+  for(let lat=-60;lat<=60;lat+=30){
+    const [,y]=proj(0,lat);
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(CW,y);ctx.stroke();
+  }
+  for(let lon=-180;lon<=180;lon+=30){
+    const [x]=proj(lon,0);
+    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,CH);ctx.stroke();
+  }
+
+  ctx.strokeStyle='rgba(13,127,204,0.28)';
+  ctx.lineWidth=1.1;
+  const [,ey]=proj(0,0);
+  ctx.beginPath();ctx.moveTo(0,ey);ctx.lineTo(CW,ey);ctx.stroke();
+
+  if (mapMode === 'realistic') {
+    drawRealisticLand();
+  } else {
+    drawFallbackLand();
+  }
+
+  const tau = t / 1000;
+  FAC.forEach(f=>{
+    const [x,y]=proj(f.lon,f.lat);
+    const isH = hovered===f;
+    const pulse = (Math.sin(tau*1.7+f.lat*0.25)*0.5+0.5);
+    const featuredColor = FEATURED[f.abbr] || DEFAULT_MARKER;
+    const isFeatured = Boolean(FEATURED[f.abbr]);
+
+    ctx.beginPath();
+    ctx.arc(x,y, isH ? 13+pulse*7 : (isFeatured ? 11+pulse*5 : 9+pulse*4), 0, Math.PI*2);
+    const ringAlpha = isH ? (0.34*pulse) : (isFeatured ? 0.24*pulse : 0.15*pulse);
+    ctx.strokeStyle = isFeatured ? `rgba(21,128,61,${ringAlpha})` : `rgba(255,209,102,${ringAlpha * 1.25})`;
+    if (f.abbr === 'SESAME') {
+      ctx.strokeStyle = `rgba(212,85,0,${isH ? 0.35*pulse : 0.24*pulse})`;
+    }
+    ctx.lineWidth = isH ? 1.8 : (isFeatured ? 1.4 : 1);
+    ctx.stroke();
+
+    const gr=ctx.createRadialGradient(x,y,0,x,y,isH?8.5:(isFeatured?7:5.5));
+    const glowBase = f.abbr === 'SESAME' ? '212,85,0' : (f.abbr === 'SIRIUS' ? '21,128,61' : '255,209,102');
+    gr.addColorStop(0,`rgba(${glowBase},0.9)`);
+    gr.addColorStop(1,`rgba(${glowBase},0)`);
+    ctx.beginPath();ctx.arc(x,y,isH?8.5:(isFeatured?7:5.5),0,Math.PI*2);
+    ctx.fillStyle=gr;ctx.fill();
+
+    ctx.beginPath();ctx.arc(x,y,isH?3.8:(isFeatured?3.3:2.6),0,Math.PI*2);
+    ctx.fillStyle=isH?'#ffffff':featuredColor;ctx.fill();
+    ctx.strokeStyle = 'rgba(12,36,58,0.82)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    if(isH || isFeatured){
+      drawLabel(f.abbr, x, y, featuredColor);
+    }
+  });
+}
+
+function loop(t){ draw(t); requestAnimationFrame(loop); }
+
+function getFacilityAtEvent(e){
+  const r=canvas.getBoundingClientRect();
+  const mx=(e.clientX-r.left)/r.width*CW;
+  const my=(e.clientY-r.top)/r.height*CH;
+  let found=null;
+  for(const f of FAC){
+    const [fx,fy]=proj(f.lon,f.lat);
+    if(Math.sqrt((mx-fx)**2+(my-fy)**2)<15){found=f;break;}
+  }
+  return found;
+}
+
+canvas.addEventListener('mousemove',e=>{
+  const found = getFacilityAtEvent(e);
+  hovered=found;
+  canvas.style.cursor=found?'pointer':'crosshair';
+  if(found){
+    document.getElementById('tt-n').textContent=found.abbr;
+    document.getElementById('tt-f').textContent=found.name;
+    document.getElementById('tt-l').textContent='Location: '+found.loc;
+    document.getElementById('tt-e').textContent=found.energy;
+    document.getElementById('tt-y').textContent=found.year;
+    document.getElementById('tt-b').textContent=found.beams;
+    tip.classList.add('show');
+    const tx=e.clientX+16, ty=e.clientY-18;
+    const tw=240, th=145;
+    tip.style.left=(tx+tw>window.innerWidth?e.clientX-tw-12:tx)+'px';
+    tip.style.top=(ty+th>window.innerHeight?e.clientY-th:ty)+'px';
+  } else {
+    tip.classList.remove('show');
+  }
+});
+canvas.addEventListener('mouseleave',()=>{hovered=null;tip.classList.remove('show');});
+canvas.addEventListener('click',e=>{
+  const found = getFacilityAtEvent(e);
+  if(found && found.url){
+    window.open(found.url,'_blank','noopener,noreferrer');
+  }
+});
+
+window.addEventListener('resize',()=>resize());
+resize();
+loadRealisticBasemap();
+requestAnimationFrame(loop);
+
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting) setTimeout(()=>e.target.classList.add('in'),i*90);
+  });
+},{threshold:0.12});
+document.querySelectorAll('.fu').forEach(el=>obs.observe(el));
+</script>
+<script type="module">
+async function startQuadrupoleDemo() {
+  const mount = document.getElementById("quad-scene");
+  if (!mount) return;
+
+  const spinBtn = document.getElementById("quadToggleSpin");
+  const beamBtn = document.getElementById("quadToggleBeam");
+  const statusEl = document.getElementById("quadLoadStatus");
+
+  function setStatus(text, state) {
+    statusEl.textContent = text;
+    statusEl.dataset.state = state;
+  }
+
+  let THREE;
+  try {
+    const candidates = [
+      "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+      "https://unpkg.com/three@0.165.0/build/three.module.js",
+      "https://esm.sh/three@0.165.0"
+    ];
+    let lastErr = null;
+    for (const url of candidates) {
+      try {
+        THREE = await import(url);
+        break;
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    if (!THREE) throw lastErr || new Error("Unable to load Three.js");
+  } catch (err) {
+    setStatus("3D load failed", "error");
+    mount.innerHTML = "<div style=\"display:grid;place-items:center;height:100%;padding:24px;text-align:center;color:#1f2b36;background:rgba(255,255,255,.72)\"><div><strong style=\"display:block;margin-bottom:8px\">3D module failed to load</strong><div>Serve this page via HTTP(S), not file://</div></div></div>";
+    return;
+  }
+
+  const testCanvas = document.createElement("canvas");
+  const glOk = testCanvas.getContext("webgl") || testCanvas.getContext("experimental-webgl");
+  if (!glOk) {
+    setStatus("WebGL unavailable", "error");
+    mount.innerHTML = "<div style=\"display:grid;place-items:center;height:100%;padding:24px;text-align:center;color:#1f2b36;background:rgba(255,255,255,.72)\">WebGL is unavailable in this browser.</div>";
+    return;
+  }
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0xe7edf5, 14, 28);
+
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+  camera.position.set(6.6, 5.4, 8.0);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(mount.clientWidth, mount.clientHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.12;
+  mount.appendChild(renderer.domElement);
+
+  let camYaw = 0.68;
+  let camPitch = 0.64;
+  let camRadius = 11.2;
+  let dragging = false;
+  let dragX = 0;
+  let dragY = 0;
+  const camTarget = new THREE.Vector3(0, 0, 0);
+
+  function updateCamera() {
+    const cp = Math.cos(camPitch);
+    camera.position.set(
+      camRadius * cp * Math.sin(camYaw),
+      camRadius * Math.sin(camPitch),
+      camRadius * cp * Math.cos(camYaw)
+    );
+    camera.lookAt(camTarget);
+  }
+
+  renderer.domElement.addEventListener("pointerdown", (ev) => {
+    dragging = true;
+    dragX = ev.clientX;
+    dragY = ev.clientY;
+    renderer.domElement.setPointerCapture?.(ev.pointerId);
+  });
+
+  renderer.domElement.addEventListener("pointermove", (ev) => {
+    if (!dragging) return;
+    const dx = ev.clientX - dragX;
+    const dy = ev.clientY - dragY;
+    dragX = ev.clientX;
+    dragY = ev.clientY;
+    camYaw -= dx * 0.005;
+    camPitch = Math.max(-0.22, Math.min(1.22, camPitch - dy * 0.0044));
+  });
+
+  renderer.domElement.addEventListener("pointerup", () => {
+    dragging = false;
+  });
+
+  renderer.domElement.addEventListener("wheel", (ev) => {
+    camRadius = Math.max(6.0, Math.min(20.0, camRadius + ev.deltaY * 0.009));
+    ev.preventDefault();
+  }, { passive: false });
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.62));
+  const key = new THREE.DirectionalLight(0xffffff, 1.2);
+  key.position.set(5, 8, 9);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0x9cc6ff, 0.65);
+  fill.position.set(-7, 3, -6);
+  scene.add(fill);
+  const rim = new THREE.PointLight(0x87f7ff, 18, 20, 2.1);
+  rim.position.set(0, -1.2, 5.8);
+  scene.add(rim);
+
+  const magnetRoot = new THREE.Group();
+  magnetRoot.rotation.x = 0.18;
+  magnetRoot.rotation.y = 0.34;
+  scene.add(magnetRoot);
+
+  const yokeMat = new THREE.MeshStandardMaterial({ color: 0x8e9caf, metalness: 0.42, roughness: 0.52 });
+  const poleMat = new THREE.MeshStandardMaterial({ color: 0xc26b38, metalness: 0.64, roughness: 0.25 });
+  const copperMat = new THREE.MeshStandardMaterial({ color: 0xda8341, metalness: 0.58, roughness: 0.21 });
+
+  function octagonPoints(radius, rotation = 0, reverse = false) {
+    const pts = [];
+    for (let i = 0; i < 8; i += 1) {
+      const a = rotation + (i * Math.PI) / 4;
+      pts.push(new THREE.Vector2(Math.cos(a) * radius, Math.sin(a) * radius));
+    }
+    return reverse ? pts.reverse() : pts;
+  }
+
+  const outerPts = octagonPoints(4.1, Math.PI / 8, false);
+  const innerPts = octagonPoints(2.86, Math.PI / 8, true);
+  const shape = new THREE.Shape();
+  shape.moveTo(outerPts[0].x, outerPts[0].y);
+  for (let i = 1; i < outerPts.length; i += 1) shape.lineTo(outerPts[i].x, outerPts[i].y);
+  shape.closePath();
+  const holePath = new THREE.Path();
+  holePath.moveTo(innerPts[0].x, innerPts[0].y);
+  for (let i = 1; i < innerPts.length; i += 1) holePath.lineTo(innerPts[i].x, innerPts[i].y);
+  holePath.closePath();
+  shape.holes.push(holePath);
+
+  const yokeGeo = new THREE.ExtrudeGeometry(shape, {
+    depth: 1.65,
+    bevelEnabled: true,
+    bevelThickness: 0.14,
+    bevelSize: 0.1,
+    bevelSegments: 3
+  });
+  yokeGeo.center();
+  magnetRoot.add(new THREE.Mesh(yokeGeo, yokeMat));
+
+  function createPoleAssembly(angle) {
+    const poleGroup = new THREE.Group();
+    const dir = new THREE.Vector3(-Math.cos(angle), -Math.sin(angle), 0).normalize();
+    const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+
+    const polePiece = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.58, 2.05, 28), poleMat);
+    polePiece.quaternion.copy(q);
+    polePiece.position.set(Math.cos(angle) * 1.96, Math.sin(angle) * 1.96, 0);
+    poleGroup.add(polePiece);
+
+    const windings = new THREE.Group();
+    for (let i = 0; i < 11; i += 1) {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.54, 0.043, 13, 36), copperMat);
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = -0.86 + i * 0.172;
+      windings.add(ring);
+    }
+    windings.quaternion.copy(q);
+    windings.position.set(Math.cos(angle) * 1.96, Math.sin(angle) * 1.96, 0);
+    poleGroup.add(windings);
+    return poleGroup;
+  }
+
+  const poleAngles = [Math.PI / 4, (3 * Math.PI) / 4, (5 * Math.PI) / 4, (7 * Math.PI) / 4];
+  poleAngles.forEach((angle) => magnetRoot.add(createPoleAssembly(angle)));
+
+  const pulseCarrier = new THREE.Group();
+  magnetRoot.add(pulseCarrier);
+
+  const pulse = new THREE.Mesh(
+    new THREE.SphereGeometry(0.17, 24, 24),
+    new THREE.MeshStandardMaterial({
+      color: 0xb8ffd6,
+      emissive: 0x69ffb2,
+      emissiveIntensity: 0.95,
+      metalness: 0.0,
+      roughness: 0.1,
+      transparent: true,
+      opacity: 0.98
+    })
+  );
+  pulse.scale.set(0.9, 0.9, 2.4);
+  pulseCarrier.add(pulse);
+
+  const pulseHalo = new THREE.Mesh(
+    new THREE.SphereGeometry(0.3, 22, 22),
+    new THREE.MeshBasicMaterial({
+      color: 0x97ffd1,
+      transparent: true,
+      opacity: 0.2,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    })
+  );
+  pulseHalo.scale.set(1.2, 1.2, 2.8);
+  pulseCarrier.add(pulseHalo);
+
+  const fieldLines = new THREE.Group();
+  const fieldMat = new THREE.MeshBasicMaterial({ color: 0xff6476, transparent: true, opacity: 0.32 });
+  function addFieldArc(a0, a1, h) {
+    const curve = new THREE.CubicBezierCurve3(
+      new THREE.Vector3(Math.cos(a0) * 1.2, Math.sin(a0) * 1.2, h),
+      new THREE.Vector3(Math.cos(a0) * 0.35, Math.sin(a0) * 0.35, h + 0.1),
+      new THREE.Vector3(Math.cos(a1) * 0.35, Math.sin(a1) * 0.35, h + 0.1),
+      new THREE.Vector3(Math.cos(a1) * 1.2, Math.sin(a1) * 1.2, h)
+    );
+    fieldLines.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 34, 0.02, 8, false), fieldMat));
+  }
+  for (let i = 0; i < 4; i += 1) {
+    const a0 = poleAngles[i];
+    const a1 = poleAngles[(i + 1) % 4];
+    addFieldArc(a0, a1, -0.34);
+    addFieldArc(a0, a1, 0.34);
+  }
+  magnetRoot.add(fieldLines);
+
+  const state = { autoRotate: true, beamPulse: true, rotationSpeed: 0.0028 };
+  spinBtn.addEventListener("click", () => {
+    state.autoRotate = !state.autoRotate;
+    spinBtn.dataset.active = String(state.autoRotate);
+    spinBtn.textContent = `Auto rotate: ${state.autoRotate ? "on" : "off"}`;
+  });
+  beamBtn.addEventListener("click", () => {
+    state.beamPulse = !state.beamPulse;
+    beamBtn.dataset.active = String(state.beamPulse);
+    beamBtn.textContent = `Beam pulse: ${state.beamPulse ? "on" : "off"}`;
+    pulseCarrier.visible = state.beamPulse;
+  });
+
+  const clock = new THREE.Clock();
+  let renderCount = 0;
+  function resize() {
+    const w = mount.clientWidth;
+    const h = mount.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  }
+  window.addEventListener("resize", resize);
+
+  function animate() {
+    const t = clock.getElapsedTime();
+    if (state.autoRotate) magnetRoot.rotation.y += state.rotationSpeed;
+    fieldLines.rotation.z = Math.sin(t * 0.8) * 0.05;
+    if (state.beamPulse) {
+      const z = -3.8 + (t * 2.1 % 7.6);
+      pulseCarrier.position.set(Math.sin(t * 1.5) * 0.03, Math.cos(t * 1.1) * 0.03, z);
+      pulse.material.opacity = 0.86 + 0.12 * Math.sin(t * 7.0);
+      pulseHalo.material.opacity = 0.16 + 0.07 * Math.sin(t * 5.2);
+    }
+    updateCamera();
+    renderer.render(scene, camera);
+    renderCount += 1;
+    if (renderCount === 2) statusEl.style.display = "none";
+    requestAnimationFrame(animate);
+  }
+
+  resize();
+  animate();
+}
+
+startQuadrupoleDemo();
+</script>
+</body>
+</html>
