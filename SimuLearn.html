@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>SimuLearn - Hiiro Moriyama</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    /* STICKY FOOTER LOGIC */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    .main {
+      flex: 1 0 auto;
+    }
+    #footer {
+      flex-shrink: 0;
+    }
+
+    /* Project Cards styling */
+    .project-card {
+      background: #fff;
+      border: 1px solid #002147;
+      padding: 15px;
+      border-radius: 8px;
+      height: 100%;
+      transition: 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .project-card:hover { border-color: #000000; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    .project-card h4 { font-size: 1rem; margin-bottom: 5px; }
+    .project-card p { font-size: 0.8rem; color: #666; margin-bottom: 10px; }
+    
+    .btn-launch {
+      background: #002147; color: white; border: none; padding: 5px 12px;
+      border-radius: 4px; font-size: 0.8rem; font-weight: 500; cursor: pointer; width: 100%;
+    }
+    .btn-launch:hover { background: #000000; }
+
+    /* Overlay styling - UPDATED FOR FULL VIEW WITHOUT BORDERS */
+    .project-section { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100vw; 
+      height: 100vh;
+      background: #ffffff; 
+      z-index: 9999; 
+      padding: 0 !important; 
+      margin: 0 !important;
+      border: none;
+    }
+    .project-section.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .btn-exit-tool {
+      position: absolute; 
+      top: 20px; 
+      right: 30px; 
+      background: rgba(220, 53, 69, 0.9);
+      color: white; 
+      border: none; 
+      padding: 8px 20px; 
+      border-radius: 50px;
+      font-weight: 600; 
+      font-size: 0.9rem; 
+      cursor: pointer; 
+      z-index: 10001;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .simulation-container { 
+      width: 100vw; 
+      height: 100vh; 
+      background: #fff; 
+      overflow: hidden; 
+      margin: 0;
+      padding: 0;
+    }
+    .simulation-container iframe { 
+      width: 100%; 
+      height: 100%; 
+      border: none; 
+      display: block; 
+      margin: 0;
+      padding: 0;
+    }
+
+    .select-dropdown {
+      width: 100%; padding: 5px; margin-bottom: 15px; border-radius: 4px;
+      border: 1px solid #dee2e6; font-size: 0.85rem;
+    }
+
+    /* Prevent body scrolling when a tool is open */
+    body.tool-open { 
+      overflow: hidden !important; 
+    }
+
+    /* Footer Alignment with Sidebar */
+    @media (min-width: 1200px) {
+      #footer {
+        margin-left: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body class="service-details-page">
+
+  <header id="header" class="header dark-background d-flex flex-column">
+    <i class="header-toggle d-xl-none bi bi-list"></i>
+    <div class="profile-img"><img src="assets/img/prof3.jpg" alt="" class="img-fluid rounded-circle"></div>
+    <a href="index.html" class="logo d-flex align-items-center justify-content-center">
+      <h1 class="sitename">Hiiro Moriyama</h1>
+    </a>
+    <div class="social-links text-center">
+      <a href="https://www.researchgate.net/profile/Hiiro-Moriyama?ev=hdr_xprf" target="_blank"><i class="bi bi-journal-richtext"></i></a>
+      <a href="https://pam.web.ox.ac.uk/people/hiiro-moriyama" target="_blank"><i class="bi bi-person-workspace"></i></a>
+      <a href="https://www.digitalmaterials-cdt.ac.uk/people/hiiro-moriyama/" target="_blank"><i class="bi bi-buildings"></i></a>
+      <a href="https://orcid.org/0009-0001-9306-3806" target="_blank"><i class="bi bi-person-badge"></i></a>
+      <a href="https://www.linkedin.com/in/hiiro-moriyama/" target="_blank"><i class="bi bi-linkedin"></i></a>
+    </div>
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="index.html#hero"><i class="bi bi-house navicon"></i>Home</a></li>
+        <li><a href="index.html#aboutme"><i class="bi bi-person navicon"></i>About me</a></li>
+        <li><a href="index.html#scientificprojects" class="active"><i class="bi bi-folder navicon"></i>Scientific Projects</a></li>
+        <li><a href="index.html#awards"><i class="bi bi-trophy navicon"></i>Awards</a></li>
+        <li><a href="index.html#arts"><i class="bi bi-palette navicon"></i>Artistic Pursuits</a></li>
+      </ul>
+    </nav>
+     <div class="oxford-logo-container mt-auto pb-5 text-center">
+  <a href="https://www.ox.ac.uk/" target="_blank" rel="noopener noreferrer" class="oxford-link">
+    <img src="assets/img/Oxford-University-Circlet.svg" 
+         alt="University of Oxford" 
+         class="img-fluid" 
+         style="max-width: 70px; height: auto; transition: 0.3s;">
+  </a>
+</div>
+
+<style>
+  /* This adds a nice glow or opacity change when you hover over the logo */
+  .oxford-link:hover img {
+    opacity: 0.7;
+    transform: scale(1.05); /* Slightly enlarges the logo on hover */
+  }
+</style>
+  </header>
+
+  <main class="main">
+    <div class="page-title dark-background">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">SimuLearn</h1>
+        <nav class="breadcrumbs">
+          <ol><li><a href="index.html">Home</a></li><li class="current">SimuLearn</li></ol>
+        </nav>
+      </div>
+    </div>
+
+    <section id="service-details" class="service-details section">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-4">
+            <div class="services-list">
+              <a href="Mats4.html" class="active">Materials 4.0</a>
+              <a href="microresidual-stress.html">Micro-Residual Stress</a>
+              <a href="xray-prosthesis.html">X-ray Prosthesis</a>
+              <a href="xray-optics.html">Ultrafast X-ray Optics</a>
+              <a href="2D-Flows.html">2D Flows</a>
+              <a href="hackathon.html" class="active">SimuLearn</a>
+            </div>
+           <h4>Acknowledgement</h4>
+             <p style="text-align: justify;">This project was developed and presented by my team at the IUPAP WG-13 Hackathon during the 17th International Particle Accelerator Conference (IPAC 2026) in Deauville, France, where it earned first place.</p>
+            <div class="container">
+            <div class="row align-items-center g-4">
+              <div class="col-6 col-md-3">
+                <a href="https://iupap-wg14.web.cern.ch" target="_blank">
+                  <img src="assets/img/iupap.png" alt="IUPAP" class="img-fluid">
+                </a>
+              </div>
+              <div class="col-6 col-md-3">
+                <a href="http://www.ifast-cbi.particle-accelerators.eu" target="_blank">
+                  <img src="assets/img/IPAC26.png" alt="IPAC" class="img-fluid">
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div style="width: 40px; display: inline-block;"></div>
+          
+          <div class="container">
+            <div class="row align-items-center g-4">
+              <div class="col-6 col-md-3">
+                <a href="https://sdgs.un.org/goals/goal3" target="_blank">
+                  <img src="assets/img/goal4.png" alt="Goal 4" class="img-fluid">
+                </a>
+              </div>
+              <div class="col-6 col-md-3">
+                <a href="https://sdgs.un.org/goals/goal9" target="_blank">
+                  <img src="assets/img/goal9.png" alt="Goal 9" class="img-fluid">
+                </a>
+              </div>
+              <div class="col-6 col-md-3">
+                <a href="https://sdgs.un.org/goals/goal12" target="_blank">
+                  <img src="assets/img/goal17.png" alt="Goal 17" class="img-fluid">
+                </a>
+              </div>
+            </div>
+          </div>
+
+          
+
+          <div class="col-lg-8">
+            <h3>SimuLearn: An interactive platform designed to bring accelerator technology into classrooms.</h3>
+            <p>This project expands on existing <em>MAX IV<em> simulation software, and with integrated beam dynamics observables, a customisable ring builder, and a practical case study based on <em>SESAME<em> (Synchrotron-light for Experimental Science and Applications in the Middle East), located in Jordan. The project was proposed by <em>MAX IV, Lund University <em> Professors <strong>Sverker Werin<strong> and <strong>Francesca Curbis<strong>, and presented to the IUPAP WG-13 jury by:
+            <p>
+              <ul style="text-align: justify; max-width: 600px; margin: 0 auto 20px auto;">
+              <li style="text-align: justify;">
+                <i class="bi bi-dot"></i> <span><strong>Maria Ünal<strong> <em>(SOLARIS, PL)</em></span>
+              </li>
+              <li style="text-align: justify;">
+                <i class="bi bi-dot"></i> <span><strong>Wiktoria Wiatrowska<strong> <em>(SOLARIS, PL)</span>
+              </li>
+              <li style="text-align: justify;">
+                <i class="bi bi-dot"></i> <span><strong>Helena Alamprese<strong> <em>(Michigan State University, US)</span>
+              </li>
+              <li style="text-align: justify;">
+                <i class="bi bi-dot"></i> <span><strong>Weibo Hu<strong> <em>(University of Science and Technology of China, CN)</span>
+              </li>
+              <li style="text-align: justify;">
+                <i class="bi bi-dot"></i> <span><strong>Hiiro Moriyama<strong> <em>(University of Oxford, UK)</span>
+              </li>
+              <li style="text-align: justify;">
+                <i class="bi bi-dot"></i> <span><strong>Laury Batista<strong> <em>(Université Paris-Saclay, CEA, FR)</span>
+              </li>
+            </ul>
+            <div class="row g-3 mb-4">   
+               <div class="col-md-6 col-12">
+                <div class="project-card">
+                  <div>
+                    <h4>Project E</h4>
+                    <p>IPAC2026 Hackathon</p>
+                  </div>
+                  <button class="btn-launch" onclick="showProject('hackathonino')">Launch</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="project-display-area">
+          <div id="hackathonino" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="Hackathonino.html"></iframe></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer light-background">
+    <div class="container text-center" style="padding: 10px 0;">
+      <p style="font-size: 14px; margin-bottom: 5px;">Department of Materials, <a href="https://www.ox.ac.uk">University of Oxford</a> | Email: <a href="mailto:hiiro.moriyama@materials.ox.ac.uk">hiiro.moriyama@materials.ox.ac.uk</a></p>
+      <div class="copyright" style="font-size: 14px;">
+        &copy; <span>Hiiro Moriyama | Oxford 2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/js/main.js"></script>
+
+  <script>
+    function launchExafs() { showProject(document.getElementById('exafs-select').value); }
+    function launchPhotoionization() { showProject(document.getElementById('photoionization-select').value); }
+    
+    function closeAllProjects() {
+      document.body.classList.remove('tool-open');
+      document.querySelectorAll('.project-section').forEach(s => {
+        const iframe = s.querySelector('iframe');
+        if (iframe) { 
+          // Reset iframe to stop simulation CPU usage when closed
+          const src = iframe.src; 
+          iframe.src = ""; 
+          iframe.src = src; 
+        }
+        s.classList.remove('active');
+      });
+    }
+
+    function showProject(id) {
+      closeAllProjects();
+      const target = document.getElementById(id);
+      if (target) { 
+        document.body.classList.add('tool-open'); 
+        target.classList.add('active'); 
+      }
+    }
+
+    // Keyboard shortcut to close tools
+    document.addEventListener('keydown', function(event) {
+      if (event.key === "Escape") {
+        closeAllProjects();
+      }
+    });
+  </script>
+</body>
+</html>
