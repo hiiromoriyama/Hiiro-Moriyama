@@ -116,9 +116,9 @@ h1 .hl{color:var(--cyan);}
 .lg-maxiv{background:#2563eb;}
 
 /* LOGO STRIP */
-#logo{background:#ffffff;padding:1.4rem 2.8rem 2rem;border-bottom:1px solid #d5e5f3;}
-.logo-wrap{max-width:1280px;margin:0 auto;}
-.logo-rail{overflow:hidden;position:relative;}
+#logo{background:rgba(255,255,255,.88);padding:1.4rem 0 2rem;border-bottom:1px solid #d5e5f3;}
+.logo-wrap{width:100%;max-width:none;margin:0;}
+.logo-rail{overflow:hidden;position:relative;width:100%;}
 .logo-track{display:flex;align-items:center;gap:1rem;width:max-content;animation:logoMove 26s linear infinite;}
 .logo-rail:hover .logo-track{animation-play-state:paused;}
 .simu-logo{
@@ -326,7 +326,7 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
   .ftop{grid-template-columns:1fr 1fr;gap:2rem;}
   .mlegend{position:static;margin:10px;display:inline-flex;}
   .site-logo{height:32px;}
-  #logo{padding:1.2rem 1.5rem 1.8rem;}
+  #logo{padding:1.2rem 0 1.8rem;}
   .simu-logo{width:184px;height:64px;font-size:1rem;}
   .q3d-widget{height:560px;}
 }
@@ -620,7 +620,7 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
     <div class="stitle">News</div>
     <div class="news-grid">
       <article class="news-card fu">
-        <div class="news-meta">May 2026 · Instrumentation</div>
+        <div class="news-meta">May 2026</div>
         <h3 class="news-title">SimuLearn won 1st prize at the IPAC2026 hackathon</h3>
         <p class="news-copy"></p>
         <a class="card-link" href="#">Read More</a>
@@ -633,7 +633,7 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
   <div class="ftop">
     <div class="fbrand">
       <a class="logo" href="#" aria-label="SimuLearn home">
-        <img class="site-logo" src="assets/img/logos/simulearn.svg" alt="SimuLearn" onerror="this.onerror=null;this.src='assets/logo/simulearn-wordmark.png';" />
+        <img class="site-logo" src="assets/img/logos/simulearn.svg" alt="SimuLearn" onerror="this.onerror=null;this.src='assets/img/logos/simulearn.svg';" />
       </a>
       <p class="fabout">A global platform dedicated to connecting the synchrotron community through open data, interactive education, and collaborative tools.</p>
     </div>
@@ -718,7 +718,7 @@ const FEATURED = {
 };
 const DEFAULT_MARKER = '#ffd166';
 
-document.getElementById('fcount').textContent = FAC.length + ' FACILITIES MAPPED';
+document.getElementById('fcount').textContent = FAC.length + ' FACILITIES';
 
 const LAND_FALLBACK = [
   [[-168,72],[-140,70],[-110,72],[-84,74],[-65,68],[-53,50],[-56,47],[-66,44],[-70,42],[-73,38],[-76,35],[-80,26],[-83,10],[-86,16],[-92,15],[-98,20],[-108,24],[-115,30],[-120,35],[-124,46],[-126,52],[-132,56],[-138,58],[-145,60],[-155,60],[-160,58],[-165,62],[-170,66],[-168,72]],
@@ -1293,10 +1293,23 @@ startQuadrupoleDemo();
 <script>
 window.addEventListener("load", () => {
   const loader = document.getElementById("siteLoader");
-  if (!loader) return;
-  setTimeout(() => loader.classList.add("hide"), 1500);
-  setTimeout(() => loader.remove(), 2100);
+  if (loader) {
+    setTimeout(() => loader.classList.add("hide"), 1500);
+    setTimeout(() => loader.remove(), 2100);
+  }
+
+  const logoTrack = document.querySelector(".logo-track");
+  if (logoTrack && !logoTrack.dataset.loopReady) {
+    const items = Array.from(logoTrack.children);
+    items.forEach((item) => {
+      const clone = item.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      logoTrack.appendChild(clone);
+    });
+    logoTrack.dataset.loopReady = "true";
+  }
 });
 </script>
 </body>
 </html>
+
