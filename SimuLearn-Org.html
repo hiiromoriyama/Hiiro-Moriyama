@@ -55,6 +55,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:ce
   animation:boltDraw 1.1s cubic-bezier(.2,.8,.2,1) both,settle 2.8s ease-in-out 1.1s infinite;
 }
 .site-loader .word-left{animation:enterLeft 900ms cubic-bezier(.16,1,.3,1) 360ms both;}
+.site-loader .word-u{animation:enterLeft 900ms cubic-bezier(.16,1,.3,1) 470ms both;}
 .site-loader .word-right{animation:enterRight 900ms cubic-bezier(.16,1,.3,1) 560ms both;}
 @keyframes boltDraw{
   0%{opacity:0;transform:translateY(-22px) scaleY(.82);}
@@ -112,6 +113,7 @@ h1 .hl{color:var(--cyan);}
 .mlegend .lg{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:.2rem;}
 .lg-sesame{background:#d45500;}
 .lg-sirius{background:#15803d;}
+.lg-maxiv{background:#2563eb;}
 
 /* LOGO STRIP */
 #logo{background:#ffffff;padding:1.4rem 2.8rem 2rem;border-bottom:1px solid #d5e5f3;}
@@ -133,10 +135,10 @@ h1 .hl{color:var(--cyan);}
   font-size:1.15rem;
   font-weight:700;
   letter-spacing:.02em;
+  position:relative;
+  overflow:hidden;
 }
-.simu-logo .simu{color:#3d4348;}
-.simu-logo .l{color:#2cb0c3;margin:0 .04em;}
-.simu-logo .learn{color:#2cb0c3;}
+.simu-upload{max-width:88%;max-height:78%;object-fit:contain;display:block;}
 @keyframes logoMove{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* ABOUT */
@@ -355,7 +357,10 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
       <path d="M402 56 L496 56 L416 308 L668 308 L638 403 L291 403 L348 221 Z" fill="#2cb0c3"></path>
     </g>
     <g class="word-left" filter="url(#simuShadow)">
-      <text x="45" y="280" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="112" letter-spacing="-6" fill="#333333">Simu</text>
+      <text x="120" y="280" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="112" letter-spacing="-6" fill="#333333">Sim</text>
+    </g>
+    <g class="word-u" filter="url(#simuShadow)">
+      <text x="307" y="280" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="112" letter-spacing="-2" fill="#333333">u</text>
     </g>
     <g class="word-right">
       <text x="448" y="280" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="112" letter-spacing="-2" fill="#2cb0c3">earn</text>
@@ -365,18 +370,16 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
 
 <nav>
   <a class="logo" href="#" aria-label="SimuLearn home">
-    <img class="site-logo" src="assets/logo/simulearn-wordmark.svg" alt="SimuLearn" onerror="this.onerror=null;this.src='assets/img/simulearn-logo.png';" />
+    <img class="site-logo" src="assets/img/logos/simulearn.svg" alt="SimuLearn" onerror="this.onerror=null;this.src='assets/img/logos/simulearn.svg';" />
   </a>
   <ul class="nav-links">
-    <li><a href="#hero">Map</a></li>
-    <li><a href="#logo">Logos</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#tools">Tools</a></li>
-    <li><a href="#news">News</a></li>
-    <li><a href="#events">Events</a></li>
-    <li><a href="#suppliers">Suppliers</a></li>
+    <li><a href="#suppliers">Industry</a></li>
     <li><a href="#team">Team</a></li>
     <li><a href="#goals">Goals</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#news">News</a></li>
     <li><a href="#footer">Contact</a></li>
   </ul>
   <button class="nav-btn" onclick="document.getElementById('tools').scrollIntoView({behavior:'smooth'})">Explore Tools</button>
@@ -402,7 +405,7 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
   <div class="hero-inner">
     <div class="map-wrap">
       <canvas id="mapCanvas"></canvas>
-      <div class="mlegend"><span class="lg lg-sesame"></span>SESAME (Jordan) <span class="lg lg-sirius"></span>SIRIUS (Brazil)</div>
+      <div class="mlegend"><span class="lg lg-sesame"></span>SESAME (Jordan) <span class="lg lg-sirius"></span>SIRIUS (Brazil) <span class="lg lg-maxiv"></span>MAX IV (Sweden)</div>
       <div class="mbadge"></div>
       <div class="mbadge2"><span class="ldot2"></span><span id="fcount">28 FACILITIES</span></div>
     </div>
@@ -413,18 +416,14 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
   <div class="logo-wrap">
     <div class="logo-rail">
       <div class="logo-track">
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
-        <div class="simu-logo"><span class="simu">Simu</span><span class="l">L</span><span class="learn">earn</span></div>
+        <div class="simu-logo"><img class="simu-upload" src="assets/img/logos/iupap.png" alt="Uploaded logo 1"></div>
+        <div class="simu-logo"><img class="simu-upload" src="assets/img/logos/ipac26.png" alt="Uploaded logo 2"></div>
+        <div class="simu-logo"><img class="simu-upload" src="assets/img/logos/maxiv.png" alt="Uploaded logo 3"></div>
+        <div class="simu-logo"><img class="simu-upload" src="assets/img/logos/solaris.png" alt="Uploaded logo 4"></div>
+        <div class="simu-logo"><img class="simu-upload" src="assets/img/logos/oxford.png" alt="Uploaded logo 5"></div>
+        <div class="simu-logo"><img class="simu-upload" src="assets/img/logos/paris.png" alt="Uploaded logo 6"></div>
+        <div class="simu-logo"><img class="simu-upload" src="assets/img/logos/michigan.png" alt="Uploaded logo 7"></div>
+        <div class="simu-logo"><img class="simu-upload" src="assets/img/logos/ustc.png" alt="Uploaded logo 8"></div>
       </div>
     </div>
   </div>
@@ -490,37 +489,6 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
           <div class="q3d-status" id="quadLoadStatus" data-state="loading">Loading 3D...</div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<section id="news">
-  <div class="sinner">
-    <div class="stag">Latest Updates</div>
-    <div class="stitle">News</div>
-    <div class="news-grid">
-      <article class="news-card fu">
-        <div class="news-meta">May 2026 · Instrumentation</div>
-        <h3 class="news-title">SimuLearn won 1st prize at the IPAC2026 hackathon</h3>
-        <p class="news-copy"></p>
-        <a class="card-link" href="#">Read More</a>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section id="events">
-  <div class="sinner">
-    <div class="stag">Upcoming</div>
-    <div class="stitle">Events</div>
-    <p class="ssub">Workshops, schools, and meetings across the synchrotron and accelerator learning community.</p>
-    <div class="event-grid">
-      <article class="event-card fu">
-        <div class="event-meta">Date · Place</div>
-        <h3 class="event-title">To be updated</h3>
-        <p class="event-copy">To be written</p>
-        <a class="card-link" href="#">Register</a>
-      </article>
     </div>
   </div>
 </section>
@@ -622,6 +590,37 @@ footer{background:#edf4fa;border-top:1px solid var(--bd);padding:4rem 2.8rem 2re
   </div>
 </section>
 
+<section id="events">
+  <div class="sinner">
+    <div class="stag">Upcoming</div>
+    <div class="stitle">Events</div>
+    <p class="ssub">Workshops, schools, and meetings across the synchrotron and accelerator learning community.</p>
+    <div class="event-grid">
+      <article class="event-card fu">
+        <div class="event-meta">Date · Place</div>
+        <h3 class="event-title">To be updated</h3>
+        <p class="event-copy">To be written</p>
+        <a class="card-link" href="#">Register</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="news">
+  <div class="sinner">
+    <div class="stag">Latest Updates</div>
+    <div class="stitle">News</div>
+    <div class="news-grid">
+      <article class="news-card fu">
+        <div class="news-meta">May 2026 · Instrumentation</div>
+        <h3 class="news-title">SimuLearn won 1st prize at the IPAC2026 hackathon</h3>
+        <p class="news-copy"></p>
+        <a class="card-link" href="#">Read More</a>
+      </article>
+    </div>
+  </div>
+</section>
+
 <footer id="footer">
   <div class="ftop">
     <div class="fbrand">
@@ -706,7 +705,8 @@ const FAC = [
 
 const FEATURED = {
   SESAME: '#d45500',
-  SIRIUS: '#15803d'
+  SIRIUS: '#15803d',
+  'MAX IV': '#2563eb'
 };
 const DEFAULT_MARKER = '#ffd166';
 
@@ -795,6 +795,18 @@ function drawLabel(text, x, y, color) {
   ctx.strokeText(text, x + 9, y - 8);
   ctx.fillStyle = color;
   ctx.fillText(text, x + 9, y - 8);
+}
+
+function hexToRgb(hex) {
+  const clean = (hex || '').replace('#', '');
+  if (clean.length !== 6) return null;
+  const value = Number.parseInt(clean, 16);
+  if (Number.isNaN(value)) return null;
+  return {
+    r: (value >> 16) & 255,
+    g: (value >> 8) & 255,
+    b: value & 255
+  };
 }
 
 function traceRing(ring) {
@@ -905,21 +917,19 @@ function draw(t) {
     const pulse = (Math.sin(tau*1.7+f.lat*0.25)*0.5+0.5);
     const featuredColor = FEATURED[f.abbr] || DEFAULT_MARKER;
     const isFeatured = Boolean(FEATURED[f.abbr]);
+    const featuredRgb = isFeatured ? hexToRgb(featuredColor) : null;
+    const markerRgb = featuredRgb ? `${featuredRgb.r},${featuredRgb.g},${featuredRgb.b}` : '255,209,102';
 
     ctx.beginPath();
     ctx.arc(x,y, isH ? 13+pulse*7 : (isFeatured ? 11+pulse*5 : 9+pulse*4), 0, Math.PI*2);
     const ringAlpha = isH ? (0.34*pulse) : (isFeatured ? 0.24*pulse : 0.15*pulse);
-    ctx.strokeStyle = isFeatured ? `rgba(21,128,61,${ringAlpha})` : `rgba(255,209,102,${ringAlpha * 1.25})`;
-    if (f.abbr === 'SESAME') {
-      ctx.strokeStyle = `rgba(212,85,0,${isH ? 0.35*pulse : 0.24*pulse})`;
-    }
+    ctx.strokeStyle = `rgba(${markerRgb},${isFeatured ? ringAlpha : ringAlpha * 1.25})`;
     ctx.lineWidth = isH ? 1.8 : (isFeatured ? 1.4 : 1);
     ctx.stroke();
 
     const gr=ctx.createRadialGradient(x,y,0,x,y,isH?8.5:(isFeatured?7:5.5));
-    const glowBase = f.abbr === 'SESAME' ? '212,85,0' : (f.abbr === 'SIRIUS' ? '21,128,61' : '255,209,102');
-    gr.addColorStop(0,`rgba(${glowBase},0.9)`);
-    gr.addColorStop(1,`rgba(${glowBase},0)`);
+    gr.addColorStop(0,`rgba(${markerRgb},0.9)`);
+    gr.addColorStop(1,`rgba(${markerRgb},0)`);
     ctx.beginPath();ctx.arc(x,y,isH?8.5:(isFeatured?7:5.5),0,Math.PI*2);
     ctx.fillStyle=gr;ctx.fill();
 
@@ -1282,4 +1292,3 @@ window.addEventListener("load", () => {
 </script>
 </body>
 </html>
-
