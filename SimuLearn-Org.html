@@ -981,16 +981,16 @@ canvas.addEventListener('mousemove',e=>{
   }
 });
 canvas.addEventListener('mouseleave',()=>{hovered=null;tip.classList.remove('show');});
-canvas.addEventListener('click',e=>{
+canvas.addEventListener('click', e => {
   const found = getFacilityAtEvent(e);
-  if(found && found.url){
-    const newTab = window.open('about:blank','_blank','noopener,noreferrer');
-    if (newTab) {
-      try { newTab.document.title = ''; } catch (_) {}
-      newTab.location.replace(found.url);
-    }
+  if (!found || !found.url) return;
+
+  const opened = window.open(found.url, '_blank', 'noopener,noreferrer');
+  if (!opened) {
+    window.location.href = found.url;
   }
 });
+
 
 window.addEventListener('resize',()=>resize());
 resize();
