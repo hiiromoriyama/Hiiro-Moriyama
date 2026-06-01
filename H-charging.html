@@ -7,32 +7,71 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         
+        /* Centralized Theme Token System */
         :root { 
             --accent: #E10600; 
             --panel: #0A0A0A; 
             --border: #222; 
             --cyan: #00f2ff; 
+            --bg-body: #000000;
+            --bg-wrapper: #050505;
+            --bg-canvas-fluid: #050505;
+            --bg-canvas-slab: #16181d;
+            --bg-canvas-oxide: #000000;
+            --grain-color: rgba(255, 255, 255, 0.15);
+            --text-main: #ffffff;
+            --text-label: #888888;
+            --text-brand: #00f2ff;
+            --btn-bg: #222222;
+            --btn-text: #cccccc;
+            --btn-mode-border: #ffffff;
+            --btn-mode-hover: #00CC66;
+            --toggle-bg: #111111;
+            --toggle-border: #333333;
+        }
+
+        [data-theme="light"] {
+            --panel: #ffffff; 
+            --border: #dddddd; 
+            --cyan: #007a8c;
+            --bg-body: #f0f2f5;
+            --bg-wrapper: #ffffff;
+            --bg-canvas-fluid: #f5f7fa;
+            --bg-canvas-slab: #e2e8f0;
+            --bg-canvas-oxide: #cbd5e1;
+            --grain-color: rgba(0, 0, 0, 0.12);
+            --text-main: #111111;
+            --text-label: #555555;
+            --text-brand: #007a8c; /* Enhanced contrast variant for clarity */
+            --btn-bg: #eaeaea;
+            --btn-text: #444444;
+            --btn-mode-border: #333333;
+            --btn-mode-hover: #00994d;
+            --toggle-bg: #f0f0f0;
+            --toggle-border: #cccccc;
         }
 
         body {
             margin: 0;
             padding: 20px;
-            background: #000;
+            background: var(--bg-body);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            transition: background 0.3s ease;
         }
 
         #wrapper-div {
             width: 100%;
-            max-width: 1200px; /* Optional cap for very large screens */
+            max-width: 1200px;
             aspect-ratio: 16 / 9;
-            border: 1px solid #222;
-            background: #050505;
+            border: 1px solid var(--border);
+            background: var(--bg-wrapper);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         #sim-container { 
@@ -53,15 +92,17 @@
             flex-direction: column; 
             gap: 22px; 
             overflow-y: auto; 
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .canvas-area { 
             flex: 1; 
             position: relative; 
             border: 1px solid var(--border); 
-            background: #000; 
+            background: var(--bg-canvas-fluid); 
             border-radius: 4px; 
             overflow: hidden; 
+            transition: border-color 0.3s ease;
         }
 
         #simCanvas { 
@@ -74,11 +115,12 @@
         .control-group { display: flex; flex-direction: column; gap: 8px; }
 
         label { 
-            color: #888; 
+            color: var(--text-label); 
             font-size: 11px; 
             font-weight: 700; 
             text-transform: uppercase; 
             letter-spacing: 1px; 
+            transition: color 0.3s ease;
         }
 
         input[type="range"] { 
@@ -106,17 +148,25 @@
             text-transform: uppercase; 
             letter-spacing: 1px; 
             cursor: pointer; 
-            transition: 0.2s; 
+            transition: all 0.2s; 
             border: none; 
             font-size: 12px; 
         }
 
         #pauseBtn { background: var(--accent); color: white; }
-        #heatModeBtn { background: #222; color: #cc0000; border: 1px solid #440000; }
+        #heatModeBtn { background: var(--btn-bg); color: #cc0000; border: 1px solid #440000; }
         #heatModeBtn.active { background: #cc0000; color: white; box-shadow: 0 0 10px rgba(204,0,0,0.5); }
-        #modeBtn { background: #111; color: white; border: 1px solid #ffffff; margin-bottom: -10px; }
-        #modeBtn:hover { color: #0C6; border-color: #0C6; }
-        #resetBtn { background: #222; color: #ccc; }
+        
+        #modeBtn { background: var(--btn-bg); color: var(--text-main); border: 1px solid var(--btn-mode-border); margin-bottom: -10px; }
+        #modeBtn:hover { color: var(--btn-mode-hover); border-color: var(--btn-mode-hover); }
+        #resetBtn { background: var(--btn-bg); color: var(--btn-text); }
+
+        #themeToggleBtn {
+            background: var(--toggle-bg);
+            color: var(--text-main);
+            border: 1px solid var(--toggle-border);
+            margin-bottom: -5px;
+        }
     </style>
 </head>
 <body>
@@ -124,8 +174,10 @@
 <div id="wrapper-div">
     <div id="sim-container">
         <div class="sidebar">
-            <div style="font-weight: 900; color: cyan; letter-spacing: 2px; font-size: 14px;">Process Dynamics Lab</div>
+            <div id="brand-heading" style="font-weight: 900; color: var(--text-brand); letter-spacing: 2px; font-size: 14px; transition: color 0.3s ease;">Process Dynamics Lab</div>
+            <button id="themeToggleBtn" class="action-btn">Toggle Light/Dark</button>
             <button id="modeBtn" class="action-btn">Mode: Gas Phase</button>
+            
             <div class="control-group">
                 <label id="input-label">H<sub>2</sub> Pressure</label>
                 <input type="range" id="pRange" min="0.0" max="2.0" step="0.01" value="0.5">
@@ -146,9 +198,9 @@
                 <button id="pauseBtn" class="action-btn">Pause</button>
                 <button id="resetBtn" class="action-btn">Reset</button>
             </div>
-            <div style="margin-top: auto; border-top: 1px solid #222; padding-top: 15px;">
+            <div style="margin-top: auto; border-top: 1px solid var(--border); padding-top: 15px; transition: border-color 0.3s ease;">
                 <label>Status</label>
-                <div id="status-text" style="color: #0C6; font-size: 12px; margin-top: 5px;">SYSTEM NOMINAL</div>
+                <div id="status-text" style="color: #0C6; font-size: 12px; margin-top: 5px; font-weight: bold;">SYSTEM NOMINAL</div>
             </div>
         </div>
         <div class="canvas-area"><canvas id="simCanvas"></canvas></div>
@@ -160,7 +212,7 @@
         const ctx = canvas.getContext('2d');
         const pSlider = document.getElementById('pRange'), dSlider = document.getElementById('dRange'), tSlider = document.getElementById('tRange');
         const pReadout = document.getElementById('p-readout'), dReadout = document.getElementById('d-readout'), tReadout = document.getElementById('t-readout');
-        const resetBtn = document.getElementById('resetBtn'), pauseBtn = document.getElementById('pauseBtn'), heatModeBtn = document.getElementById('heatModeBtn'), modeBtn = document.getElementById('modeBtn');
+        const resetBtn = document.getElementById('resetBtn'), pauseBtn = document.getElementById('pauseBtn'), heatModeBtn = document.getElementById('heatModeBtn'), modeBtn = document.getElementById('modeBtn'), themeToggleBtn = document.getElementById('themeToggleBtn');
 
         const dpr = window.devicePixelRatio || 1;
         let W, H, heatMode = false, isPaused = false, isElectrolytic = false;
@@ -189,9 +241,17 @@
         function drawSphere(x, y, r, c1, c2, c3, isH = false) {
             ctx.save();
             let g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r);
+            
+            const isLightMode = document.documentElement.getAttribute('data-theme') === 'light';
+
             if (isH) {
-                g.addColorStop(0, '#ff3333'); 
-                g.addColorStop(1, '#200000');
+                if (isLightMode) {
+                    g.addColorStop(0, '#ff4d4d'); 
+                    g.addColorStop(1, '#660000'); // Higher localized lightness baseline for visibility against white
+                } else {
+                    g.addColorStop(0, '#ff3333'); 
+                    g.addColorStop(1, '#200000');
+                }
             } else {
                 g.addColorStop(0, c1); 
                 g.addColorStop(0.7, c2); 
@@ -201,7 +261,7 @@
             ctx.beginPath();
             ctx.arc(x, y, r, 0, Math.PI * 2);
             ctx.fill();
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.strokeStyle = isLightMode ? 'rgba(0, 0, 0, 0.15)' : 'rgba(255, 255, 255, 0.05)';
             ctx.lineWidth = 0.5;
             ctx.stroke();
             ctx.restore();
@@ -381,15 +441,34 @@
             init();
         };
 
+        themeToggleBtn.onclick = () => {
+            if (document.documentElement.getAttribute('data-theme') === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        };
+
         function loop() {
-            ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, W, H);
-            ctx.fillStyle = '#16181d'; ctx.fillRect(surfaceX, 0, W-surfaceX, H);
-            ctx.fillStyle = 'rgba(255,255,255,0.15)';
+            // Read active computing colors directly from runtime style metrics
+            const style = getComputedStyle(document.body);
+            
+            ctx.fillStyle = style.getPropertyValue('--bg-canvas-fluid').trim(); 
+            ctx.fillRect(0, 0, W, H);
+            
+            ctx.fillStyle = style.getPropertyValue('--bg-canvas-slab').trim(); 
+            ctx.fillRect(surfaceX, 0, W-surfaceX, H);
+            
+            ctx.fillStyle = style.getPropertyValue('--grain-color').trim();
             let startAt = isElectrolytic ? surfaceX : (surfaceX + slabWidth);
             for (let i = startAt + 10; i < W; i += 5) {
                 for (let j = 0; j < H; j += 5) if (getGBDist(i, j) < 2.5) ctx.fillRect(i, j, 3, 3);
             }
-            if(!isElectrolytic) { ctx.fillStyle = '#000'; ctx.fillRect(surfaceX, 0, slabWidth, H); }
+            if(!isElectrolytic) { 
+                ctx.fillStyle = style.getPropertyValue('--bg-canvas-oxide').trim(); 
+                ctx.fillRect(surfaceX, 0, slabWidth, H); 
+            }
+            
             const therm = Math.pow((parseInt(tSlider.value)-300)/900, 2);
             const p = parseFloat(pSlider.value);
             if (heatMode && atoms.length === 0) {
@@ -399,6 +478,7 @@
                     toggleSliders(true);
                     heatModeBtn.classList.remove('active');
                     document.getElementById('status-text').innerText = "DESORPTION COMPLETE";
+                    document.getElementById('status-text').style.color = "#E10600";
                     pauseBtn.innerText = "Resume";
                     if (!isElectrolytic) isPaused = true; 
                 }
@@ -429,6 +509,7 @@
                 isPaused = false;
                 toggleSliders(false);
                 document.getElementById('status-text').innerText = "SYSTEM NOMINAL";
+                document.getElementById('status-text').style.color = "#0C6";
                 pauseBtn.innerText = "Pause";
                 return;
             }
@@ -436,6 +517,7 @@
             pauseBtn.innerText = isPaused ? "Resume" : "Pause";
             if (!isPaused) {
                 document.getElementById('status-text').innerText = "SYSTEM NOMINAL";
+                document.getElementById('status-text').style.color = "#0C6";
             }
         };
         resetBtn.onclick = init;
@@ -449,6 +531,7 @@
             pauseBtn.innerText = isPaused ? "Resume" : "Pause";
             heatModeBtn.classList.toggle('active'); 
             document.getElementById('status-text').innerText = heatMode ? "THERMAL DESORPTION" : "SYSTEM NOMINAL";
+            document.getElementById('status-text').style.color = heatMode ? "#cc0000" : "#0C6";
             updateMolecules(); 
         };
         pSlider.oninput = () => { if(!desorptionCompleteFlag) { updateLabels(); updateMolecules(); } };
