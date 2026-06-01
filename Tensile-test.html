@@ -7,18 +7,47 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
         
-        :root { --accent: #E10600; --panel: #0A0A0A; --border: #222; }
+        /* Theme Variables Configuration */
+        :root { 
+            --accent: #E10600; 
+            --panel: #0A0A0A; 
+            --border: #222; 
+            --bg-body: #050505;
+            --bg-canvas: #000000;
+            --text-main: #ffffff;
+            --text-label: #888888;
+            --text-brand: cyan;
+            --btn-reset: #222222;
+            --btn-reset-text: #ffffff;
+            --btn-toggle-bg: #1a1a1a;
+            --btn-toggle-border: #333333;
+        }
+
+        [data-theme="light"] {
+            --panel: #ffffff; 
+            --border: #dddddd; 
+            --bg-body: #f0f2f5;
+            --bg-canvas: #fdfdfd;
+            --text-main: #111111;
+            --text-label: #666666;
+            --text-brand: #007a8c; /* Dark teal variant for visibility over white backgrounds */
+            --btn-reset: #e0e0e0;
+            --btn-reset-text: #333333;
+            --btn-toggle-bg: #eaeaea;
+            --btn-toggle-border: #cccccc;
+        }
         
         body { 
             margin: 0; 
             padding: 0; 
-            background: #050505; 
+            background: var(--bg-body); 
             overflow: hidden; 
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             width: 100vw;
+            transition: background 0.3s ease;
         }
 
         #wrapper-div {
@@ -26,11 +55,12 @@
             width: 100%;
             max-width: 100vw;
             max-height: 100vh;
-            border: 1px solid #222;
-            background: #050505;
+            border: 1px solid var(--border);
+            background: var(--bg-body);
             position: relative;
             box-sizing: border-box;
             display: flex;
+            transition: border-color 0.3s ease, background 0.3s ease;
         }
 
         #sim-main { 
@@ -53,15 +83,17 @@
             display: flex; 
             flex-direction: column; 
             gap: 20px; 
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .canvas-area { 
             flex: 2; 
             position: relative; 
             border: 1px solid var(--border); 
-            background: #000; 
+            background: var(--bg-canvas); 
             border-radius: 4px; 
             overflow: hidden;
+            transition: border-color 0.3s ease, background 0.3s ease;
         }
 
         #three-canvas { width: 100%; height: 100%; display: block; }
@@ -72,11 +104,33 @@
             background: var(--panel); 
             border: 1px solid var(--border); 
             padding: 15px; 
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .readout { font-family: monospace; color: var(--accent); font-size: 18px; text-align: right; font-weight: 700; }
-        label { color: #888; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        label { color: var(--text-label); font-size: 11px; font-weight: 700; text-transform: uppercase; transition: color 0.3s ease; }
         input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+
+        #brand-title {
+            font-weight: 1000; 
+            color: var(--text-brand); 
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+        }
+
+        #theme-toggle {
+            padding: 8px;
+            background: var(--btn-toggle-bg);
+            color: var(--text-main);
+            border: 1px solid var(--btn-toggle-border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -86,7 +140,7 @@
 
     <div id="sim-main">
         <div class="sidebar">
-            <div style="font-weight: 1000; color: cyan; letter-spacing: 2px;">Process Dynamics Lab</div>
+            <div id="brand-title">Process Dynamics Lab</div>
             
             <div class="control-group">
                 <label>Hydrogen Content</label>
@@ -101,8 +155,10 @@
             </div>
 
             <button id="run-btn" style="padding: 10px; background: #E10600; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight:bold;">RUN</button>
-            <button onclick="window.resetSim()" style="padding: 10px; background: #222; color: white; border: none; cursor: pointer; border-radius: 4px; margin-top:5px;">RESET</button>
+            <button onclick="window.resetSim()" style="padding: 10px; background: var(--btn-reset); color: var(--btn-reset-text); border: none; cursor: pointer; border-radius: 4px; margin-top:5px; transition: background 0.3s ease, color 0.3s ease;">RESET</button>
             
+            <button id="theme-toggle">Toggle Theme</button>
+
             <div style="margin-top:auto">
                 <label>Tensile Stress (MPa)</label>
                 <div class="readout" id="stress-val">0</div>
@@ -142,13 +198,13 @@
 
             let hParticles = [];
             const hGeo = new THREE.SphereGeometry(5.5, 32, 32); 
-            const hMat = new THREE.MeshPhysicalMaterial({ color: 0x770000, roughness: 0.2, emissive: 0x220000 });
+            const hMat = new THREE.MeshPhysicalMaterial({ color: 0xaa0000, roughness: 0.2, emissive: 0x220000 });
             let lastHValue = 10;
 
             const canvas = document.getElementById('three-canvas');
             const container = canvas.parentElement;
 
-            renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.toneMapping = THREE.ReinhardToneMapping;
             
@@ -157,7 +213,9 @@
             camera.position.copy(baseCameraPos);
             camera.lookAt(0, 0, 0);
 
-            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
             const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
             keyLight.position.set(200, 300, 400);
             scene.add(keyLight);
@@ -200,10 +258,11 @@
             window.addEventListener('resize', onWindowResize);
             onWindowResize();
 
+            // Chart Initialization with Adaptive Parameters
             const ctx = document.getElementById('stress-chart').getContext('2d');
             const chart = new Chart(ctx, {
                 type: 'line',
-                data: { datasets: [{ data: [], borderColor: 'cyan', borderWidth: 2, pointRadius: 0, fill: false }] },
+                data: { datasets: [{ data: [], borderColor: '#00e5ff', borderWidth: 2, pointRadius: 0, fill: false }] },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     scales: {
@@ -256,6 +315,45 @@
 
             function animate() {
                 requestAnimationFrame(animate);
+
+                // Runtime Theme Parameter Sync Loop
+                const isLightMode = document.documentElement.getAttribute('data-theme') === 'light';
+                
+                // Sync WebGL Engine Context Colors
+                if (isLightMode) {
+                    renderer.setClearColor(0xfdfdfd, 1);
+                    ambientLight.intensity = 1.0;
+                    keyLight.intensity = 1.4;
+                    metalMat.color.setHex(0x777777);
+                    metalMat.specular.setHex(0x888888);
+                    hMat.color.setHex(0xff1111); // Pop particle vibrant red against white background
+                    hMat.emissive.setHex(0x550000);
+                } else {
+                    renderer.setClearColor(0x000000, 0);
+                    ambientLight.intensity = 0.6;
+                    keyLight.intensity = 1.2;
+                    metalMat.color.setHex(0x999999);
+                    metalMat.specular.setHex(0x444444);
+                    hMat.color.setHex(0xaa0000);
+                    hMat.emissive.setHex(0x220000);
+                }
+
+                // Sync Chart Object Settings
+                const targetChartColor = isLightMode ? '#007a8c' : '#00e5ff';
+                const targetGridColor = isLightMode ? '#e2e8f0' : '#222222';
+                const targetLabelColor = isLightMode ? '#666666' : '#888888';
+
+                if (chart.data.datasets[0].borderColor !== targetChartColor || chart.options.scales.x.grid.color !== targetGridColor) {
+                    chart.data.datasets[0].borderColor = targetChartColor;
+                    chart.options.scales.x.grid.color = targetGridColor;
+                    chart.options.scales.y.grid.color = targetGridColor;
+                    chart.options.scales.x.title.color = targetLabelColor;
+                    chart.options.scales.y.title.color = targetLabelColor;
+                    chart.options.scales.x.ticks.color = targetLabelColor;
+                    chart.options.scales.y.ticks.color = targetLabelColor;
+                    chart.update('none');
+                }
+
                 if (isRunning && !isFractured) {
                     currentStrain += 0.1;
                     document.getElementById('strain-slider').value = currentStrain;
@@ -310,6 +408,15 @@
                     currentStrain = parseFloat(e.target.value);
                     chart.data.datasets[0].data = chart.data.datasets[0].data.filter(p => p.x <= currentStrain);
                     updatePhysics(currentStrain);
+                }
+            };
+
+            // Toggle Button Handler Configuration
+            document.getElementById('theme-toggle').onclick = () => {
+                if (document.documentElement.getAttribute('data-theme') === 'light') {
+                    document.documentElement.removeAttribute('data-theme');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
                 }
             };
         }
