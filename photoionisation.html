@@ -19,6 +19,7 @@
             --border-status-top: #222;
             --toggle-btn-bg: #222;
             --toggle-btn-text: #fff;
+            --text-brand: #00e5ff; /* Cyan brand text for dark mode */
         }
 
         [data-theme="light"] {
@@ -34,6 +35,7 @@
             --border-status-top: #dddddd;
             --toggle-btn-bg: #e0e0e0;
             --toggle-btn-text: #333;
+            --text-brand: #007b99; /* Deepened dark cyan for readability on light sidebar */
         }
 
         body {
@@ -50,6 +52,7 @@
         #simulation-container { background-color: var(--bg-container) !important; border-color: var(--border-container) !important; transition: all 0.3s ease; }
         #sim-viewport { background: var(--bg-viewport) !important; border-color: var(--border-viewport) !important; transition: all 0.3s ease; }
         #sidebar { background: var(--bg-sidebar) !important; border-right-color: var(--border-sidebar) !important; color: var(--text-sidebar) !important; transition: all 0.3s ease; }
+        #brand-title { color: var(--text-brand) !important; transition: all 0.3s ease; }
         #status-divider { border-top-color: var(--border-status-top) !important; transition: all 0.3s ease; }
         #status-title { color: var(--text-status-title) !important; transition: all 0.3s ease; }
     </style>
@@ -59,7 +62,7 @@
 <div id="simulation-container" style="background-color: #050505; padding: 15px; border: 1px solid #222; border-radius: 8px; font-family: 'Inter', sans-serif; width: 90vw; max-width: 1000px;">
 <div id="sim-viewport" style="background: #000; width: 100%; height: 550px; position: relative; overflow: hidden; display: flex; border: 1px solid #333;">
     <div id="sidebar" style="width: 240px; background: rgba(10, 10, 10, 0.9); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 20px; z-index: 20; color: white;">
-        <div style="font-size: 14px; font-weight: 900; color: #00e5ff; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1.5px;">Process Dynamics Lab</div>
+        <div id="brand-title" style="font-size: 14px; font-weight: 900; color: #00e5ff; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1.5px;">Process Dynamics Lab</div>
         
         <div style="flex-grow: 1;">
             <button style="margin-bottom: 10px; padding: 12px; background: #E10600; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; font-size: 10px;" onclick="triggerInteraction('eject')">Photoionization</button>
@@ -195,6 +198,26 @@
         cloud.rotation.y += 0.005;
         excitedCloud.rotation.y -= 0.005;
 
+        // Dynamic theme-safety parameters inside the animation loop
+        const isLightMode = document.documentElement.getAttribute('data-theme') === 'light';
+        
+        // 1. Adjust material properties depending on theme context
+        if (isLightMode) {
+            cloudMat.blending = THREE.NormalBlending;
+            cloudMat.color.setHex(0x008fa3); // Darker cyan for high contrast
+            excitedMat.blending = THREE.NormalBlending;
+            excitedMat.color.setHex(0xcc00cc); // Darker magenta
+            eMat.emissiveIntensity = 1; // Subdue emissive blinding glow on white
+            eMat.color.setHex(0x008fa3);
+        } else {
+            cloudMat.blending = THREE.AdditiveBlending;
+            cloudMat.color.setHex(0x00e5ff); // Default bright vibrant cyan
+            excitedMat.blending = THREE.AdditiveBlending;
+            excitedMat.color.setHex(0xff00ff); 
+            eMat.emissiveIntensity = 5;
+            eMat.color.setHex(0x00ffff);
+        }
+
         let proximity = 0;
         if (sim.active) proximity = Math.max(0, 1 - (Math.abs(sim.progress) / orbitalRadius));
 
@@ -235,7 +258,8 @@
                 if (axis.length() < 0.1) axis = new THREE.Vector3(0, 0, 1);
                 p.position.addScaledVector(axis, Math.sin(step * 1.5 + time * 20) * 0.8 * envelope);
                 
-                p.material.opacity = envelope * 0.45; 
+                p.material.blending = isLightMode ? THREE.NormalBlending : THREE.AdditiveBlending;
+                p.material.opacity = envelope * (isLightMode ? 0.8 : 0.45); 
             });
             
             if(sim.outboundProgress - (packetSpread / 2) > 80) {
@@ -255,11 +279,12 @@
                 let envelope = Math.exp(-Math.pow(offset, 2) / 40);
                 p.position.copy(travelDir).multiplyScalar(step);
                 p.position.y += Math.sin(step * 1.5 + time * 20) * 3 * envelope;
-                p.material.opacity = envelope * 0.6; 
+                p.material.blending = isLightMode ? THREE.NormalBlending : THREE.AdditiveBlending;
+                p.material.opacity = envelope * (isLightMode ? 0.9 : 0.6); 
             });
 
             if (headPos > -orbitalRadius && tailPos < orbitalRadius) {
-                cloud.material.color.setHex(0xffdd00); 
+                cloud.material.color.setHex(isLightMode ? 0xd4a373 : 0xffdd00); // Earthier yellow for high visibility if in Light Mode
                 let dilationAmt = 0.25;
                 let shakeIntensity = 0.5;
                 if (sim.mode === 'transmit') { dilationAmt = 0.04; shakeIntensity = 0.1; }
@@ -277,7 +302,7 @@
                 if (sim.progress >= -1) {
                     if (sim.mode === 'eject' && electrons[0].active) {
                         sim.active = false; sim.progress = -1000; inboundPhoton.group.visible = false;
-                        cloud.material.color.setHex(0x00e5ff); cloud.scale.setScalar(1.0);
+                        cloud.material.color.setHex(isLightMode ? 0x008fa3 : 0x00e5ff); cloud.scale.setScalar(1.0);
                         cloud.position.set(0,0,0); nucleus.position.set(0,0,0);
                         electrons[0].active = false; electrons[0].group.visible = false;
                         sim.ejectedE = electrons[0].group.clone();
@@ -291,7 +316,7 @@
                         sim.active = false; sim.mode = 'excited'; inboundPhoton.group.visible = false;
                         statusEl.innerText = "EXCITED STATE";
                         excitedCloud.material.opacity = 0.9;
-                        cloud.material.color.setHex(0x00e5ff); cloud.scale.setScalar(1.0);
+                        cloud.material.color.setHex(isLightMode ? 0x008fa3 : 0x00e5ff); cloud.scale.setScalar(1.0);
                         cloud.position.set(0,0,0); nucleus.position.set(0,0,0);
                         
                         setTimeout(() => { excitedCloud.material.opacity = 0; }, 2550); 
@@ -313,7 +338,7 @@
                 }
             } else {
                 if(sim.mode !== 'excited') {
-                    cloud.material.color.setHex(0x00e5ff); cloud.scale.setScalar(1.0);
+                    cloud.material.color.setHex(isLightMode ? 0x008fa3 : 0x00e5ff); cloud.scale.setScalar(1.0);
                     cloud.position.set(0,0,0); nucleus.position.set(0,0,0);
                 }
             }
