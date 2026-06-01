@@ -5,57 +5,109 @@
     <title>Zr-H BCC Tetrahedral EXAFS Dynamics</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        /* Universal Theme Matrix Engine */
+        :root {
+            --bg-body: #000000;
+            --bg-container: #000000;
+            --bg-panel: #0d0d0d;
+            --bg-canvas: #000000;
+            --border-panel: #333333;
+            --border-control: #444444;
+            --text-main: #eeeeee;
+            --text-label: #ffffff;
+            --text-stat-lbl: #aaaaaa;
+            --btn-bg: #222222;
+            --btn-hover-bg: #ffffff;
+            --btn-hover-text: #000000;
+            --slider-bg: #333333;
+            --slider-thumb: #ffffff;
+            --overlay-bg: rgba(0,0,0,0.9);
+            --particle-trail: 0, 229, 255;
+            
+            /* Atomic Visual Profiles */
+            --zr-l-offset: 0;
+            --stroke-alpha: 0.1;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f0f2f5;
+            --bg-container: #ffffff;
+            --bg-panel: #f8fafc;
+            --bg-canvas: #ffffff;
+            --border-panel: #cbd5e1;
+            --border-control: #cbd5e1;
+            --text-main: #1e293b;
+            --text-label: #0f172a;
+            --text-stat-lbl: #64748b;
+            --btn-bg: #e2e8f0;
+            --btn-hover-bg: #0f172a;
+            --btn-hover-text: #ffffff;
+            --slider-bg: #cbd5e1;
+            --slider-thumb: #0f172a;
+            --overlay-bg: rgba(255,255,255,0.95);
+            --particle-trail: 0, 140, 180;
+            
+            --zr-l-offset: 20;
+            --stroke-alpha: 0.25;
+        }
        
         body {
-            margin:0; padding:0; background:#000; overflow:hidden;
-            font-family: 'Inter', sans-serif; color: #eee; user-select: none;
+            margin:0; padding:0; background: var(--bg-body); overflow:hidden;
+            font-family: 'Inter', sans-serif; color: var(--text-main); user-select: none;
             width: 100vw; height: 100vh;
+            transition: background 0.3s ease;
         }
-        #container { display: flex; flex-direction: row; width: 100%; height: 100%; background: #000; }
+        #container { display: flex; flex-direction: row; width: 100%; height: 100%; background: var(--bg-container); transition: background 0.3s ease; }
         #ui-panel {
             width: 170px; min-width: 170px; height: 100%;
-            background: #0d0d0d; border-right: 2px solid #333;
+            background: var(--bg-panel); border-right: 2px solid var(--border-panel);
             padding: 10px; display: flex; flex-direction: column;
             gap: 8px; box-sizing: border-box; z-index: 100;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
-        #c { flex-grow: 1; height: 100%; display: block; background: #000; }
+        #c { flex-grow: 1; height: 100%; display: block; background: var(--bg-canvas); }
         #overlay {
             position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.9); z-index: 1001;
+            background: var(--overlay-bg); z-index: 1001;
             display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
         }
         .control { display: flex; flex-direction: column; gap: 2px; width: 100%; }
-        .control label { font-size: 7.5px; color: #ffffff; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
+        .control label { font-size: 7.5px; color: var(--text-label); font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
        
-        .legend { margin-top: 5px; padding-top: 5px; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 4px; }
-        .stat-item { font-size: 8px; font-weight: 900; text-transform: uppercase; color: #aaa; }
-        .stat-val { color: #eee; float: right; }
-        #abs-val { color: #00ff66; }
+        .legend { margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--border-panel); display: flex; flex-direction: column; gap: 4px; }
+        .stat-item { font-size: 8px; font-weight: 900; text-transform: uppercase; color: var(--text-stat-lbl); }
+        .stat-val { color: var(--text-main); float: right; }
+        #abs-val { color: #00aa44; }
+        [data-theme="dark"] #abs-val { color: #00ff66; }
         #h-val { color: #ff4444; }
-        button#play-pause {
-            background: #222; color: #ffffff; border: 1px solid #ffffff; padding: 6px; width: 100%;
-            cursor: pointer; font-size: 14px; transition: all 0.2s; border-radius: 4px;
+
+        button.ui-action-btn {
+            background: var(--btn-bg); color: var(--text-main); border: 1px solid var(--text-main); padding: 6px; width: 100%;
+            cursor: pointer; font-size: 11px; font-weight: 700; transition: all 0.2s; border-radius: 4px;
         }
-        button#play-pause:hover { background: #ffffff; color: #000; }
-        select { background: #222; color: #eee; border: 1px solid #444; font-size: 8px; padding: 2px; border-radius: 3px; width: 100%; }
-        input[type=range] { appearance: none; background: #333; height: 2px; width: 100%; margin: 4px 0; }
+        button.ui-action-btn:hover { background: var(--btn-hover-bg); color: var(--btn-hover-text); }
+        
+        select { background: var(--btn-bg); color: var(--text-main); border: 1px solid var(--border-control); font-size: 8px; padding: 2px; border-radius: 3px; width: 100%; outline: none; }
+        input[type=range] { appearance: none; background: var(--slider-bg); height: 2px; width: 100%; margin: 4px 0; }
         input[type=range]::-webkit-slider-thumb {
-            appearance: none; width: 10px; height: 10px; background: #ffffff;
-            cursor: pointer; border-radius: 50%; box-shadow: 0 0 5px rgba(255,255,255,0.3);
+            appearance: none; width: 10px; height: 10px; background: var(--slider-thumb);
+            cursor: pointer; border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.2);
         }
        
         .audio-toggles { display: flex; flex-direction: row; flex-wrap: wrap; gap: 6px; }
-        .audio-toggles label { font-size: 7px; color: #ccc; display: flex; align-items: center; gap: 2px; cursor: pointer;}
+        .audio-toggles label { font-size: 7px; color: var(--text-stat-lbl); display: flex; align-items: center; gap: 2px; cursor: pointer;}
     </style>
 </head>
 <body>
     <div id="overlay" onclick="startSim()">
-        <h2 style="font-weight:900; color:#ffffff; letter-spacing:5px;">INITIALIZE</h2>
+        <h2 id="overlay-title" style="font-weight:900; color:#ffffff; letter-spacing:5px;">INITIALIZE</h2>
         <p style="font-size:10px; color:#777;">CLICK TO START</p>
     </div>
     <div id="container">
         <div id="ui-panel">
-            <button id="play-pause" onclick="togglePause()">⏯</button>
+            <button id="play-pause" class="ui-action-btn" onclick="togglePause()">⏯ PAUSE</button>
+            <button id="theme-toggle" class="ui-action-btn" style="font-size: 8px; padding: 4px;" onclick="toggleTheme()">Light/Dark Mode</button>
            
             <div class="control">
                 <label>Flux</label>
@@ -102,6 +154,21 @@
         const PX_PER_ANG = 45;
         const A = 3.23;                    // Zr BCC lattice parameter (Å)
         const BCC_SPACING = A * PX_PER_ANG; // horizontal/vertical spacing for square projection
+
+        // Synchronize startup configuration ruleset
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('overlay-title').style.color = '#000000';
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        }
 
         function startSim() {
             if (started) return;
@@ -159,10 +226,7 @@
             }
 
             // Tetrahedral interstitial sites in BCC (2D projection)
-            // These are offset positions surrounded by 4 Zr atoms (forming tetrahedra)
             tempZr.forEach(zr => {
-                // For each Zr, add possible tetrahedral H sites in the local cell
-                // Typical BCC tetrahedral offsets (scaled): approx. (0.25, 0.5), (0.5, 0.25), etc. relative to cell
                 const offsets = [
                     {dx: 0.25 * BCC_SPACING, dy: 0.50 * BCC_SPACING},
                     {dx: 0.50 * BCC_SPACING, dy: 0.25 * BCC_SPACING},
@@ -180,26 +244,25 @@
                 });
             });
 
-            // Optional: light relaxation (push Zr slightly away from nearby H for visual clarity)
+            // Light atomic layout structural relaxation 
             tempZr.forEach(zr => {
                 let dx_total = 0, dy_total = 0;
                 hAtoms.forEach(h => {
                     const dx = zr.x - h.x, dy = zr.y - h.y, dist = Math.hypot(dx, dy);
                     const forceRange = BCC_SPACING * 0.8;
                     if (dist < forceRange && dist > 0) {
-                        const strength = (1 - dist/forceRange) * 8;   // gentler than original
+                        const strength = (1 - dist/forceRange) * 8;   
                         dx_total += (dx/dist) * strength;
                         dy_total += (dy/dist) * strength;
                     }
                 });
-                zr.x += dx_total * 0.3;   // reduced strength for stability
+                zr.x += dx_total * 0.3;   
                 zr.y += dy_total * 0.3;
                 zr.baseX = zr.x; zr.baseY = zr.y;
             });
 
             atoms = tempZr;
 
-            // Find central emitter
             emitter = atoms.reduce((p, c) => Math.hypot(c.x-cx, c.y-cy) < Math.hypot(p.x-cx, p.y-cy) ? c : p);
             if(emitter) emitter.isEmitter = true;
 
@@ -207,9 +270,6 @@
             document.getElementById('h-val').textContent = hAtoms.length;
         }
 
-        /**
-         * UPDATED: Audio logic synchronized with the Fe simulation
-         */
         function playSound(freq, type, decay, vol, toggleId) {
             if (!audioCtx || !document.getElementById(toggleId).checked) return;
             try {
@@ -229,7 +289,7 @@
             frame++;
             [...atoms, ...hAtoms].forEach(a => a.updateVibe());
             const interval = emitMode === 'pulse' ? Math.max(1, Math.floor(61 - emitFreq)) : 2;
-           
+            
             if (frame % interval === 0 && emitter) {
                 const angle = Math.random() * Math.PI * 2;
                 particles.push({
@@ -261,7 +321,7 @@
                         }
                     }
                 }
-               
+                
                 if (p.intensity < 0.01 || p.x < -50 || p.x > canvas.width + 50 || p.y < -50 || p.y > canvas.height + 50) {
                     particles.splice(i, 1);
                 } else if (p.b > 0 && Math.hypot(p.x - emitter.x, p.y - emitter.y) < emitter.r + 5) {
@@ -277,8 +337,15 @@
         function draw() {
             if (!started) return;
             const dpr = window.devicePixelRatio || 1;
-            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width/dpr, canvas.height/dpr);
-           
+            const sysStyles = getComputedStyle(document.body);
+            
+            ctx.fillStyle = sysStyles.getPropertyValue('--bg-canvas').trim(); 
+            ctx.fillRect(0, 0, canvas.width/dpr, canvas.height/dpr);
+            
+            const zrL = parseInt(sysStyles.getPropertyValue('--zr-l-offset').trim());
+            const sAlpha = sysStyles.getPropertyValue('--stroke-alpha').trim();
+            const trailRGB = sysStyles.getPropertyValue('--particle-trail').trim();
+
             [...atoms, ...hAtoms].forEach(a => {
                 const isHit = frame - a.hitTime < 10;
                 const tx = a.x + a.vibeX, ty = a.y + a.vibeY;
@@ -286,15 +353,19 @@
                 const g = ctx.createRadialGradient(tx - a.r*0.3, ty - a.r*0.3, a.r*0.1, tx, ty, a.r);
                
                 if (a.type === 'Zr') {
-                    g.addColorStop(0, isHit ? '#fff' : '#c387ff');
-                    g.addColorStop(0.4, isHit ? '#9d4edd' : '#5a189a');
-                    g.addColorStop(1, '#10002b');
+                    // Adapt violet hues smoothly for both background weight structures
+                    g.addColorStop(0, isHit ? '#ffffff' : `hsl(${270 - (zrL*0.5)}, 75%, ${75 + (zrL*0.2)}%)`);
+                    g.addColorStop(0.4, isHit ? '#9d4edd' : `hsl(270, 70%, ${35 + zrL}%)`);
+                    g.addColorStop(1, `hsl(260, 80%, ${8 + (zrL*0.5)}%)`);
                 } else {
                     g.addColorStop(0, isHit ? '#ffffff' : '#ff4d4d');
                     g.addColorStop(1, '#330000');
                 }
                 ctx.fillStyle = g; ctx.fill();
-                ctx.strokeStyle = a.isEmitter ? '#00e5ff' : 'rgba(255,255,255,0.1)';
+                ctx.strokeStyle = a.isEmitter ? '#00e5ff' : `rgba(0,0,0,${sAlpha})`;
+                if (!a.isEmitter && document.documentElement.getAttribute('data-theme') !== 'light') {
+                    ctx.strokeStyle = `rgba(255,255,255,${sAlpha})`;
+                }
                 ctx.lineWidth = a.isEmitter ? 2 : 0.5; ctx.stroke();
             });
 
@@ -304,18 +375,22 @@
                         const ratio = 1 - (j / p.history.length);
                         ctx.beginPath(); ctx.moveTo(p.history[j].x, p.history[j].y);
                         ctx.lineTo(p.history[j+1].x, p.history[j+1].y);
-                        ctx.strokeStyle = `rgba(0, 229, 255, ${p.intensity * ratio * 0.4})`;
+                        ctx.strokeStyle = `rgba(${trailRGB}, ${p.intensity * ratio * 0.4})`;
                         ctx.lineWidth = particleBaseR * ratio; ctx.stroke();
                     }
                 }
                 ctx.beginPath(); ctx.arc(p.x, p.y, (particleBaseR/2) * p.intensity, 0, Math.PI*2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${p.intensity})`; ctx.fill();
+                ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'light'
+                    ? `rgba(0, 90, 120, ${p.intensity})`
+                    : `rgba(255, 255, 255, ${p.intensity})`;
+                ctx.fill();
             });
             update(); requestAnimationFrame(draw);
         }
 
         function togglePause() {
             isPaused = !isPaused;
+            document.getElementById('play-pause').innerText = isPaused ? "▶ RESUME" : "⏯ PAUSE";
             if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
         }
 
@@ -325,6 +400,7 @@
             const dpr = window.devicePixelRatio || 1;
             canvas.width = (window.innerWidth - 170) * dpr;
             canvas.height = window.innerHeight * dpr;
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.scale(dpr, dpr);
             generateLattice();
         }
