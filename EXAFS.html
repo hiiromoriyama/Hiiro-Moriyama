@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EXAFS Interference Slider</title>
+  <style>
+    :root {
+      --bg-body: #000;
+      --bg-container: #050505;
+      --border-container: #222;
+      --bg-viewport: #000;
+      --border-viewport: #333;
+      --bg-sidebar: rgba(10, 10, 10, 0.9);
+      --border-sidebar: #333;
+      --text-sidebar: #fff;
+      --text-status-title: #888;
+      --border-status-top: #222;
+      --toggle-btn-bg: #222;
+      --toggle-btn-text: #fff;
+      --text-brand: #fff;
+      --control-bg: #000;
+      --control-border: #444;
+      --control-fg: #fff;
+      --control-accent: #fff;
+      --canvas-bg: #000;
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f0f2f5;
+      --bg-container: #fff;
+      --border-container: #ddd;
+      --bg-viewport: #fdfdfd;
+      --border-viewport: #ccc;
+      --bg-sidebar: rgba(245, 245, 245, 0.95);
+      --border-sidebar: #ddd;
+      --text-sidebar: #222;
+      --text-status-title: #777;
+      --border-status-top: #ddd;
+      --toggle-btn-bg: #e0e0e0;
+      --toggle-btn-text: #111;
+      --text-brand: #111;
+      --control-bg: #fff;
+      --control-border: #bdbdbd;
+      --control-fg: #111;
+      --control-accent: #111;
+      --canvas-bg: #fff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg-body);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+      font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      transition: background-color 0.3s ease;
+    }
+
+    #simulation-container {
+      background-color: var(--bg-container) !important;
+      border: 1px solid var(--border-container) !important;
+      border-radius: 8px;
+      width: 96vw;
+      max-width: 1650px;
+      padding: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    #sim-viewport {
+      background: var(--bg-viewport) !important;
+      border: 1px solid var(--border-viewport) !important;
+      display: flex;
+      width: 100%;
+      height: min(84vh, 900px);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    #sidebar {
+      width: 260px;
+      background: var(--bg-sidebar) !important;
+      border-right: 1px solid var(--border-sidebar) !important;
+      color: var(--text-sidebar) !important;
+      display: flex;
+      flex-direction: column;
+      padding: 18px;
+      gap: 14px;
+      transition: all 0.3s ease;
+    }
+
+    #brand-title {
+      color: var(--text-brand) !important;
+      transition: all 0.3s ease;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .control-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--control-accent);
+      cursor: pointer;
+    }
+
+    .badge {
+      display: inline-block;
+      min-width: 110px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.4px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--control-border);
+      color: var(--control-fg);
+      background: var(--control-bg);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .action-btn {
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 800;
+      width: 100%;
+      text-transform: uppercase;
+      font-size: 11px;
+      border: 1px solid var(--control-border);
+      background: var(--control-bg);
+      color: var(--control-fg);
+    }
+
+    #theme-toggle {
+      padding: 8px;
+      background: var(--toggle-btn-bg);
+      color: var(--toggle-btn-text);
+      border: 1px solid var(--border-viewport);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    #status-divider {
+      border-top: 1px solid var(--border-status-top) !important;
+      padding-top: 12px;
+      transition: all 0.3s ease;
+      margin-top: auto;
+    }
+
+    #status-title {
+      color: var(--text-status-title) !important;
+      transition: all 0.3s ease;
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    #sim-status {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      color: var(--text-sidebar);
+    }
+
+    #canvas-target {
+      flex-grow: 1;
+      position: relative;
+      min-width: 0;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: var(--canvas-bg);
+    }
+
+    @media (max-width: 980px) {
+      #sim-viewport {
+        height: auto;
+        min-height: 680px;
+        flex-direction: column;
+      }
+
+      #sidebar {
+        width: 100%;
+        border-right: 0;
+        border-bottom: 1px solid var(--border-sidebar) !important;
+      }
+
+      #canvas-target {
+        height: 520px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="simulation-container">
+  <div id="sim-viewport">
+    <div id="sidebar">
+      <div id="brand-title">EXAFS Interference Lab</div>
+
+      <div>
+        <div class="control-label">hν / normalized energy</div>
+        <input id="hvSlider" type="range" min="0.00390625" max="1" step="0.00390625" value="0.00390625">
+      </div>
+
+      <output id="hvValue" class="badge">hν = 0.004</output>
+      <button id="playBtn" class="action-btn" type="button">Play</button>
+      <button id="theme-toggle" type="button">Light/Dark Mode</button>
+
+      <div id="status-divider">
+        <div id="status-title">Status</div>
+        <div id="sim-status">SYSTEM READY</div>
+      </div>
+    </div>
+
+    <div id="canvas-target">
+      <canvas id="scene" width="1920" height="1080" aria-label="EXAFS interference interactive scene"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById("scene");
+  const ctx = canvas.getContext("2d");
+  const slider = document.getElementById("hvSlider");
+  const hvValue = document.getElementById("hvValue");
+  const playBtn = document.getElementById("playBtn");
+  const statusEl = document.getElementById("sim-status");
+  const themeToggle = document.getElementById("theme-toggle");
+
+  const state = {
+    hv: Number(slider.value),
+    playing: false
+  };
+
+  const model = {
+    xMin: -20,
+    xMax: 45,
+    yMin: -32,
+    yMax: 24
+  };
+
+  let theme = null;
+
+  function isLightMode() {
+    return document.documentElement.getAttribute("data-theme") === "light";
+  }
+
+  function getThemePalette() {
+    if (isLightMode()) {
+      return {
+        ink: "#111",
+        grid: "#666",
+        canvasBg: "#fff",
+        potential: "#111",
+        outline: "#fff",
+        atomOutline: "#111"
+      };
+    }
+    return {
+      ink: "#f2f2f2",
+      grid: "#868686",
+      canvasBg: "#000",
+      potential: "#f2f2f2",
+      outline: "#000",
+      atomOutline: "#e8e8e8"
+    };
+  }
+
+  function mapX(x) {
+    return ((x - model.xMin) / (model.xMax - model.xMin)) * canvas.width;
+  }
+
+  function mapY(y) {
+    return canvas.height - ((y - model.yMin) / (model.yMax - model.yMin)) * canvas.height;
+  }
+
+  function drawCurve(func, xStart, xEnd, step, style = {}) {
+    ctx.save();
+    if (style.dashed) {
+      ctx.setLineDash(style.dashed);
+    } else {
+      ctx.setLineDash([]);
+    }
+    ctx.lineWidth = style.width || 2;
+    ctx.strokeStyle = style.stroke || theme.ink;
+    ctx.beginPath();
+    let started = false;
+    for (let x = xStart; x <= xEnd + 1e-9; x += step) {
+      const y = func(x);
+      const px = mapX(x);
+      const py = mapY(y);
+      if (!Number.isFinite(y)) {
+        started = false;
+        continue;
+      }
+      if (!started) {
+        ctx.moveTo(px, py);
+        started = true;
+      } else {
+        ctx.lineTo(px, py);
+      }
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawLine(x1, y1, x2, y2, style = {}) {
+    ctx.save();
+    if (style.dashed) {
+      ctx.setLineDash(style.dashed);
+    } else {
+      ctx.setLineDash([]);
+    }
+    ctx.strokeStyle = style.stroke || theme.ink;
+    ctx.lineWidth = style.width || 1.5;
+    ctx.beginPath();
+    ctx.moveTo(mapX(x1), mapY(y1));
+    ctx.lineTo(mapX(x2), mapY(y2));
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawText(txt, x, y, size = 22, align = "left", options = {}) {
+    const color = options.color || theme.ink;
+    const weight = options.weight || 400;
+    const stroke = options.stroke || null;
+    const strokeWidth = options.strokeWidth || 2.5;
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.font = `${weight} ${size}px "Avenir Next", "Helvetica Neue", sans-serif`;
+    ctx.textAlign = align;
+    ctx.textBaseline = "middle";
+    if (stroke) {
+      ctx.lineWidth = strokeWidth;
+      ctx.strokeStyle = stroke;
+      ctx.strokeText(txt, mapX(x), mapY(y));
+    }
+    ctx.fillText(txt, mapX(x), mapY(y));
+    ctx.restore();
+  }
+
+  function drawParametricCurve(xFunc, yFunc, tStart, tEnd, step, style = {}) {
+    ctx.save();
+    ctx.setLineDash(style.dashed || []);
+    ctx.lineWidth = style.width || 2;
+    ctx.strokeStyle = style.stroke || theme.ink;
+    ctx.beginPath();
+    let started = false;
+    for (let t = tStart; t <= tEnd + 1e-9; t += step) {
+      const x = xFunc(t);
+      const y = yFunc(t);
+      if (!Number.isFinite(x) || !Number.isFinite(y)) {
+        started = false;
+        continue;
+      }
+      const px = mapX(x);
+      const py = mapY(y);
+      if (!started) {
+        ctx.moveTo(px, py);
+        started = true;
+      } else {
+        ctx.lineTo(px, py);
+      }
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawPotentials() {
+    const color = theme.potential;
+    const y1 = (x) => -0.02 * Math.exp(0.7 * x);
+    const tStart = -5;
+    const tEnd = 10;
+    const dt = 0.03;
+
+    drawParametricCurve((t) => t - 10.5, y1, tStart, tEnd, dt, { stroke: color, width: 3.8 });
+    drawParametricCurve((t) => -t + 10.5, y1, tStart, tEnd, dt, { stroke: color, width: 3.8 });
+    drawParametricCurve((t) => -t + 40.5, y1, tStart, tEnd, dt, { stroke: color, width: 3.8 });
+    drawParametricCurve((t) => t + 19.5, y1, tStart, tEnd, dt, { stroke: color, width: 3.8 });
+  }
+
+  function drawGroundState(xCenter) {
+    drawCurve((x) => 4 * Math.exp(-Math.pow(x - xCenter, 2)) - 20, xCenter - 2.5, xCenter + 2.5, 0.02, {
+      stroke: theme.ink,
+      width: 2.6
+    });
+    drawLine(xCenter - 2.5, -20, xCenter + 2.5, -20, { stroke: theme.ink, width: 1.2 });
+  }
+
+  function drawAtom(cx, cy, r, hueA, hueB) {
+    const px = mapX(cx);
+    const py = mapY(cy);
+    const pr = (mapX(cx + r) - mapX(cx));
+    const gradient = ctx.createRadialGradient(px - pr * 0.3, py - pr * 0.3, pr * 0.15, px, py, pr);
+    gradient.addColorStop(0, hueA);
+    gradient.addColorStop(1, hueB);
+    ctx.save();
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(px, py, pr, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.lineWidth = 1.3;
+    ctx.strokeStyle = theme.atomOutline;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawFilledPolygon(points, color) {
+    if (!points.length) {
+      return;
+    }
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(mapX(points[0].x), mapY(points[0].y));
+    for (let i = 1; i < points.length; i += 1) {
+      ctx.lineTo(mapX(points[i].x), mapY(points[i].y));
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function rotatePoint(point, angleRad, pivot) {
+    const dx = point.x - pivot.x;
+    const dy = point.y - pivot.y;
+    return {
+      x: pivot.x + dx * Math.cos(angleRad) - dy * Math.sin(angleRad),
+      y: pivot.y + dx * Math.sin(angleRad) + dy * Math.cos(angleRad)
+    };
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function exafsColorFromT(t) {
+    const stops = [
+      { t: 0.0, c: [255, 0, 0] },
+      { t: 0.33, c: [255, 255, 0] },
+      { t: 0.66, c: [0, 255, 0] },
+      { t: 1.0, c: [0, 0, 255] }
+    ];
+    const tc = Math.max(0, Math.min(1, t));
+    for (let i = 0; i < stops.length - 1; i += 1) {
+      const a = stops[i];
+      const b = stops[i + 1];
+      if (tc >= a.t && tc <= b.t) {
+        const u = (tc - a.t) / (b.t - a.t || 1);
+        const r = Math.round(lerp(a.c[0], b.c[0], u));
+        const g = Math.round(lerp(a.c[1], b.c[1], u));
+        const bch = Math.round(lerp(a.c[2], b.c[2], u));
+        return `rgb(${r}, ${g}, ${bch})`;
+      }
+    }
+    return "rgb(255,0,0)";
+  }
+
+  function interferenceColor(hv) {
+    const minHv = 1 / 256;
+    const t = (hv - minHv) / (1 - minHv);
+    return exafsColorFromT(t);
+  }
+
+  function drawPhotonWave(hv) {
+    const angle = -Math.PI / 4;
+    const pivot = { x: -4 * Math.PI, y: -8 };
+    const points = [];
+    for (let t = -4 * Math.PI; t <= 0; t += Math.PI / 45) {
+      const stepFn = 1 / (1 + Math.exp(10 * (t + Math.PI + 0.2)));
+      const p = { x: t, y: Math.sin(2 * t) * stepFn - 8 };
+      points.push(rotatePoint(p, angle, pivot));
+    }
+
+    const photonColor = interferenceColor(hv);
+    ctx.save();
+    ctx.strokeStyle = photonColor;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i < points.length; i += 1) {
+      const px = mapX(points[i].x);
+      const py = mapY(points[i].y);
+      if (i === 0) {
+        ctx.moveTo(px, py);
+      } else {
+        ctx.lineTo(px, py);
+      }
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    const arrowHead = [
+      { x: 1.25, y: -8 },
+      { x: -0.4, y: -7.5 },
+      { x: -0.4, y: -8.5 }
+    ].map((p) => rotatePoint(p, angle, pivot));
+    drawFilledPolygon(arrowHead, photonColor);
+
+    drawText("hν", -14, -6.4, 30, "left", {
+      color: photonColor,
+      weight: 700,
+      stroke: theme.outline,
+      strokeWidth: 2.2
+    });
+  }
+
+  function drawElectronWaves(hv) {
+    const waveColor = interferenceColor(hv);
+
+    drawParametricCurve(
+      (t) => t,
+      (t) => 1.6 * Math.sin(1.4 * t * Math.sqrt(hv)) + 16 * hv,
+      0,
+      30,
+      Math.PI / 45,
+      { stroke: waveColor, width: 3 }
+    );
+
+    drawParametricCurve(
+      (t) => 30 - t,
+      (t) => -Math.sin(1.4 * (t + 30) * Math.sqrt(hv)) + 16 * hv,
+      0,
+      30,
+      Math.PI / 45,
+      {
+        stroke: waveColor,
+        width: 2
+      }
+    );
+
+    drawLine(0, 16 * hv, 30, 16 * hv, { stroke: theme.ink, width: 1 });
+  }
+
+  function drawSpectrum(hv, frontColor) {
+    const xExFront = Math.max(-2, Math.min(16, 16 * hv));
+
+    const xExToSpectrumX = (xEx) => {
+      const yE1 = 1 / (1 + Math.exp(-20 * xEx)) - xEx / 28;
+      const yE2 = 0.28 * Math.exp(-xEx / 5) * Math.cos(21 * Math.sqrt(Math.abs(xEx))) / (1 + Math.exp(-50 * xEx));
+      return -5.6 * (yE1 + yE2) + 37;
+    };
+
+    drawParametricCurve(
+      (xEx) => xExToSpectrumX(xEx),
+      (xEx) => xEx,
+      -2,
+      xExFront,
+      0.01,
+      { stroke: theme.ink, width: 2.8 }
+    );
+
+    const tipX = xExToSpectrumX(xExFront);
+    ctx.save();
+    ctx.fillStyle = frontColor;
+    ctx.beginPath();
+    ctx.arc(mapX(tipX), mapY(xExFront), 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    drawLine(37, 0, 37, 16, { stroke: theme.ink, width: 1.5 });
+    drawFilledPolygon(
+      [
+        { x: 36.7, y: 16 },
+        { x: 37.3, y: 16 },
+        { x: 37.0, y: 17.35 }
+      ],
+      theme.ink
+    );
+    drawText("Eₑ", 37.9, 8.1, 33, "left", {
+      color: theme.ink,
+      weight: 700,
+      stroke: theme.outline,
+      strokeWidth: 3
+    });
+    drawText("μ(Eₑ)", 30.7, -1.1, 30, "left", {
+      color: theme.ink,
+      weight: 700,
+      stroke: theme.outline,
+      strokeWidth: 3
+    });
+  }
+
+  function render() {
+    theme = getThemePalette();
+    const hv = state.hv;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawLine(-20, 0, 45, 0, { stroke: theme.grid, width: 1.2, dashed: [2, 5] });
+    drawLine(0, -30, 0, 24, { stroke: theme.grid, width: 1.2, dashed: [2, 5] });
+    drawLine(30, -30, 30, 24, { stroke: theme.grid, width: 1.2, dashed: [2, 5] });
+
+    drawPotentials();
+    drawGroundState(0);
+    drawPhotonWave(hv);
+    drawElectronWaves(hv);
+    drawSpectrum(hv, interferenceColor(hv));
+
+    drawAtom(0, -28, 2, "#505050", "#000000");
+    drawAtom(30, -28, 2, "#f0f0f0", "#696969");
+  }
+
+  function setHv(value) {
+    state.hv = Math.max(1 / 256, Math.min(1, value));
+    slider.value = String(state.hv);
+    hvValue.textContent = `hν = ${state.hv.toFixed(3)}`;
+    render();
+  }
+
+  slider.addEventListener("input", (event) => {
+    setHv(Number(event.target.value));
+    if (!state.playing) {
+      statusEl.textContent = "MANUAL CONTROL";
+    }
+  });
+
+  playBtn.addEventListener("click", () => {
+    state.playing = !state.playing;
+    playBtn.textContent = state.playing ? "Pause" : "Play";
+    statusEl.textContent = state.playing ? "SCANNING" : "SYSTEM READY";
+    if (state.playing) {
+      requestAnimationFrame(animate);
+    }
+  });
+
+  function animate() {
+    if (!state.playing) {
+      return;
+    }
+    const next = state.hv + 0.0025;
+    setHv(next > 1 ? 1 / 256 : next);
+    requestAnimationFrame(animate);
+  }
+
+  themeToggle.addEventListener("click", () => {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    if (currentTheme === "light") {
+      document.documentElement.removeAttribute("data-theme");
+    } else {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+    render();
+  });
+
+  setHv(state.hv);
+</script>
+</body>
+</html>
