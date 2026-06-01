@@ -5,14 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Process Dynamics Lab</title>
     <style>
+        /* CSS variables mapping the existing dark styles vs light styles */
+        :root {
+            --bg-body: #000;
+            --bg-container: #050505;
+            --border-container: #222;
+            --bg-viewport: #000;
+            --border-viewport: #333;
+            --bg-sidebar: rgba(10, 10, 10, 0.9);
+            --border-sidebar: #333;
+            --text-sidebar: white;
+            --text-status-title: #666;
+            --border-status-top: #222;
+            --toggle-btn-bg: #222;
+            --toggle-btn-text: #fff;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f0f2f5;
+            --bg-container: #ffffff;
+            --border-container: #dddddd;
+            --bg-viewport: #fdfdfd;
+            --border-viewport: #cccccc;
+            --bg-sidebar: rgba(245, 245, 245, 0.95);
+            --border-sidebar: #dddddd;
+            --text-sidebar: #333333;
+            --text-status-title: #888888;
+            --border-status-top: #dddddd;
+            --toggle-btn-bg: #e0e0e0;
+            --toggle-btn-text: #333;
+        }
+
         body {
             margin: 0;
-            background-color: #000;
+            background-color: var(--bg-body);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            transition: background-color 0.3s ease;
         }
+
+        /* Utility style overrides to preserve inline styles while supporting themes */
+        #simulation-container { background-color: var(--bg-container) !important; border-color: var(--border-container) !important; transition: all 0.3s ease; }
+        #sim-viewport { background: var(--bg-viewport) !important; border-color: var(--border-viewport) !important; transition: all 0.3s ease; }
+        #sidebar { background: var(--bg-sidebar) !important; border-right-color: var(--border-sidebar) !important; color: var(--text-sidebar) !important; transition: all 0.3s ease; }
+        #status-divider { border-top-color: var(--border-status-top) !important; transition: all 0.3s ease; }
+        #status-title { color: var(--text-status-title) !important; transition: all 0.3s ease; }
     </style>
 </head>
 <body>
@@ -28,8 +67,10 @@
             <button style="margin-bottom: 10px; padding: 12px; background: #E10600; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; font-size: 10px;" onclick="triggerInteraction('jump')">Excitation</button>
         </div>
 
-        <div style="border-top: 1px solid #222; pt: 15px;">
-            <div style="font-size: 10px; font-weight: 900; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px;">Status</div>
+        <button id="theme-toggle" style="margin-bottom: 15px; padding: 8px; background: var(--toggle-btn-bg); color: var(--toggle-btn-text); border: 1px solid var(--border-viewport); border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; text-transform: uppercase; width: 100%; transition: all 0.3s ease;">Toggle Theme</button>
+
+        <div id="status-divider" style="border-top: 1px solid #222; pt: 15px;">
+            <div id="status-title" style="font-size: 10px; font-weight: 900; color: #666; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px;">Status</div>
             <div id="sim-status" style="font-size: 16px; font-weight: 900; color: #28a745;">SYSTEM READY</div>
         </div>
     </div>
@@ -301,6 +342,17 @@
         renderer.render(scene, camera);
     }
     animate();
+
+    // Theme Selector Script Hook
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'light') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    });
 })();
 </script>
 </div>
