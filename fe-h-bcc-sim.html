@@ -4,73 +4,124 @@
     <meta charset="UTF-8">
     <title>Fe-H BCC EXAFS Dynamics</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght=400;700;900&display=swap');
+        
+        /* Theme Configuration Matrix */
+        :root {
+            --bg-body: #000000;
+            --bg-container: #000000;
+            --bg-panel: #0d0d0d;
+            --bg-canvas: #000000;
+            --border-panel: #333333;
+            --border-control: #444444;
+            --text-main: #eeeeee;
+            --text-label: #ffffff;
+            --text-stat-lbl: #aaaaaa;
+            --btn-bg: #222222;
+            --btn-hover-bg: #ffffff;
+            --btn-hover-text: #000000;
+            --slider-bg: #333333;
+            --slider-thumb: #ffffff;
+            --overlay-bg: rgba(0,0,0,0.9);
+            --particle-trail: 0, 229, 255;
+            
+            /* Atom Render Constants (Fallback Handling) */
+            --fe-lightness: 0;
+            --stroke-alpha: 0.05;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f0f2f5;
+            --bg-container: #ffffff;
+            --bg-panel: #f8fafc;
+            --bg-canvas: #ffffff;
+            --border-panel: #cbd5e1;
+            --border-control: #cbd5e1;
+            --text-main: #1e293b;
+            --text-label: #0f172a;
+            --text-stat-lbl: #64748b;
+            --btn-bg: #e2e8f0;
+            --btn-hover-bg: #0f172a;
+            --btn-hover-text: #ffffff;
+            --slider-bg: #cbd5e1;
+            --slider-thumb: #0f172a;
+            --overlay-bg: rgba(255,255,255,0.95);
+            --particle-trail: 0, 140, 180;
+            
+            --fe-lightness: 40;
+            --stroke-alpha: 0.2;
+        }
         
         body { 
-            margin:0; padding:0; background:#000; overflow:hidden; 
-            font-family: 'Inter', sans-serif; color: #eee; user-select: none;
+            margin:0; padding:0; background: var(--bg-body); overflow:hidden; 
+            font-family: 'Inter', sans-serif; color: var(--text-main); user-select: none;
             width: 100vw; height: 100vh;
             display: flex; justify-content: center; align-items: center;
+            transition: background 0.3s ease;
         }
 
         #container { 
             display: flex; flex-direction: row; 
             width: 100%; height: 100%; 
             max-width: 100vw; max-height: 100vh;
-            background: #000; 
-            aspect-ratio: 16 / 9; /* Forces the container to 16:9 */
+            background: var(--bg-container); 
+            aspect-ratio: 16 / 9;
+            transition: background 0.3s ease;
         }
 
         #ui-panel { 
             width: 170px; min-width: 170px; height: 100%; 
-            background: #0d0d0d; border-right: 2px solid #333; 
+            background: var(--bg-panel); border-right: 2px solid var(--border-panel); 
             padding: 10px; display: flex; flex-direction: column; 
             gap: 8px; box-sizing: border-box; z-index: 100;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
-        #c { flex-grow: 1; height: 100%; display: block; background: #000; }
+        #c { flex-grow: 1; height: 100%; display: block; background: var(--bg-canvas); }
 
         #overlay {
             position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.9); z-index: 1001;
+            background: var(--overlay-bg); z-index: 1001;
             display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;
         }
 
         .control { display: flex; flex-direction: column; gap: 2px; width: 100%; }
-        .control label { font-size: 7.5px; color: #ffffff; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
+        .control label { font-size: 7.5px; color: var(--text-label); font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .legend { margin-top: 5px; padding-top: 5px; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 4px; }
-        .stat-item { font-size: 8px; font-weight: 900; text-transform: uppercase; color: #aaa; }
-        .stat-val { color: #eee; float: right; }
-        #abs-val { color: #00ff66; }
+        .legend { margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--border-panel); display: flex; flex-direction: column; gap: 4px; }
+        .stat-item { font-size: 8px; font-weight: 900; text-transform: uppercase; color: var(--text-stat-lbl); }
+        .stat-val { color: var(--text-main); float: right; }
+        #abs-val { color: #00aa44; }
+        [data-theme="dark"] #abs-val { color: #00ff66; }
         #h-val { color: #ff4444; }
 
-        button#play-pause { 
-            background: #222; color: #ffffff; border: 1px solid #ffffff; padding: 6px; width: 100%;
-            cursor: pointer; font-size: 14px; transition: all 0.2s; border-radius: 4px;
+        button.ui-action-btn { 
+            background: var(--btn-bg); color: var(--text-main); border: 1px solid var(--text-main); padding: 6px; width: 100%;
+            cursor: pointer; font-size: 11px; font-weight: 700; transition: all 0.2s; border-radius: 4px;
         }
-        button#play-pause:hover { background: #ffffff; color: #000; }
+        button.ui-action-btn:hover { background: var(--btn-hover-bg); color: var(--btn-hover-text); }
 
-        select { background: #222; color: #eee; border: 1px solid #444; font-size: 8px; padding: 2px; border-radius: 3px; width: 100%; }
+        select { background: var(--btn-bg); color: var(--text-main); border: 1px solid var(--border-control); font-size: 8px; padding: 2px; border-radius: 3px; width: 100%; outline: none; }
 
-        input[type=range] { appearance: none; background: #333; height: 2px; width: 100%; margin: 4px 0; }
+        input[type=range] { appearance: none; background: var(--slider-bg); height: 2px; width: 100%; margin: 4px 0; }
         input[type=range]::-webkit-slider-thumb { 
-            appearance: none; width: 10px; height: 10px; background: #ffffff; 
-            cursor: pointer; border-radius: 50%; box-shadow: 0 0 5px rgba(255,255,255,0.3);
+            appearance: none; width: 10px; height: 10px; background: var(--slider-thumb); 
+            cursor: pointer; border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.2);
         }
         
         .audio-toggles { display: flex; flex-direction: row; flex-wrap: wrap; gap: 6px; }
-        .audio-toggles label { font-size: 7px; color: #ccc; display: flex; align-items: center; gap: 2px; cursor: pointer;}
+        .audio-toggles label { font-size: 7px; color: var(--text-stat-lbl); display: flex; align-items: center; gap: 2px; cursor: pointer;}
     </style>
 </head>
 <body>
     <div id="overlay" onclick="startSim()">
-        <h2 style="font-weight:900; color:#ffffff; letter-spacing:5px;">INITIALIZE BCC</h2>
+        <h2 id="overlay-title" style="font-weight:900; color:#ffffff; letter-spacing:5px;">INITIALIZE BCC</h2>
         <p style="font-size:10px; color:#777;">CLICK TO START (16:9 MODE)</p>
     </div>
     <div id="container">
         <div id="ui-panel">
-            <button id="play-pause" onclick="togglePause()">⏯</button>
+            <button id="play-pause" class="ui-action-btn" onclick="togglePause()">⏯ PAUSE</button>
+            <button id="theme-toggle" class="ui-action-btn" style="font-size: 8px; padding: 4px;" onclick="toggleTheme()">🌓 TOGGLE THEME</button>
             
             <div class="control">
                 <label>Flux</label>
@@ -119,6 +170,21 @@
         const PX_PER_ANG = 35;
         const LATTICE_A = 2.86; 
         let audioCtx;
+
+        // Initialize Theme Setup on window load
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('overlay-title').style.color = '#000000';
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        }
 
         function startSim() {
             if (started) return;
@@ -255,42 +321,59 @@
         function draw() {
             if (!started) return;
             const dpr = window.devicePixelRatio || 1;
-            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width/dpr, canvas.height/dpr);
+            const sysStyles = getComputedStyle(document.body);
+            
+            // Sync Canvas background with theme token
+            ctx.fillStyle = sysStyles.getPropertyValue('--bg-canvas').trim(); 
+            ctx.fillRect(0, 0, canvas.width/dpr, canvas.height/dpr);
+            
+            const feL = sysStyles.getPropertyValue('--fe-lightness').trim();
+            const sAlpha = sysStyles.getPropertyValue('--stroke-alpha').trim();
+            const trailRGB = sysStyles.getPropertyValue('--particle-trail').trim();
+
             [...atoms, ...hAtoms].forEach(a => {
                 const isHit = frame - a.hitTime < 10;
                 const tx = a.x + a.vibeX, ty = a.y + a.vibeY;
                 ctx.beginPath(); ctx.arc(tx, ty, a.r, 0, Math.PI*2);
                 const g = ctx.createRadialGradient(tx - a.r*0.3, ty - a.r*0.3, a.r*0.1, tx, ty, a.r);
                 if (a.type === 'Fe') {
-                    g.addColorStop(0, isHit ? '#fff' : '#efefef');
-                    g.addColorStop(0.3, isHit ? '#aaa' : '#444');
-                    g.addColorStop(1, '#050505');
+                    g.addColorStop(0, isHit ? '#ffffff' : `hsl(0, 0%, ${85 + parseInt(feL)}%)`);
+                    g.addColorStop(0.3, isHit ? '#aaaaaa' : `hsl(0, 0%, ${25 + parseInt(feL)}%)`);
+                    g.addColorStop(1, `hsl(0, 0%, ${2 + parseInt(feL)}%)`);
                 } else {
                     g.addColorStop(0, isHit ? '#ffaaaa' : '#ff3333');
                     g.addColorStop(1, '#200000');
                 }
                 ctx.fillStyle = g; ctx.fill();
-                ctx.strokeStyle = a.isEmitter ? '#00e5ff' : 'rgba(255,255,255,0.05)';
+                ctx.strokeStyle = a.isEmitter ? '#00e5ff' : `rgba(0,0,0,${sAlpha})`;
+                if (!a.isEmitter && document.documentElement.getAttribute('data-theme') !== 'light') {
+                    ctx.strokeStyle = `rgba(255,255,255,${sAlpha})`;
+                }
                 ctx.lineWidth = a.isEmitter ? 2 : 0.5; ctx.stroke();
             });
+
             particles.forEach(p => {
                 if (p.history.length > 2) {
                     for (let j = 0; j < p.history.length - 1; j++) {
                         const ratio = 1 - (j / p.history.length);
                         ctx.beginPath(); ctx.moveTo(p.history[j].x, p.history[j].y);
                         ctx.lineTo(p.history[j+1].x, p.history[j+1].y);
-                        ctx.strokeStyle = `rgba(0, 229, 255, ${p.intensity * ratio * 0.5})`;
+                        ctx.strokeStyle = `rgba(${trailRGB}, ${p.intensity * ratio * 0.5})`;
                         ctx.lineWidth = particleBaseR * ratio * 0.7; ctx.stroke();
                     }
                 }
                 ctx.beginPath(); ctx.arc(p.x, p.y, (particleBaseR/2) * p.intensity, 0, Math.PI*2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${p.intensity})`; ctx.fill();
+                ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'light' 
+                    ? `rgba(0, 90, 120, ${p.intensity})` 
+                    : `rgba(255, 255, 255, ${p.intensity})`; 
+                ctx.fill();
             });
             update(); requestAnimationFrame(draw);
         }
 
         function togglePause() { 
             isPaused = !isPaused; 
+            document.getElementById('play-pause').innerText = isPaused ? "▶ RESUME" : "⏯ PAUSE";
             if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
         }
 
@@ -299,15 +382,12 @@
         function resize() {
             const dpr = window.devicePixelRatio || 1;
             const container = document.getElementById('container');
-            
-            // Get the calculated 16:9 dimensions of the container
             const rect = container.getBoundingClientRect();
             
-            // Set canvas size based on the 16:9 area remaining after UI panel
             canvas.width = (rect.width - 170) * dpr;
             canvas.height = rect.height * dpr;
             
-            ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset scale before re-applying
+            ctx.setTransform(1, 0, 0, 1, 0, 0); 
             ctx.scale(dpr, dpr);
             generateLattice();
         }
