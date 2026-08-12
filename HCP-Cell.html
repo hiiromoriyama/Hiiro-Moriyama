@@ -1,0 +1,1051 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HCP Zr Symmetry Cell</title>
+  <link rel="icon" href="data:,">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #ffffff;
+      --fg: #1c2027;
+      --muted: #5d6675;
+      --panel: #ffffff;
+      --line: rgba(30,35,44,.16);
+      --accent: #2662a8;
+      --zr: #7da0c4;
+      --zr2: #415f7f;
+      --h: #e31b23;
+      --h-tet: #e31b23;
+      --h-oct: #e31b23;
+      --tet: #00a89a;
+      --oct: #f0a526;
+      --bond: #4c596b;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--fg);
+      background: #ffffff;
+    }
+    main {
+      min-height: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 350px;
+    }
+    #scene-wrap {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    canvas { display: block; width: 100%; height: 100%; }
+    aside {
+      border-left: 1px solid var(--line);
+      background: var(--panel);
+      padding: 16px;
+      overflow: auto;
+      max-height: 100vh;
+    }
+    h2 {
+      margin: 18px 0 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+    h2:first-child { margin-top: 0; }
+    label, select, input, button { font: inherit; }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+      font-size: 13px;
+    }
+    .stack { display: grid; gap: 8px; }
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+    input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--accent); }
+    input[type="range"] { width: 150px; accent-color: var(--accent); }
+    select, button {
+      width: 100%;
+      color: var(--fg);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      padding: 7px 8px;
+      border-radius: 6px;
+    }
+    button { cursor: pointer; }
+    button:hover { border-color: var(--accent); }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    .plane-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .plane-chip {
+      width: auto;
+      padding: 6px 7px;
+      font-size: 12px;
+      text-align: center;
+    }
+    .plane-chip:hover,
+    .plane-chip:focus {
+      border-color: var(--accent);
+      background: rgba(38,98,168,.08);
+      outline: none;
+    }
+    .value {
+      min-width: 56px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      font-size: 12px;
+    }
+    .facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .fact {
+      border: 1px solid var(--line);
+      padding: 8px;
+      background: rgba(255,255,255,.45);
+    }
+    .fact b {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .fact span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+      font-size: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .swatch {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,.18);
+      flex: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      padding: 5px 4px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    th:first-child, td:first-child { text-align: left; }
+    .selected {
+      border: 1px solid var(--line);
+      padding: 10px;
+      min-height: 74px;
+      background: light-dark(rgba(255,255,255,.42), rgba(0,0,0,.16));
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .selected b { font-weight: 600; }
+    .note {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+      #scene-wrap { min-height: 68vh; }
+      aside {
+        max-height: none;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+      input[type="range"] { width: 120px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <section id="scene-wrap" aria-label="Interactive HCP zirconium 3D cell">
+  </section>
+  <aside>
+    <h2>View</h2>
+    <div class="stack">
+      <label class="check"><input id="toggle-atoms" type="checkbox" checked> Zr atoms</label>
+      <label class="check"><input id="toggle-bonds" type="checkbox" checked> Zr-Zr first-shell bonds</label>
+      <label class="check"><input id="toggle-cell" type="checkbox" checked> Unit-cell edges</label>
+      <label class="check"><input id="toggle-sites" type="checkbox" checked> Interstitial sites</label>
+      <button id="unit-cell-view" type="button" aria-pressed="false">Unit HCP cell</button>
+    </div>
+
+    <h2>Planes</h2>
+    <div class="plane-grid">
+      <button class="plane-chip" type="button" data-plane="basal-bottom">Basal bottom</button>
+      <button class="plane-chip" type="button" data-plane="basal-top">Basal top</button>
+      <button class="plane-chip" type="button" data-plane="prismatic-0">Prismatic 1</button>
+      <button class="plane-chip" type="button" data-plane="prismatic-1">Prismatic 2</button>
+      <button class="plane-chip" type="button" data-plane="prismatic-2">Prismatic 3</button>
+      <button class="plane-chip" type="button" data-plane="prismatic-3">Prismatic 4</button>
+      <button class="plane-chip" type="button" data-plane="prismatic-4">Prismatic 5</button>
+      <button class="plane-chip" type="button" data-plane="prismatic-5">Prismatic 6</button>
+      <button class="plane-chip" type="button" data-plane="pyramidal-1">1st-order pyramidal</button>
+    </div>
+
+    <h2>Hydrogen insertion</h2>
+    <div class="stack">
+      <label class="check"><input id="toggle-h" type="checkbox" checked> Show inserted H</label>
+      <label>
+        <span class="note">Seed interstitial site</span>
+        <select id="site-select"></select>
+      </label>
+      <label>
+        <span class="note">Allowed site family</span>
+        <select id="site-family">
+          <option value="mixed">tetrahedral and octahedral</option>
+          <option value="tetra">tetrahedral only</option>
+          <option value="octa">octahedral only</option>
+        </select>
+      </label>
+      <div class="row">
+        <label for="h-count">Hydrogen atoms</label>
+        <span class="value" id="h-count-value">1 H</span>
+      </div>
+      <input id="h-count" type="range" min="0" max="32" value="1" step="1">
+      <button id="reset-view" type="button">Reset view</button>
+    </div>
+
+    <h2>Legend</h2>
+    <div class="legend">
+      <div class="legend-item"><i class="swatch" style="background:var(--zr)"></i>Zr</div>
+      <div class="legend-item"><i class="swatch" style="background:var(--h)"></i>H</div>
+      <div class="legend-item"><i class="swatch" style="background:var(--tet)"></i>T-Site</div>
+      <div class="legend-item"><i class="swatch" style="background:var(--oct)"></i>O-Site</div>
+    </div>
+  </aside>
+</main>
+
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+
+const a = 3.231;
+const c = 5.147;
+const sqrt3 = Math.sqrt(3);
+const maxDistortion = 1.15;
+const vectors = [
+  new THREE.Vector3(a, 0, 0),
+  new THREE.Vector3(-0.5 * a, 0.5 * sqrt3 * a, 0),
+  new THREE.Vector3(0, 0, c)
+];
+const basis = [
+  { f: [0, 0, 0], sub: "A" },
+  { f: [2 / 3, 1 / 3, 1 / 2], sub: "B" }
+];
+const fullReplication = { nx: 3, ny: 3, nz: 2 };
+let replication = { ...fullReplication };
+let unitCellView = false;
+const centralShift = new THREE.Vector3(-0.5, -0.5, -0.5);
+
+// HCP interstitial positions for the Zr basis above: 2 O-sites and 4 T-sites per cell.
+const siteDefs = [
+  { f: [1 / 3, 2 / 3, 0.25], kind: "octa", label: "O1" },
+  { f: [1 / 3, 2 / 3, 0.75], kind: "octa", label: "O2" },
+  { f: [2 / 3, 1 / 3, 0.125], kind: "tetra", label: "T1" },
+  { f: [0, 0, 0.375], kind: "tetra", label: "T2" },
+  { f: [0, 0, 0.625], kind: "tetra", label: "T3" },
+  { f: [2 / 3, 1 / 3, 0.875], kind: "tetra", label: "T4" }
+];
+
+const wrap = document.getElementById("scene-wrap");
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0xffffff, 1);
+wrap.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 200);
+camera.up.set(0, 0, 1);
+camera.position.set(8, -13, 5.2);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.target.set(0, 0, 1.5);
+
+scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+const key = new THREE.DirectionalLight(0xffffff, 2.2);
+key.position.set(8, -9, 12);
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x9ebcff, 1.0);
+fill.position.set(-8, 8, 4);
+scene.add(fill);
+
+const atomGroup = new THREE.Group();
+const bondGroup = new THREE.Group();
+const cellGroup = new THREE.Group();
+const planeGroup = new THREE.Group();
+const symmetryGroup = new THREE.Group();
+const siteGroup = new THREE.Group();
+const labelGroup = new THREE.Group();
+const hydrogenGroup = new THREE.Group();
+const distortionGroup = new THREE.Group();
+const highlightGroup = new THREE.Group();
+scene.add(atomGroup, bondGroup, cellGroup, planeGroup, symmetryGroup, siteGroup, labelGroup, hydrogenGroup, distortionGroup, highlightGroup);
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+const pickables = [];
+const atoms = [];
+const sites = [];
+let selectedObject = null;
+let hSite = null;
+let activeHydrogenSites = [];
+let activePlaneKey = null;
+
+const materials = {
+  zr: new THREE.MeshStandardMaterial({ color: 0x7da0c4, metalness: 0.25, roughness: 0.45 }),
+  zrAlt: new THREE.MeshStandardMaterial({ color: 0x415f7f, metalness: 0.25, roughness: 0.48 }),
+  h: new THREE.MeshStandardMaterial({ color: 0xe31b23, roughness: 0.4 }),
+  tet: new THREE.MeshStandardMaterial({ color: 0x00a89a, roughness: 0.45, transparent: true, opacity: 0.9 }),
+  oct: new THREE.MeshStandardMaterial({ color: 0xf0a526, roughness: 0.45, transparent: true, opacity: 0.92 }),
+  selected: new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }),
+  bond: new THREE.LineBasicMaterial({ color: 0x7a8594, transparent: true, opacity: 0.42 }),
+  nearBond: new THREE.LineBasicMaterial({ color: 0xe25050, transparent: true, opacity: 0.72 }),
+  distortion: new THREE.MeshBasicMaterial({ color: 0xd72638, transparent: true, opacity: 0.86 }),
+  planeBasal: new THREE.MeshBasicMaterial({ color: 0x4f86d9, transparent: true, opacity: 0.24, side: THREE.DoubleSide, depthWrite: false }),
+  planePrismatic: new THREE.MeshBasicMaterial({ color: 0x29a36a, transparent: true, opacity: 0.24, side: THREE.DoubleSide, depthWrite: false }),
+  planePyramidal: new THREE.MeshBasicMaterial({ color: 0xd58a29, transparent: true, opacity: 0.28, side: THREE.DoubleSide, depthWrite: false }),
+  planePyramidalLine: new THREE.LineBasicMaterial({ color: 0xb45121, transparent: true, opacity: 0.78 }),
+  cell: new THREE.LineBasicMaterial({ color: 0x9aa6b2, transparent: true, opacity: 0.9 }),
+  axisX: new THREE.LineBasicMaterial({ color: 0xc62828, transparent: true, opacity: 0.95 }),
+  axisY: new THREE.LineBasicMaterial({ color: 0x2e7d32, transparent: true, opacity: 0.95 }),
+  axisU: new THREE.LineBasicMaterial({ color: 0x6a1b9a, transparent: true, opacity: 0.95 }),
+  axisZ: new THREE.LineBasicMaterial({ color: 0x1565c0, transparent: true, opacity: 0.95 }),
+  axisMesh: new THREE.MeshBasicMaterial({ color: 0x2f6fbd }),
+  mirror: new THREE.MeshBasicMaterial({ color: 0x7f8a98, transparent: true, opacity: 0.14, side: THREE.DoubleSide })
+};
+
+function fracToCart(f, cell = [0, 0, 0]) {
+  const u = f[0] + cell[0] + centralShift.x;
+  const v = f[1] + cell[1] + centralShift.y;
+  const w = f[2] + cell[2] + centralShift.z;
+  return new THREE.Vector3()
+    .addScaledVector(vectors[0], u)
+    .addScaledVector(vectors[1], v)
+    .addScaledVector(vectors[2], w);
+}
+
+function cartToCellFraction(position) {
+  const m = new THREE.Matrix3().set(
+    vectors[0].x, vectors[1].x, vectors[2].x,
+    vectors[0].y, vectors[1].y, vectors[2].y,
+    vectors[0].z, vectors[1].z, vectors[2].z
+  );
+  const inv = m.clone().invert();
+  const p = position.clone();
+  return p.applyMatrix3(inv);
+}
+
+function distance(aPos, bPos) {
+  return aPos.distanceTo(bPos);
+}
+
+function distortedPosition(basePos) {
+  if (!activeHydrogenSites.length || !document.getElementById("toggle-h").checked) return basePos.clone();
+  const strength = maxDistortion;
+  if (strength === 0) return basePos.clone();
+  const shift = new THREE.Vector3();
+  for (const site of activeHydrogenSites) {
+    const delta = basePos.clone().sub(site.position);
+    const r = Math.max(delta.length(), 0.001);
+    const falloff = Math.exp(-Math.pow(r / 3.15, 2));
+    const dir = delta.normalize();
+    shift.addScaledVector(dir, strength * falloff);
+  }
+  const cap = strength * 2.0;
+  if (shift.length() > cap) shift.setLength(cap);
+  return basePos.clone().add(shift);
+}
+
+function makeSphere(radius, material) {
+  return new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 18), material);
+}
+
+function makeLine(points, material) {
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  return new THREE.Line(geometry, material);
+}
+
+function makeCylinderBetween(start, end, radius, material) {
+  const mid = start.clone().add(end).multiplyScalar(0.5);
+  const direction = end.clone().sub(start);
+  const length = direction.length();
+  const geometry = new THREE.CylinderGeometry(radius, radius, length, 12);
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.position.copy(mid);
+  mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+  return mesh;
+}
+
+function makePlaneMesh(points, material) {
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(new Float32Array(points.flatMap(p => [p.x, p.y, p.z])), 3)
+  );
+  const indices = [];
+  for (let i = 1; i < points.length - 1; i++) indices.push(0, i, i + 1);
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  return new THREE.Mesh(geometry, material);
+}
+
+function makeTextSprite(text, color = "#edf1f7") {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = 128;
+  canvas.height = 48;
+  ctx.font = "600 24px system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = "rgba(20,24,30,.72)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = color;
+  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+  const texture = new THREE.CanvasTexture(canvas);
+  const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+  const sprite = new THREE.Sprite(material);
+  sprite.scale.set(0.9, 0.34, 1);
+  return sprite;
+}
+
+function makeAxisLabel(text, color) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = 96;
+  canvas.height = 64;
+  ctx.font = "700 34px system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = "rgba(255,255,255,.95)";
+  ctx.strokeText(text, canvas.width / 2, canvas.height / 2);
+  ctx.fillStyle = color;
+  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+  const texture = new THREE.CanvasTexture(canvas);
+  const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+  const sprite = new THREE.Sprite(material);
+  sprite.scale.set(0.55, 0.38, 1);
+  return sprite;
+}
+
+function buildAtoms() {
+  atoms.length = 0;
+  const center = centerCell();
+  for (let i = 0; i < replication.nx; i++) {
+    for (let j = 0; j < replication.ny; j++) {
+      for (let k = 0; k < replication.nz; k++) {
+        for (const b of basis) {
+          const base = fracToCart(b.f, [i, j, k]);
+          atoms.push({
+            id: atoms.length + 1,
+            type: "Zr",
+            sub: b.sub,
+            cell: [i, j, k],
+            central: i === center[0] && j === center[1] && k === center[2],
+            basePosition: base,
+            position: base.clone()
+          });
+        }
+      }
+    }
+  }
+}
+
+function centerCell() {
+  return [
+    Math.floor(replication.nx / 2),
+    Math.floor(replication.ny / 2),
+    Math.floor((replication.nz - 1) / 2)
+  ];
+}
+
+function formatCell(cell) {
+  return `[${cell.join(",")}]`;
+}
+
+function siteName(type) {
+  return type === "octa" ? "octahedral" : "tetrahedral";
+}
+
+function visibleAtoms() {
+  if (!unitCellView) return atoms;
+  return unitDisplayAtoms();
+}
+
+function visibleSites() {
+  return sites.filter(site => siteIsEnclosed(site) && (!unitCellView || site.central));
+}
+
+function buildSites() {
+  sites.length = 0;
+  const center = centerCell();
+  for (let i = 0; i < replication.nx; i++) {
+    for (let j = 0; j < replication.ny; j++) {
+      for (let k = 0; k < replication.nz; k++) {
+        for (const def of siteDefs) {
+          const cell = [i, j, k];
+          const pos = fracToCart(def.f, cell);
+          const nearCount = def.kind === "octa" ? 6 : 4;
+          const nearest = nearestAtoms(pos, 8, false);
+          const isCentral = i === center[0] && j === center[1] && k === center[2];
+          const id = `${def.label}_${i}${j}${k}`;
+          sites.push({
+            id,
+            baseLabel: def.label,
+            displayLabel: `${def.label} ${formatCell(cell)}`,
+            type: def.kind,
+            cell,
+            central: isCentral,
+            basePosition: pos,
+            position: pos.clone(),
+            coordinationHint: def.kind === "octa" ? "six nearby Zr" : "four nearby Zr",
+            nearestMean: nearest.slice(0, nearCount).reduce((s, n) => s + n.d, 0) / nearCount
+          });
+        }
+      }
+    }
+  }
+}
+
+function clearGroup(group) {
+  while (group.children.length) {
+    const obj = group.children.pop();
+    if (obj.geometry) obj.geometry.dispose();
+    if (obj.type === "Sprite" && obj.material) {
+      if (obj.material.map) obj.material.map.dispose();
+      obj.material.dispose?.();
+    }
+  }
+}
+
+function updateAtomPositions() {
+  for (const atom of atoms) atom.position = distortedPosition(atom.basePosition);
+}
+
+function unitDisplayAtoms() {
+  return unitHexAtomDefs().map(atom => ({
+    ...atom,
+    position: distortedPosition(atom.basePosition),
+    unitDisplay: true
+  }));
+}
+
+function drawAtoms() {
+  clearGroup(atomGroup);
+  pickables.length = 0;
+  let atomCount = 0;
+  if (!document.getElementById("toggle-atoms").checked) {
+    wrap.dataset.atomCount = "0";
+    return;
+  }
+  for (const atom of visibleAtoms()) {
+    const isBasal = atom.sub === "A" || String(atom.sub).startsWith("basal");
+    const mesh = makeSphere(atom.unitDisplay ? 0.27 : 0.32, isBasal ? materials.zr : materials.zrAlt);
+    mesh.position.copy(atom.position);
+    mesh.userData = { kind: "atom", ref: atom };
+    atomGroup.add(mesh);
+    pickables.push(mesh);
+    atomCount += 1;
+  }
+  wrap.dataset.atomCount = String(atomCount);
+}
+
+function drawSites() {
+  clearGroup(siteGroup);
+  clearGroup(labelGroup);
+  if (!document.getElementById("toggle-sites").checked) return;
+  for (const site of visibleSites()) {
+    const radius = site.type === "octa" ? 0.15 : 0.13;
+    const mesh = makeSphere(radius, site.type === "octa" ? materials.oct : materials.tet);
+    mesh.position.copy(site.position);
+    mesh.userData = { kind: "site", ref: site };
+    siteGroup.add(mesh);
+    pickables.push(mesh);
+  }
+}
+
+function selectedSiteFamily() {
+  return document.getElementById("site-family").value;
+}
+
+function getEligibleSites() {
+  const family = selectedSiteFamily();
+  const sitePool = visibleSites();
+  if (family === "tetra") return sitePool.filter(site => site.type === "tetra");
+  if (family === "octa") return sitePool.filter(site => site.type === "octa");
+  return sitePool;
+}
+
+function refreshHydrogenControls() {
+  const eligible = getEligibleSites();
+  const countInput = document.getElementById("h-count");
+  const countValue = document.getElementById("h-count-value");
+  const maxCount = Math.min(32, eligible.length);
+  countInput.max = String(maxCount);
+  if (Number(countInput.value) > maxCount) countInput.value = String(maxCount);
+  if (hSite && !eligible.includes(hSite)) {
+    hSite = eligible.find(site => site.central) || eligible[0] || null;
+    if (hSite) document.getElementById("site-select").value = hSite.id;
+  }
+  const n = Number(countInput.value);
+  countValue.textContent = `${n} H`;
+}
+
+function siteIsEnclosed(site) {
+  const rows = nearestAtoms(site.basePosition, site.type === "octa" ? 7 : 5, false);
+  if (site.type === "octa") {
+    return rows.length >= 7 && rows[5].d < 2.45 && rows[6].d - rows[5].d > 0.45;
+  }
+  return rows.length >= 5 && rows[3].d < 2.12 && rows[4].d - rows[3].d > 0.45;
+}
+
+function chooseHydrogenSites() {
+  const showH = document.getElementById("toggle-h").checked;
+  const requested = Number(document.getElementById("h-count").value);
+  if (!showH || requested <= 0) return [];
+  const eligible = getEligibleSites();
+  if (!eligible.length) return [];
+  const seed = hSite && eligible.includes(hSite) ? hSite : (eligible.find(site => site.central) || eligible[0]);
+  const chosen = [seed];
+  while (chosen.length < Math.min(requested, eligible.length)) {
+    let best = null;
+    let bestScore = -Infinity;
+    for (const candidate of eligible) {
+      if (chosen.includes(candidate)) continue;
+      const nearestH = Math.min(...chosen.map(site => site.position.distanceTo(candidate.position)));
+      const centralBonus = candidate.central ? 0.02 : 0;
+      const score = nearestH + centralBonus;
+      if (score > bestScore) {
+        best = candidate;
+        bestScore = score;
+      }
+    }
+    if (!best) break;
+    chosen.push(best);
+  }
+  return chosen;
+}
+
+function drawHydrogen() {
+  clearGroup(hydrogenGroup);
+  if (!activeHydrogenSites.length) return;
+  activeHydrogenSites.forEach((site, index) => {
+    const mesh = makeSphere(0.21, materials.h);
+    mesh.position.copy(site.position);
+    mesh.userData = {
+      kind: "hydrogen",
+      ref: { id: `H${index + 1}`, type: "H", position: site.position, site, index: index + 1 }
+    };
+    hydrogenGroup.add(mesh);
+    pickables.push(mesh);
+  });
+}
+
+function drawBonds() {
+  clearGroup(bondGroup);
+  let bondCount = 0;
+  if (unitCellView || !document.getElementById("toggle-bonds").checked) {
+    wrap.dataset.bondCount = "0";
+    return;
+  }
+  const bondAtoms = visibleAtoms();
+  const cutoff = 3.45;
+  for (let i = 0; i < bondAtoms.length; i++) {
+    for (let j = i + 1; j < bondAtoms.length; j++) {
+      const d = distance(bondAtoms[i].basePosition, bondAtoms[j].basePosition);
+      if (d <= cutoff) {
+        bondGroup.add(makeCylinderBetween(bondAtoms[i].position, bondAtoms[j].position, 0.025, materials.bond));
+        bondCount += 1;
+      }
+    }
+  }
+  wrap.dataset.bondCount = String(bondCount);
+}
+
+function nearestVisibleAtoms(position, count = 12) {
+  const rows = visibleAtoms().map(atom => ({ atom, d: atom.position.distanceTo(position) }));
+  rows.sort((a, b) => a.d - b.d || String(a.atom.id).localeCompare(String(b.atom.id)));
+  return rows.slice(0, count);
+}
+
+function drawDistortionGuides() {
+  clearGroup(distortionGroup);
+  wrap.dataset.distortionGuideCount = "0";
+}
+
+function cellCorners() {
+  const cells = [
+    [0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0],
+    [0, 0, 1], [1, 0, 1], [0, 1, 1], [1, 1, 1]
+  ];
+  return cells.map(f => fracToCart([0, 0, 0], f));
+}
+
+function unitCellCenter() {
+  return fracToCart([0.5, 0.5, 0.5], centerCell());
+}
+
+function unitHexCorners(z) {
+  const center = unitCellCenter();
+  const angleOffset = Math.PI / 6;
+  return Array.from({ length: 6 }, (_, i) => {
+    const theta = angleOffset + i * Math.PI / 3;
+    return center.clone().add(new THREE.Vector3(a * Math.cos(theta), a * Math.sin(theta), z));
+  });
+}
+
+function unitHexAtomDefs() {
+  const center = unitCellCenter();
+  const bottom = unitHexCorners(-c / 2);
+  const top = unitHexCorners(c / 2);
+  const midRadius = a / Math.sqrt(3);
+  const defs = [];
+  bottom.forEach((position, index) => {
+    defs.push({ id: `U-B${index + 1}`, sub: "basal lower vertex", basePosition: position, cell: ["unit"], central: true });
+  });
+  defs.push({ id: "U-B7", sub: "basal lower center", basePosition: center.clone().add(new THREE.Vector3(0, 0, -c / 2)), cell: ["unit"], central: true });
+  top.forEach((position, index) => {
+    defs.push({ id: `U-T${index + 1}`, sub: "basal upper vertex", basePosition: position, cell: ["unit"], central: true });
+  });
+  defs.push({ id: "U-T7", sub: "basal upper center", basePosition: center.clone().add(new THREE.Vector3(0, 0, c / 2)), cell: ["unit"], central: true });
+  [0, 2 * Math.PI / 3, 4 * Math.PI / 3].forEach((theta, index) => {
+    defs.push({
+      id: `U-M${index + 1}`,
+      sub: "middle B layer",
+      basePosition: center.clone().add(new THREE.Vector3(midRadius * Math.cos(theta), midRadius * Math.sin(theta), 0)),
+      cell: ["unit"],
+      central: true
+    });
+  });
+  return defs.map(atom => ({ ...atom, type: "Zr" }));
+}
+
+function drawAxis(origin, direction, length, color, material, label) {
+  const dir = direction.clone().normalize();
+  const arrow = new THREE.ArrowHelper(dir, origin, length, color, length * 0.13, length * 0.055);
+  arrow.line.material = material;
+  cellGroup.add(arrow);
+  const sprite = makeAxisLabel(label, `#${color.toString(16).padStart(6, "0")}`);
+  sprite.position.copy(origin).addScaledVector(dir, length + 0.32);
+  cellGroup.add(sprite);
+}
+
+function drawUnitHexCell() {
+  const bottom = unitHexCorners(-c / 2).map(position => distortedPosition(position));
+  const top = unitHexCorners(c / 2).map(position => distortedPosition(position));
+  for (let i = 0; i < 6; i++) {
+    const next = (i + 1) % 6;
+    cellGroup.add(makeLine([bottom[i], bottom[next]], materials.cell));
+    cellGroup.add(makeLine([top[i], top[next]], materials.cell));
+    cellGroup.add(makeLine([bottom[i], top[i]], materials.cell));
+  }
+  const origin = unitCellCenter().add(new THREE.Vector3(0, 0, -c / 2 - 0.45));
+  const axisLength = a * 1.25;
+  drawAxis(origin, new THREE.Vector3(1, 0, 0), axisLength, 0xc62828, materials.axisX, "x");
+  drawAxis(origin, new THREE.Vector3(-0.5, sqrt3 / 2, 0), axisLength, 0x2e7d32, materials.axisY, "y");
+  drawAxis(origin, new THREE.Vector3(-0.5, -sqrt3 / 2, 0), axisLength, 0x6a1b9a, materials.axisU, "u");
+  drawAxis(origin, new THREE.Vector3(0, 0, 1), c * 1.25, 0x1565c0, materials.axisZ, "z");
+}
+
+function drawPlaneOverlay(key) {
+  clearGroup(planeGroup);
+  wrap.dataset.planeKey = key || "none";
+  wrap.dataset.planeVertexCount = "0";
+  if (!unitCellView || !key) return;
+
+  const bottom = unitHexCorners(-c / 2).map(position => distortedPosition(position));
+  const top = unitHexCorners(c / 2).map(position => distortedPosition(position));
+  let points = null;
+  let material = materials.planeBasal;
+
+  if (key === "basal-bottom") {
+    points = bottom;
+  } else if (key === "basal-top") {
+    points = top;
+  } else if (key.startsWith("prismatic-")) {
+    const index = Number(key.split("-")[1]);
+    const next = (index + 1) % 6;
+    points = [bottom[index], bottom[next], top[next], top[index]];
+    material = materials.planePrismatic;
+  } else if (key === "pyramidal-1") {
+    const topCenter = distortedPosition(unitCellCenter().add(new THREE.Vector3(0, 0, c / 2)));
+    points = [bottom[4], bottom[5], top[0], topCenter, top[3]];
+    material = materials.planePyramidal;
+  }
+
+  if (!points) return;
+  planeGroup.add(makePlaneMesh(points, material));
+  if (key === "pyramidal-1") {
+    planeGroup.add(makeLine([...points, points[0]], materials.planePyramidalLine));
+  }
+  wrap.dataset.planeVertexCount = String(points.length);
+}
+
+function drawCell() {
+  clearGroup(cellGroup);
+  if (!document.getElementById("toggle-cell").checked) return;
+  if (unitCellView) {
+    drawUnitHexCell();
+    return;
+  }
+  const p = cellCorners();
+  const edges = [[0,1],[0,2],[1,3],[2,3],[4,5],[4,6],[5,7],[6,7],[0,4],[1,5],[2,6],[3,7]];
+  for (const [i, j] of edges) cellGroup.add(makeLine([p[i], p[j]], materials.cell));
+}
+
+function drawSymmetry() {
+  clearGroup(symmetryGroup);
+  const origin = fracToCart([0, 0, 0], [1, 1, 0]);
+  const z0 = origin.clone().add(new THREE.Vector3(0, 0, -c * 0.7));
+  const z1 = origin.clone().add(new THREE.Vector3(0, 0, c * 0.9));
+  symmetryGroup.add(makeCylinderBetween(z0, z1, 0.025, materials.axisMesh));
+  const axisLabel = makeTextSprite("6_3", "#9fc6ff");
+  axisLabel.position.copy(z1).add(new THREE.Vector3(0.35, 0, 0.25));
+  symmetryGroup.add(axisLabel);
+
+  const planeGeo = new THREE.PlaneGeometry(7.8, 6.8);
+  const basal = new THREE.Mesh(planeGeo, materials.mirror);
+  basal.position.copy(origin).add(new THREE.Vector3(0, 0, c * 0.25));
+  basal.rotation.x = 0;
+  symmetryGroup.add(basal);
+
+  for (let n = 0; n < 3; n++) {
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(8.0, 5.8), materials.mirror);
+    plane.position.copy(origin);
+    plane.rotation.y = Math.PI / 2;
+    plane.rotation.z = n * Math.PI / 3;
+    symmetryGroup.add(plane);
+  }
+}
+
+function nearestAtoms(position, count = 12, useDistorted = true) {
+  const rows = atoms.map(atom => {
+    const pos = useDistorted ? atom.position : atom.basePosition;
+    return { atom, d: pos.distanceTo(position) };
+  });
+  rows.sort((a, b) => a.d - b.d || a.atom.id - b.atom.id);
+  return rows.slice(0, count);
+}
+
+function updateSelection(obj) {
+  selectedObject = obj;
+  clearGroup(highlightGroup);
+  const sel = document.getElementById("selection");
+  const body = document.getElementById("distance-body");
+  if (!sel || !body) return;
+  body.innerHTML = "";
+  if (!obj) {
+    sel.textContent = "Click a Zr atom, H atom, or interstitial candidate.";
+    return;
+  }
+  const { kind, ref } = obj.userData;
+  const pos = obj.position.clone();
+  const halo = makeSphere(kind === "atom" ? 0.43 : 0.32, materials.selected);
+  halo.position.copy(pos);
+  highlightGroup.add(halo);
+
+  let rows;
+  if (kind === "atom") {
+    const atomRows = unitCellView ? nearestVisibleAtoms(pos, 13) : nearestAtoms(pos, 13, true);
+    rows = atomRows.filter(row => row.atom.id !== ref.id).slice(0, 12);
+    const basal = rows.filter(row => Math.abs(row.atom.position.z - ref.position.z) < 0.35);
+    const out = rows.filter(row => Math.abs(row.atom.position.z - ref.position.z) >= 0.35);
+    sel.innerHTML = `<b>Zr atom ${ref.id}</b><br>sub-lattice ${ref.sub}, ${formatCell(ref.cell)}<br>${basal.length} basal-plane and ${out.length} out-of-plane neighbours in first 12.`;
+  } else if (kind === "site") {
+    rows = unitCellView ? nearestVisibleAtoms(pos, 8) : nearestAtoms(pos, 8, true);
+    sel.innerHTML = `<b>${ref.displayLabel}</b><br>${siteName(ref.type)}; ${ref.coordinationHint}; mean nearest-shell distance ${ref.nearestMean.toFixed(3)} A.`;
+  } else {
+    rows = unitCellView ? nearestVisibleAtoms(pos, 8) : nearestAtoms(pos, 8, true);
+    sel.innerHTML = `<b>Inserted ${ref.id}</b><br>${ref.site.displayLabel}, ${siteName(ref.site.type)}. Nearest Zr atoms are listed below.`;
+  }
+  for (const row of rows) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>Zr ${row.atom.id}</td><td>${row.atom.sub}</td><td>${row.d.toFixed(3)}</td>`;
+    body.appendChild(tr);
+  }
+}
+
+function populateSiteSelector() {
+  const select = document.getElementById("site-select");
+  select.innerHTML = "";
+  const ordered = [...visibleSites()].sort((a, b) =>
+    Number(b.central) - Number(a.central) ||
+    Number(b.type === "tetra") - Number(a.type === "tetra") ||
+    a.baseLabel.localeCompare(b.baseLabel) ||
+    a.id.localeCompare(b.id)
+  );
+  for (const site of ordered) {
+    const opt = document.createElement("option");
+    opt.value = site.id;
+    opt.textContent = site.displayLabel;
+    select.appendChild(opt);
+  }
+  hSite = ordered.find(site => site.central && site.baseLabel === "T1") || ordered[0] || null;
+  if (hSite) select.value = hSite.id;
+}
+
+function updateVisibility() {
+  const bondToggle = document.getElementById("toggle-bonds");
+  bondToggle.disabled = unitCellView;
+  for (const button of document.querySelectorAll("[data-plane]")) {
+    button.disabled = !unitCellView;
+  }
+  atomGroup.visible = document.getElementById("toggle-atoms").checked;
+  bondGroup.visible = !unitCellView && bondToggle.checked;
+  cellGroup.visible = document.getElementById("toggle-cell").checked;
+  planeGroup.visible = unitCellView && activePlaneKey !== null;
+  symmetryGroup.visible = false;
+  siteGroup.visible = document.getElementById("toggle-sites").checked;
+  labelGroup.visible = false;
+  hydrogenGroup.visible = document.getElementById("toggle-h").checked;
+  distortionGroup.visible = false;
+}
+
+function redraw() {
+  refreshHydrogenControls();
+  activeHydrogenSites = chooseHydrogenSites();
+  document.getElementById("h-count-value").textContent = `${activeHydrogenSites.length} H`;
+  wrap.dataset.activeHydrogen = String(activeHydrogenSites.length);
+  wrap.dataset.siteCount = String(visibleSites().length);
+  wrap.dataset.viewMode = unitCellView ? "unit" : "repeated";
+  updateAtomPositions();
+  pickables.length = 0;
+  drawAtoms();
+  drawSites();
+  drawHydrogen();
+  drawBonds();
+  drawDistortionGuides();
+  drawCell();
+  drawPlaneOverlay(activePlaneKey);
+  clearGroup(symmetryGroup);
+  updateVisibility();
+  if (selectedObject) updateSelection(selectedObject);
+}
+
+function onPointerDown(event) {
+  const rect = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(pickables, false);
+  updateSelection(hits.length ? hits[0].object : null);
+}
+
+function resize() {
+  const width = wrap.clientWidth;
+  const height = wrap.clientHeight;
+  renderer.setSize(width, height, false);
+  camera.aspect = width / Math.max(height, 1);
+  camera.updateProjectionMatrix();
+}
+
+function animate() {
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+
+buildAtoms();
+buildSites();
+populateSiteSelector();
+redraw();
+resize();
+animate();
+
+document.getElementById("site-select").addEventListener("change", event => {
+  hSite = sites.find(site => site.id === event.target.value) || sites[0];
+  selectedObject = null;
+  redraw();
+});
+for (const id of ["toggle-atoms", "toggle-bonds", "toggle-cell", "toggle-sites", "toggle-h", "site-family", "h-count"]) {
+  document.getElementById(id).addEventListener("input", redraw);
+}
+for (const button of document.querySelectorAll("[data-plane]")) {
+  const showPlane = () => {
+    if (!unitCellView) return;
+    activePlaneKey = button.dataset.plane;
+    drawPlaneOverlay(activePlaneKey);
+    updateVisibility();
+  };
+  const hidePlane = () => {
+    activePlaneKey = null;
+    drawPlaneOverlay(null);
+    updateVisibility();
+  };
+  button.addEventListener("mouseenter", showPlane);
+  button.addEventListener("mouseleave", hidePlane);
+  button.addEventListener("focus", showPlane);
+  button.addEventListener("blur", hidePlane);
+}
+document.getElementById("unit-cell-view").addEventListener("click", () => {
+  unitCellView = !unitCellView;
+  replication = { ...fullReplication };
+  selectedObject = null;
+  hSite = null;
+  activePlaneKey = null;
+  populateSiteSelector();
+  redraw();
+  resetCamera();
+  const button = document.getElementById("unit-cell-view");
+  button.textContent = unitCellView ? "Lattice" : "Unit HCP cell";
+  button.setAttribute("aria-pressed", String(unitCellView));
+});
+function resetCamera() {
+  if (unitCellView) {
+    const center = unitCellCenter();
+    camera.position.copy(center.clone().add(new THREE.Vector3(6.4, -11.2, 4.8)));
+    controls.target.copy(center);
+  } else {
+    camera.position.set(8, -13, 5.2);
+    controls.target.set(0, 0, 1.5);
+  }
+  camera.up.set(0, 0, 1);
+  controls.update();
+}
+document.getElementById("reset-view").addEventListener("click", resetCamera);
+renderer.domElement.addEventListener("pointerdown", onPointerDown);
+window.addEventListener("resize", resize);
+</script>
+</body>
+</html>
