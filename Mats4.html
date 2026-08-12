@@ -233,6 +233,18 @@
                   <button class="btn-launch" onclick="launchExafs()">Launch</button>
                 </div>
               </div>
+                <div class="col-md-6 col-12">
+                <div class="project-card">
+                  <div>
+                    <h4>Crystal Structure</h4>
+                    <p>3D viewer of FCC, HCP and BCC structures</p>
+                    <select id="exafs-select" class="select-dropdown">
+                      <option value="hcp">HCP - ZrH</option>
+                    </select>
+                  </div>
+                  <button class="btn-launch" onclick="launchExafs()">Launch</button>
+                </div>
+              </div>
               <div class="col-md-6 col-12">
                 <div class="project-card">
                   <div>
@@ -301,6 +313,10 @@
            <div id="emission" class="project-section">
             <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
             <div class="simulation-container"><iframe src="Emission.html"></iframe></div>
+          </div>
+          <div id="hcp" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="HCP-Cell.html"></iframe></div>
           </div>
         </div>
       </div>
