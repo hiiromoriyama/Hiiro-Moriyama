@@ -242,7 +242,7 @@
                       <option value="hcp">HCP - ZrH</option>
                     </select>
                   </div>
-                  <button class="btn-launch" onclick="launchExafs()">Launch</button>
+                  <button class="btn-launch" onclick="launchCell()">Launch</button>
                 </div>
               </div>
               <div class="col-md-6 col-12">
@@ -342,7 +342,7 @@
   <script>
     function launchExafs() { showProject(document.getElementById('exafs-select').value); }
     function launchPhotoionization() { showProject(document.getElementById('photoionization-select').value); }
-    
+    function launchCell() { showProject(document.getElementById('Cell-select').value); }
     function closeAllProjects() {
       document.body.classList.remove('tool-open');
       document.querySelectorAll('.project-section').forEach(s => {
