@@ -193,7 +193,7 @@
               <a href="xray-prosthesis.html">X-ray Prosthesis</a>
               <a href="xray-optics.html">Ultrafast X-ray Optics</a>
               <a href="2D-Flows.html">2D Flows</a>
-              <a href="SimuLearn.html">SimuLearn</a>
+              <a href="SimuLearn.html">SILMARIL</a>
             </div>
             <h4>Acknowledgement</h4>
             <p style="text-align: justify;">
@@ -237,9 +237,11 @@
                 <div class="project-card">
                   <div>
                     <h4>Crystal Structure</h4>
-                    <p>3D viewer of FCC, HCP and BCC structures</p>
+                    <p>3D viewer of FCC, BCC and HCP structures</p>
                     <select id="Cell-select" class="select-dropdown">
-                      <option value="hcp">HCP - ZrH</option>
+                      <option value="fcc">FCC - Pd</option>
+                      <option value="bcc">BCC - Fe</option>
+                      <option value="hcp">HCP - Zr</option>
                     </select>
                   </div>
                   <button class="btn-launch" onclick="launchCell()">Launch</button>
@@ -317,6 +319,14 @@
           <div id="hcp" class="project-section">
             <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
             <div class="simulation-container"><iframe src="Cell-hcp.html"></iframe></div>
+          </div>
+          <div id="fcc" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="Cell-fcc.html"></iframe></div>
+          </div>
+          <div id="bcc" class="project-section">
+            <button class="btn-exit-tool" onclick="closeAllProjects()">Exit</button>
+            <div class="simulation-container"><iframe src="Cell-bcc.html"></iframe></div>
           </div>
         </div>
       </div>
